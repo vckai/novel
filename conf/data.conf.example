@@ -1,0 +1,20 @@
+
+# mysql 配置
+[mysql]
+database   = mysql
+drivername = default
+user	   = root
+pass	   = 123
+urls	   = 127.0.0.1:3306
+dbname     = gonovel
+charset    = utf8
+
+# mysql 章节数据库
+[mysql_chapter]
+database   = mysql
+drivername = chapter
+user	   = root
+pass	   = 123
+urls	   = 127.0.0.1:3306
+dbname     = gochapter
+charset    = utf8

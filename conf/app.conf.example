@@ -1,0 +1,62 @@
+appname  = novel
+httpport = 8089
+runmode  = dev
+domain   = false
+
+# session 配置
+sessionon = true
+
+# 加密秘钥
+secretkey = 087DC8269428CD3BC4BB689C5EE9A148
+
+# xsrf
+enablexsrf = false
+xsrfkey    = e16693381ead8926ab48150356b68bf3a60e1657d03ba617d28f048d14425cff
+xsrfexpire = 60
+
+# HTTP请求代理配置
+# 代理模式 0:不开启，1:proxy_url代理配置，2:自动IP代理
+proxy_mode = 0
+
+# proxy_url = http://139.199.178.202:8085/v1/ips
+#proxy_url  = http://user:passwd@ip4.hahado.cn:35044 
+
+# 静态资源配置
+[static]
+viewurl   = /public/
+uppredir  = ./static/
+updir     = up/ 
+
+# 网站配置
+[website]
+title = 卡丘小说
+keyword = 小说，免费小说，热门小说，言情小说，小说下载，漫画，好文章，电子书，免费杂志
+description = 精彩小说尽在卡丘小说，提供海量热门小说免费在线阅读和下载，玄幻小说，武侠小说，原创小说，网游小说，都市小说，言情小说，青春小说，历史小说，军事小说，网游小说，科幻小说等多种丰富的内容类型 
+
+# PC网站模板
+theme = default
+
+# 移动端网站模板
+mtheme = default
+
+# 移动端网站域名（配置移动浏览器访问域名自动跳转到该域名）
+#mobile_url  = http://m.vckai.com/
+
+# 语言支持配置
+[lang]
+default=zh-CN
+types=zh-CN
+names=简体中文
+
+# 小说配置
+[novel]
+# 是否开启采集
+is_snatch = true
+
+# 更新间隔时间，单位：分钟
+uptime  = 10
+
+# 小说间隔没更新自动设置为太监模式，单位：天 
+upgcday = 10
+
+include "data.conf"

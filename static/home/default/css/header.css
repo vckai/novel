@@ -1,0 +1,463 @@
+.header-box {
+    background: #fff;
+}
+
+.searchnav {
+    background-color: #FAFAFA;
+    border-bottom: 1px solid #ECECEC;
+    font-size: 12px;
+    min-width: 1200px;
+    /* _width:expression(document.body.clientWidth < 1202? "1200px" : "100%");*/
+}
+
+.topnav {
+    height: 30px;
+    width: 550px;
+    padding: 0;
+    list-style: none;
+    margin: 0 0 -1px;
+    _position: relative;
+}
+
+.topnav li {
+    position: relative;
+    text-align: center;
+    float: left;
+    height: 28px;
+    line-height: 28px;
+    margin-left: 20px;
+    padding: 0 2px;
+    display: inline;
+}
+
+.topnav li.cur {
+    border-bottom: 2px solid #E1451B;
+    color: #E1451B;
+    font-weight: bold;
+}
+
+.topnav li.cur a {
+    color: #E1451B;
+}
+
+.topnav a {
+    color: #666;
+    text-decoration: none;
+    display: block;
+}
+
+.topnav a:hover {
+    color: #E1451B;
+    text-decoration: none;
+}
+
+.topraquo {
+    font: 14px arial;
+    *display: inline-block;
+    *line-height: 28px;
+    *margin-top: -4px;
+    _margin-top: -2px;
+}
+
+.header {
+    height: 78px;
+    width: 1200px;
+    margin: auto;
+    padding-top: 32px;
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+    position: relative;
+    /*_top:-17px;*/
+    z-index: 2;
+}
+
+.searchbox {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+.searchform {
+    float: left;
+    margin: 0;
+}
+
+.logo {
+    float: left;
+    margin-right: 30px;
+    border: none;
+    width: 130px;
+    height: 34px;
+    /*background-image: url(../images/read.png);*/
+    /*background-image: -webkit-image-set(url(../images/read.png) 1x, url(../images/read@2x.png) 2x);*/
+}
+
+.querybox {
+    border-top: 1px solid #979797;
+    border-left: 1px solid #979797;
+    border-bottom: 1px solid #BCBCBC;
+    float: left;
+    width: 489px;
+    background-color: #fff;
+}
+
+.qborder {
+    border-top: 1px solid #E5E5E5;
+    border-left: 1px solid #E5E5E5;
+    height: 31px;
+}
+
+.query {
+    border: 0;
+    width: 468px;
+    margin: 0;
+    padding: 6px 10px 5px;
+    font: 16px arial, sans-serif;
+    color: #333;
+    outline: none;
+    background-color: #fff;
+}
+
+
+/*.query::-ms-clear {
+  display: none;
+}*/
+
+.sbtn1 {
+    float: left;
+    display: inline;
+}
+
+.sbtn1 input {
+    border-radius: 0 2px 2px 0;
+    border: solid 1px #df4a3b;
+    height: 34px;
+    /*line-height:34px;*/
+    width: 110px;
+    *border: none;
+    *height: 34px;
+    *width: 108px;
+    cursor: pointer;
+    outline: none;
+    font: 15px 'microsoft yahei', sans-serif;
+    color: #fff;
+    background-color: #df4a3b;
+    /* background-image: -webkit-linear-gradient(top, #fbfbfb, #ededed);
+   background-image: -moz-linear-gradient(top, #fbfbfb, #ededed);
+   background-image: -o-linear-gradient(top, #fbfbfb, #ededed);
+   background-image: -ms-linear-gradient(top, #fbfbfb, #ededed);
+   background-image: linear-gradient(to bottom, #fbfbfb, #ededed);
+   filter:progid:DXImageTransform.Microsoft.gradient(startcolorstr=#fbfbfb,endcolorstr=#ededed,gradientType=0);*/
+}
+
+.sbtn1 input:hover {
+    background: #eb5545;
+    border-color: #eb5545;
+}
+
+.hotwords {
+    clear: both;
+    text-align: left;
+    padding-top: 7px;
+    color: #9e9e9e;
+}
+
+.hotwords a {
+    color: #4a4a4a;
+    text-decoration: none;
+    margin-right: 13px;
+}
+
+.hotwords a:hover {
+    text-decoration: underline;
+    color: #333;
+}
+
+.login {
+    position: absolute;
+    top: 36px;
+    right: 0;
+    font-size: 0;
+    height: 26px;
+}
+
+.login a {
+    color: #666;
+    font-size: 12px;
+    display: inline-block;
+    height: 26px;
+    line-height: 26px;
+    position: relative;
+}
+
+.r-user {
+    *vertical-align: 4px;
+}
+
+.divider {
+    display: inline-block;
+    height: 10px;
+    border-left: 1px solid #ececec;
+}
+
+.divider1 {
+    padding-right: 12px;
+    margin-left: 12px;
+    vertical-align: -1px;
+}
+
+.divider2 {
+    padding-right: 8px;
+    margin-left: 6px;
+    vertical-align: 8px;
+}
+
+.user-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 13px;
+}
+
+.r-username {
+    vertical-align: 9px;
+    margin: 0 13px 0 9px;
+    *vertical-align: -3px;
+}
+
+.shelf {
+    vertical-align: 9px;
+}
+
+.u-triangle {
+    position: absolute;
+    right: 0;
+    border-width: 4px;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.unfold {
+    top: 11px;
+    *top: 8px;
+    _top: 9px;
+    border-color: #cccccc transparent transparent transparent;
+    border-style: solid dashed dashed dashed;
+}
+
+.shelf .unfold {
+    _top: 11px;
+}
+
+.shelf .fold {
+    _top: 6px;
+}
+
+.fold {
+    top: 7px;
+    _top: 4px;
+    border-color: transparent transparent #cccccc transparent;
+    border-style: dashed dashed solid dashed;
+}
+
+.m-shelf {
+    margin-right: 13px;
+}
+
+.user-info,
+.shelf-info {
+    position: absolute;
+    border: 1px solid #e9e8e8;
+    border-top: none;
+    top: 30px;
+    z-index: 999;
+}
+
+.user-info a,
+.shelf-info a {
+    display: block;
+    width: 114px;
+    line-height: 36px;
+    height: 36px;
+    padding-left: 15px;
+    text-align: left;
+}
+
+.user-info {
+    left: -12px;
+}
+
+.shelf-info {
+    left: 54px;
+}
+
+.user-info li,
+.shelf-info li {
+    background: #fbfbfa;
+    border-top: 1px solid #e9e8e8;
+}
+
+.user-info li:hover,
+.shelf-info li:hover {
+    background: #f4f3f3;
+}
+
+.mnavbox {
+    height: 36px;
+    font: 15px/36px "microsoft yahei", sans-serif;
+    background-color: #383838;
+    color: #fff;
+    position: relative;
+    z-index: 9;
+}
+
+.mnavbox a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 0 24px;
+}
+
+.mnavbox .r-tab:hover {
+    background-color: #585858;
+    text-decoration: none;
+}
+
+.mnav {
+    margin: auto;
+    padding: 0;
+    list-style: none;
+}
+
+.mnav li {
+    float: left;
+}
+
+.mnav li.cur {
+    background-color: #e74635;
+}
+
+.mnav .all-sort {
+    float: right;
+    width: 270px;
+    background: #252525;
+    position: relative;
+    box-sizing: border-box;
+    border-top: 3px solid #e73e2a;
+    line-height: 33px;
+    text-align: center;
+    margin: 0;
+}
+
+.mnav .sort-tab:hover {
+    background: #252525;
+}
+
+.all-sort .sort-tab {
+    height: 33px;
+}
+
+.t-box {
+    width: 44px;
+    height: 33px;
+    position: absolute;
+    cursor: pointer;
+    top: 0px;
+    left: 182px;
+}
+
+.triangle {
+    display: block;
+    width: 8px;
+    height: 8px;
+    margin-left: 10px;
+    margin-top: 10px;
+    border-top: 1px solid #858585;
+    border-right: 1px solid #858585;
+    -webkit-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    -o-transform: rotate(135deg);
+    transform: rotate(135deg);
+    -webkit-transition: -webkit-transform .2s;
+    -o-transition: -o-transform .2s;
+    transition: transform .2s;
+}
+
+.t-box:hover .triangle {
+    margin-top: 15px;
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.sort-box {
+    position: absolute;
+    font-size: 14px;
+    width: 227px;
+    overflow: hidden;
+    top: 33px;
+    left: 0;
+    z-index: 1;
+    padding: 0 21px 0 22px;
+    background-color: #222;
+    background-color: rgba(34, 34, 34, .92);
+}
+
+.sort-box ul {
+    width: 227px;
+    /*height: 261px;*/
+    overflow: hidden;
+    margin-top: 0px;
+    *position: relative;
+    padding: 7px 0;
+    _padding: 5px 0 4px;
+}
+
+.sort-box li {
+    width: 114px;
+    padding: 0;
+    float: left;
+    margin: 0 0 0 -1px;
+    position: relative;
+    height: 41px;
+}
+
+.sort-box a {
+    display: block;
+    height: 41px;
+    line-height: 41px;
+    box-sizing: border-box;
+    margin: 0;
+    border-top: 1px dashed #333;
+    border-left: 1px dashed #333;
+    border-color: rgba(218, 218, 218, .2);
+}
+
+.sort-box .top-a {
+    border-top: 0;
+}
+
+.sort-box a:hover {
+    color: #e74635;
+}
+
+.r-hot {
+    display: inline-block;
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    background: url(../images/read-ico.png) no-repeat 0 -489px;
+    top: 8px;
+    left: 92px;
+    _left: 85px;
+}
+/*beta图标*/
+.topnav-beta {
+    position: absolute;
+    top: 1px;
+    right: -20px;
+    width: 23px;
+    height: 13px;
+}
