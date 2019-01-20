@@ -15,7 +15,7 @@ function x_admin_show(title, url, w, h) {
 		url="404.html";
 	};
 	if (w == null || w == '') {
-		w=800;
+        w=($(window).width()*0.9);
 	};
 	if (h == null || h == '') {
 		h=($(window).height() - 50);
@@ -40,7 +40,7 @@ function x_admin_close() {
 
 // 发异步，把数据提交给服务端
 var is_submit = true;
-function ajax_post(url, data, tourl, is_alert) {
+function ajax_post(url, data, tourl, is_alert, is_parent) {
 	if (!is_submit) {
 		return false;
 	}
@@ -53,9 +53,13 @@ function ajax_post(url, data, tourl, is_alert) {
 		is_alert = true;
 	}
 
-	var is_parent = "";
-	if (typeof parent.layer != "undefined") {
-		is_parent = "parent.";
+	if (typeof is_parent == "undefined") {
+		is_parent = true;
+	}
+
+    var parent_script = "";
+	if (is_parent && typeof parent.layer != "undefined") {
+		parent_script = "parent.";
 	}
 
 	var index = layer.load(2, {shade: [0.3]});
@@ -67,7 +71,7 @@ function ajax_post(url, data, tourl, is_alert) {
 			}
 
 			if (!tourl) {
-				setTimeout(is_parent + "location.reload()", is_alert ? 1000 : 0);
+				setTimeout(parent_script + "location.reload()", is_alert ? 1000 : 0);
 			} else {
 				if (typeof tourl == "function") {
 					tourl(res.data);

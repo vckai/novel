@@ -58,8 +58,9 @@
 		// 批量删除提交
 		function del_all() {
 			layer.confirm('确认要删除吗？', function(index) {
-				// 捉到所有被选中的，发异步进行删除
-				layer.msg('删除成功', {icon: 1});
+                var ids = get_list_ids('all-x-select');
+				//发异步删除数据
+				ajax_post({{urlfor "admin.CateController.DeleteBatch"}}, {ids: ids});
 			});
 		}
 

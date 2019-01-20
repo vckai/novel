@@ -76,15 +76,15 @@ func TestUSFindNovel(t *testing.T) {
 	}
 
 	if nov.Name != "圣墟" {
-		t.Fatal("获取小说标题错误")
+		t.Fatal("获取小说标题错误", nov.Name)
 	}
 
 	if !strings.Contains(nov.Desc, "在寂灭中复苏") {
-		t.Fatal("获取小说内容错误")
+		t.Fatal("获取小说内容错误", nov.Desc)
 	}
 
 	if nov.Author != "辰东" {
-		t.Fatal("获取小说作者错误")
+		t.Fatal("获取小说作者错误", nov.Author)
 	}
 
 	if info.Url != "https://www.x23us.com/book/66656" {
@@ -98,7 +98,7 @@ func TestUSFindNovel(t *testing.T) {
 
 func TestUSFindNovel2(t *testing.T) {
 	us := NewUs()
-	info, err := us.FindNovel("洪荒")
+	info, err := us.FindNovel("洪荒之逆天妖帝")
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -110,7 +110,7 @@ func TestUSFindNovel2(t *testing.T) {
 	}
 
 	if nov.Name != "洪荒之逆天妖帝" {
-		t.Fatal("获取小说标题错误")
+		t.Fatal("获取小说标题错误", nov.Name)
 	}
 }
 

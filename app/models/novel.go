@@ -15,6 +15,8 @@
 package models
 
 import (
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/astaxie/beego/orm"
@@ -100,6 +102,19 @@ func (m *Novel) Update(fields ...string) error {
 	}
 
 	return nil
+}
+
+// 批量删除
+func (m *Novel) DeleteBatch(ids []string) error {
+	marks := make([]string, len(ids))
+	for i := range marks {
+		marks[i] = "?"
+	}
+	sqlStr := fmt.Sprintf("DELETE FROM nov_novel WHERE `id` %s", fmt.Sprintf("IN (%s)", strings.Join(marks, ", ")))
+
+	_, err := orm.NewOrm().Raw(sqlStr, ids).Exec()
+
+	return err
 }
 
 // 删除

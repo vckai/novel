@@ -42,7 +42,7 @@
 
 		// 添加采集
 		function snatch(url) {
-			ajax_post({{urlfor "admin.NovelController.AddSnatch"}}, {url: url});
+			ajax_post({{urlfor "admin.NovelController.AddSnatch"}}, {url: url}, "", true, false);
 		}
 	</script>
 </body>

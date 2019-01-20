@@ -10,7 +10,7 @@
 	<div class="x-body">
 		<xblock>
 			<button class="layui-btn layui-btn-danger" onclick="del_all()"><i class="layui-icon">&#xe640;</i>批量删除</button>
-			<button class="layui-btn" onclick="x_admin_show('添加banner', '{{urlfor "admin.BannerController.Add"}}', '600', '500')"><i class="layui-icon">&#xe608;</i>添加</button>
+			<button class="layui-btn" onclick="x_admin_show('添加banner', '{{urlfor "admin.BannerController.Add"}}')"><i class="layui-icon">&#xe608;</i>添加</button>
 			<span class="x-right" style="line-height:40px">共有数据：{{.BannersCount}} 条</span>
 		</xblock>
 		<table class="layui-table">
@@ -30,7 +30,7 @@
 			<tbody id="x-img">
 			{{range .Banners}}
 				<tr>
-					<td><input type="checkbox" value="{{.Id}}" name="" class="all-x-select"></td>
+					<td><input type="checkbox" value="{{.Id}}" class="all-x-select"></td>
 					<td>{{.Id}}</td>
 					<td><img src="{{.Img}}" width="200" /></td>
 					<td>{{map_get $.Zones .Zone}}</td>
@@ -39,7 +39,7 @@
 					<td>{{str2html .StatusName}}</td>
 					<td>{{datetime .CreatedAt "2006-01-02 15:04:05"}}</td>
 					<td class="td-manage">
-						<a title="编辑banner" href="javascript:;" onclick="x_admin_show('编辑banner', {{urlfor "admin.BannerController.Edit" "id" .Id}}, '600', '500')" class="ml-5" style="text-decoration:none">
+						<a title="编辑banner" href="javascript:;" onclick="x_admin_show('编辑banner', {{urlfor "admin.BannerController.Edit" "id" .Id}})" class="ml-5" style="text-decoration:none">
 							<i class="layui-icon">&#xe642;</i>
 						</a>
 						<a title="删除" href="javascript:;" onclick="del(this,'{{.Id}}', '{{.Name}}')" style="text-decoration:none">
@@ -70,8 +70,9 @@
 		// 批量删除提交
 		function del_all() {
 			layer.confirm('确认要删除吗？', function(index) {
-				// 捉到所有被选中的，发异步进行删除
-				layer.msg('删除成功', {icon: 1});
+                var ids = get_list_ids('all-x-select');
+				// 发异步删除数据
+				ajax_post({{urlfor "admin.BannerController.DeleteBatch"}}, {ids: ids});
 			});
 		}
 

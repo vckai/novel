@@ -2,7 +2,7 @@
 	<div class="x-body">
 		<form class="layui-form layui-form-pane">
 			<div class="layui-form-item">
-				<label for="L_title" class="layui-form-label">
+				<label for="_chapter_no" class="layui-form-label">
 					章节编号
 				</label>
 				<div class="layui-input-block">
@@ -10,7 +10,7 @@
 				</div>
 			</div>
 			<div class="layui-form-item">
-				<label for="L_title" class="layui-form-label">
+				<label for="_title" class="layui-form-label">
 					章节标题
 				</label>
 				<div class="layui-input-block">
@@ -26,7 +26,8 @@
 				</label>
 			</div>	
 			<div class="layui-form-item">
-				<input type="hidden" id="novid" name="novid" value="{{.Novel.Id}}">
+				<input type="hidden" id="chapter_id" name="chapter_id" value="{{.Chapter.Id}}">
+				<input type="hidden" id="novid" name="novid" value="{{.NovId}}">
 				<button  class="layui-btn" lay-filter="save" lay-submit="">
 					保存
 				</button>
@@ -46,6 +47,7 @@
 
 				// 监听提交
 				form.on('submit(save)', function(data) {
+                    data.field.desc = layui.layedit.getContent(editIndex)
 					ajax_post("{{.PostUrl}}", data.field);
 					return false;
 				});

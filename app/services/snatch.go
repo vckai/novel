@@ -213,6 +213,8 @@ func (this *SnatchTask) upChapter(source, chapLink string) uint8 {
 
 		// 跳过无用的章节
 		if strings.Contains(chap.Title, "请假一晚") ||
+			strings.Contains(chap.Title, "今天无更") ||
+			strings.Contains(chap.Title, "今日无更") ||
 			strings.Contains(chap.Title, "更新延迟") {
 			continue
 		}
@@ -306,7 +308,7 @@ func NewSnatchTaskManager() *SnatchTaskManager {
 func (this *SnatchTaskManager) LoadNovels() int {
 	novs, _ := NovelService.GetAll(10000000, 0, map[string]interface{}{
 		"status": int(models.BOOKOPEN),
-	})
+	}, "id", "name", "status")
 
 	for _, v := range novs {
 		this.AddTask(v.Id)

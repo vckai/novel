@@ -7,17 +7,12 @@
 				</a>
 				<ul class="layui-nav" lay-filter="">
 				  <li class="layui-nav-item">
-					<a href="javascript:;">admin</a>
+					<a href="javascript:;">{{.LoginUserName}}</a>
 					<dl class="layui-nav-child"> <!-- 二级菜单 -->
 					  <dd><a>个人信息</a></dd>
 					  <dd><a href="{{urlfor "admin.LoginController.Logout"}}">退出</a></dd>
 					</dl>
 				  </li>
-				  <li class="layui-nav-item">
-					<a href="" title="消息">
-						<i class="layui-icon" style="top: 1px;">&#xe63a;</i>
-					</a>
-					</li>
 				</ul>
 			</div>
 		</div>

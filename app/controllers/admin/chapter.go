@@ -16,6 +16,7 @@ package admin
 
 import (
 	"math"
+	"strings"
 
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
@@ -38,13 +39,14 @@ func (this *ChapterController) Index() {
 
 	size := 10
 	offset := (p - 1) * size
-	chapters, count := services.ChapterService.GetNovChaps(novId, size, offset, "desc", true)
 
 	search := map[string]interface{}{
 		"p":     p,
 		"q":     q,
 		"novId": novId,
 	}
+
+	chapters, count := services.ChapterService.GetNovChaps(novId, size, offset, "desc", true)
 	this.Data["Search"] = search
 	this.Data["Chapters"] = chapters
 	this.Data["ChaptersCount"] = count
@@ -54,19 +56,26 @@ func (this *ChapterController) Index() {
 
 // 添加小说章节页面
 func (this *ChapterController) Add() {
+
+	novId, _ := this.GetUint32("novid")
+	if novId < 1 {
+		this.Msg("参数错误，无法访问")
+	}
+
 	// post 数据提交
 	if this.IsAjax() {
 		this.save()
 		return
 	}
 
+	this.Data["NovId"] = novId
 	this.Data["Chapter"] = models.NewChapter()
 	this.Data["IsUpdate"] = false
 	this.Data["PostUrl"] = utils.URLFor("admin.ChapterController.Add")
 	this.View("chapter/add.tpl")
 }
 
-// 编辑小说页面
+// 编辑小说章节页面
 func (this *ChapterController) Edit() {
 	// post 数据提交
 	if this.IsAjax() {
@@ -82,16 +91,17 @@ func (this *ChapterController) Edit() {
 
 	chapter := services.ChapterService.Get(id, novId)
 	if chapter == nil {
-		this.Msg("该小说不存在或者已被删除")
+		this.Msg("该小说章节不存在或者已被删除")
 	}
 
+	this.Data["NovId"] = novId
 	this.Data["Chapter"] = chapter
 	this.Data["IsUpdate"] = true
 	this.Data["PostUrl"] = utils.URLFor("admin.ChapterController.Edit")
 	this.View("chapter/add.tpl")
 }
 
-// 删除小说
+// 删除小说章节
 func (this *ChapterController) Delete() {
 	id, _ := this.GetUint64("id")
 	novId, _ := this.GetUint32("novid")
@@ -102,11 +112,44 @@ func (this *ChapterController) Delete() {
 
 	err := services.ChapterService.Delete(id, novId)
 	if err != nil {
-		this.OutJson(1001, "删除小说失败")
+		this.OutJson(1001, "删除小说章节失败")
+	}
+
+	// 获取小说信息
+	novel := services.NovelService.Get(novId)
+	novName := ""
+	if novel == nil {
+		novName = novel.Name
 	}
 
 	// 添加操作日记
-	this.AddLog(3003, "删除", name, id)
+	this.AddLog(3101, "删除", novName, name, id)
+
+	this.OutJson(0, "已删除！")
+}
+
+// 批量删除小说章节
+func (this *ChapterController) DeleteBatch() {
+	novId, _ := this.GetUint32("novid")
+	ids := this.GetStrings("ids[]")
+	if novId < 1 || len(ids) == 0 {
+		this.OutJson(1001, "参数错误，无法访问")
+	}
+
+	err := services.ChapterService.DeleteBatch(novId, ids)
+	if err != nil {
+		this.OutJson(1002, "批量删除小说失败")
+	}
+
+	// 获取小说信息
+	novel := services.NovelService.Get(novId)
+	novName := ""
+	if novel == nil {
+		novName = novel.Name
+	}
+
+	// 添加操作日记
+	this.AddLog(3102, novName, strings.Join(ids, ","))
 
 	this.OutJson(0, "已删除！")
 }
@@ -132,6 +175,7 @@ func (this *ChapterController) save() {
 	// 入库参数
 	chapter.Title = this.GetString("title")
 	chapter.Desc = this.GetString("desc")
+	chapter.ChapterNo, _ = this.GetUint32("chapter_no")
 	chapter.NovId = novId
 
 	err := services.ChapterService.Save(chapter)
@@ -140,8 +184,15 @@ func (this *ChapterController) save() {
 		this.OutJson(1002, mtitle+"章节失败："+err.Error())
 	}
 
+	// 获取小说信息
+	novel := services.NovelService.Get(novId)
+	novName := ""
+	if novel != nil {
+		novName = novel.Name
+	}
+
 	// 添加操作日记
-	this.AddLog(3003, mtitle, chapter.Title, chapter.Id)
+	this.AddLog(3101, mtitle, novName, chapter.Title, id)
 
 	this.OutJson(0, mtitle+"成功")
 }

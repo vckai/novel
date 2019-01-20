@@ -19,7 +19,7 @@
 				  <input class="layui-input" placeholder="截止日" id="LAY_demorange_e" name="et" value="{{.Search.et}}">
 				</div>
 				<div class="layui-input-inline">
-				  <input type="text" name="q"  placeholder="请输入昵称" autocomplete="off" class="layui-input" value="{{.Search.q}}">
+				  <input type="text" name="q"  placeholder="请输入关键字" autocomplete="off" class="layui-input" value="{{.Search.q}}">
 				</div>
 				<div class="layui-input-inline" style="width:80px">
 					<button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
@@ -28,7 +28,7 @@
 			</div> 
 		</form>
 		<xblock>
-			<button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon">&#xe640;</i>批量删除</button>
+			<button class="layui-btn layui-btn-danger" onclick="del_all()"><i class="layui-icon">&#xe640;</i>批量删除</button>
 			<span class="x-right" style="line-height:40px">共有数据：{{.LogCount}} 条</span>
 		</xblock>
 		<table class="layui-table">
@@ -47,7 +47,7 @@
 			<tbody>
 				{{range .Logs}}
 				<tr>
-					<td><input type="checkbox" value="{{.Id}}" name="" class="all-x-select"></td>
+					<td><input type="checkbox" value="{{.Id}}" class="all-x-select"></td>
 					<td>{{.Id}}</td>
 					<td>{{.Type}}</td>
 					<td>{{.Content}}</td>
@@ -80,7 +80,7 @@
 					cont: 'page',
 					pages: {{.MaxPages}},
 					last: {{.MaxPages}},
-					curr: {{.p}},
+					curr: {{.Search.p}},
 					first: 1,
 					prev: '<em><</em>',
 					next: '<em>></em>',
@@ -123,13 +123,14 @@
 			});
 		}
 		  
-		//批量删除提交
-		 function delAll () {
-			layer.confirm('确认要删除吗？',function(index){
-				//捉到所有被选中的，发异步进行删除
-				layer.msg('删除成功', {icon: 1});
-			});
-		 }
+		// 批量删除提交
+		function del_all() {
+			layer.confirm('确认要删除吗？', function(index) {
+                var ids = get_list_ids('all-x-select');
+				//发异步删除数据
+				ajax_post({{urlfor "admin.AdminLogController.DeleteBatch"}}, {ids: ids});
+		    });
+		}
 	   
 		/*-删除*/
 		function log_del(obj, id) {

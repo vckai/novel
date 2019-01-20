@@ -130,3 +130,18 @@ func (this *BannerController) save() {
 
 	this.OutJson(0, mtitle+"成功")
 }
+
+// 批量删除操作日记
+func (this *BannerController) DeleteBatch() {
+	ids := this.GetStrings("ids[]")
+	if len(ids) == 0 {
+		this.OutJson(1001, "参数错误，无法访问")
+	}
+
+	err := services.BannerService.DeleteBatch(ids)
+	if err != nil {
+		this.OutJson(1002, "批量删除操作banner失败")
+	}
+
+	this.OutJson(0, "已删除！")
+}

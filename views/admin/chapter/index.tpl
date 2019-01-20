@@ -23,7 +23,7 @@
 		</form>
 		<xblock>
 			<button class="layui-btn layui-btn-danger" onclick="del_all()"><i class="layui-icon">&#xe640;</i>批量删除</button>
-			<button class="layui-btn" onclick="x_admin_show('添加章节', '{{urlfor "admin.ChapterController.Add" "novid" .Search.novId}}', '700', '680')"><i class="layui-icon">&#xe608;</i>添加</button>
+			<button class="layui-btn" onclick="x_admin_show('添加章节', '{{urlfor "admin.ChapterController.Add" "novid" .Search.novId}}')"><i class="layui-icon">&#xe608;</i>添加</button>
 			<span class="x-right" style="line-height:40px">共有数据：{{.ChaptersCount}} 条</span>
 		</xblock>
 		<table class="layui-table">
@@ -46,7 +46,7 @@
 					<td>{{.Views}}</td>
 					<td>{{datetime .CreatedAt "2006-01-02 15:04:05"}}</td>
 					<td class="td-manage">
-						<a title="编辑章节" href="javascript:;" onclick="x_admin_show('编辑章节', {{urlfor "admin.ChapterController.Edit" "id" .Id "novid" $.Search.novId}}, '700', '680')" class="ml-5" style="text-decoration:none">
+						<a title="编辑章节" href="javascript:;" onclick="x_admin_show('编辑章节', {{urlfor "admin.ChapterController.Edit" "id" .Id "novid" $.Search.novId}})" class="ml-5" style="text-decoration:none">
 							<i class="layui-icon">&#xe642;</i>
 						</a>
 						<a title="删除" href="javascript:;" onclick="del(this,'{{.Id}}', '{{.Title}}')" style="text-decoration:none">
@@ -87,8 +87,9 @@
 		// 批量删除提交
 		function del_all() {
 			layer.confirm('确认要删除吗？', function(index) {
-				// 捉到所有被选中的，发异步进行删除
-				layer.msg('删除成功', {icon: 1});
+                var ids = get_list_ids('all-x-select');
+				//发异步删除数据
+				ajax_post({{urlfor "admin.ChapterController.DeleteBatch"}}, {ids: ids, novid: {{.Search.novId}}}, "", true, false);
 			});
 		}
 
@@ -98,7 +99,7 @@
 				$(obj).parents("tr").remove();
 
 				//发异步删除数据
-				ajax_post({{urlfor "admin.ChapterController.Delete"}}, {id: id, name: name, novid: {{.Search.novId}}});
+				ajax_post({{urlfor "admin.ChapterController.Delete"}}, {id: id, name: name, novid: {{.Search.novId}}}, "", true, false);
 			});
 		}
 	</script>

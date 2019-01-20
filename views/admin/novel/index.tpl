@@ -22,9 +22,9 @@
 		</form>
 		<xblock>
 			<button class="layui-btn layui-btn-danger" onclick="del_all()"><i class="layui-icon">&#xe640;</i>批量删除</button>
-			<button class="layui-btn" onclick="x_admin_show('添加小说', '{{urlfor "admin.NovelController.Add"}}', '700', '680')"><i class="layui-icon">&#xe608;</i>添加</button>
-			<button class="layui-btn" onclick="x_admin_show('运行爬虫', '{{urlfor "admin.NovelController.Crawler"}}', '520', '450')"><i class="layui-icon">&#xe608;</i>运行爬虫</button>
-			<button class="layui-btn" onclick="x_admin_show('添加小说采集', '{{urlfor "admin.NovelController.AddSnatch"}}', '520', '450')"><i class="layui-icon">&#xe608;</i>添加采集</button>
+			<button class="layui-btn" onclick="x_admin_show('添加小说', '{{urlfor "admin.NovelController.Add"}}')"><i class="layui-icon">&#xe608;</i>添加</button>
+			<button class="layui-btn" onclick="x_admin_show('运行爬虫', '{{urlfor "admin.NovelController.Crawler"}}')"><i class="layui-icon">&#xe608;</i>运行爬虫</button>
+			<button class="layui-btn" onclick="x_admin_show('添加小说采集', '{{urlfor "admin.NovelController.AddSnatch"}}')"><i class="layui-icon">&#xe608;</i>添加采集</button>
 
 			<div class="layui-input-inline" style="width:250px">
 			<input type="text" id="nov_name" placeholder="请输入采集小说名称" autocomplete="off" class="layui-input" value="">
@@ -64,13 +64,13 @@
 					<td>{{str2html .IsVipRecName}}</td>
 					<td>{{datetime .ChapterUpdatedAt "01-02 15:04:05"}}</td>
 					<td class="td-manage">
-						<a title="编辑小说" href="javascript:;" onclick="x_admin_show('编辑小说', {{urlfor "admin.NovelController.Edit" "id" .Id}}, '700', '680')" class="ml-5" style="text-decoration:none">
+						<a title="编辑小说" href="javascript:;" onclick="x_admin_show('编辑小说', {{urlfor "admin.NovelController.Edit" "id" .Id}})" class="ml-5" style="text-decoration:none">
 							<i class="layui-icon">&#xe642;</i>
 						</a>
-						<a title="查看章节列表" href="javascript:;" onclick="x_admin_show('【{{.Name}}】小说章节列表', {{urlfor "admin.ChapterController.Index" "novid" .Id}}, '980', '780')" class="ml-5" style="text-decoration:none">
+						<a title="查看章节列表" href="javascript:;" onclick="x_admin_show('【{{.Name}}】小说章节列表', {{urlfor "admin.ChapterController.Index" "novid" .Id}})" class="ml-5" style="text-decoration:none">
 							<i class="layui-icon">&#xe62d;</i>
 						</a>
-						<a title="查看采集站点" href="javascript:;" onclick="x_admin_show('【{{.Name}}】小说采集站点列表', '{{urlfor "admin.NovelController.Links" "novid" .Id}}', 700, 550)" class="ml-5" style="text-decoration:none">
+						<a title="查看采集站点" href="javascript:;" onclick="x_admin_show('【{{.Name}}】小说采集站点列表', '{{urlfor "admin.NovelController.Links" "novid" .Id}}')" class="ml-5" style="text-decoration:none">
 							<i class="layui-icon">&#xe60a;</i>
 						</a>
 						<a title="执行采集" href="javascript:;" onclick="snatch_novel('{{.Id}}', '{{.Name}}')" class="ml-5" style="text-decoration:none">
@@ -121,14 +121,15 @@
 				return ;
 			}
 
-			x_admin_show('搜索采集小说', '{{urlfor "admin.NovelController.FindSnatchs"}}?kw='+kw, '920', '600');
+			x_admin_show('搜索采集小说', '{{urlfor "admin.NovelController.FindSnatchs"}}?kw='+kw);
 		}
 
 		// 批量删除提交
 		function del_all() {
 			layer.confirm('确认要删除吗？', function(index) {
-				// 捉到所有被选中的，发异步进行删除
-				layer.msg('删除成功', {icon: 1});
+                var ids = get_list_ids('all-x-select');
+				//发异步删除数据
+				ajax_post({{urlfor "admin.NovelController.DeleteBatch"}}, {ids: ids});
 			});
 		}
 

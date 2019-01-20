@@ -24,6 +24,7 @@ type MainController struct {
 
 // 登录页面
 func (this *MainController) Index() {
+	this.Data["LoginUserName"] = this.GetNickName()
 	this.Data["Menus"] = services.AdminService.GetMenus(this.GetUid())
 	this.View("main/index.tpl")
 }

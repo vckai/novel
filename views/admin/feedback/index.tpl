@@ -58,7 +58,7 @@
 					cont: 'page',
 					pages: {{.MaxPages}},
 					last: {{.MaxPages}},
-					curr: {{.p}},
+					curr: {{.Search.p}},
 					first: 1,
 					prev: '<em><</em>',
 					next: '<em>></em>',
@@ -74,9 +74,10 @@
 		  
 		//批量删除提交
 		 function delAll () {
-			layer.confirm('确认要删除吗？',function(index){
-				//捉到所有被选中的，发异步进行删除
-				layer.msg('删除成功', {icon: 1});
+			layer.confirm('确认要删除吗？', function(index) {
+                var ids = get_list_ids('all-x-select');
+				// 发异步删除数据
+				ajax_post({{urlfor "admin.FeedbackController.DeleteBatch"}}, {ids: ids});
 			});
 		 }
 	   

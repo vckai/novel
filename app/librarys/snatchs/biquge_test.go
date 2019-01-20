@@ -152,7 +152,7 @@ func TestBQGetChapter(t *testing.T) {
 		t.Fatal("获取章节内容错误", chap.Desc)
 	}
 
-	if info.PreUrl != "" {
+	if info.PreUrl != "" && !strings.Contains(info.PreUrl, "2940353.html") {
 		t.Fatal("获取上一页连接错误", info.PreUrl)
 	}
 

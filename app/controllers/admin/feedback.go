@@ -32,6 +32,7 @@ func (this *FeedbackController) Index() {
 	offset := (p - 1) * size
 	search := map[string]interface{}{
 		"q":     q,
+		"p":     p,
 		"count": true,
 	}
 	feeds, count := services.FeedbackService.GetAll(size, offset, search)
@@ -53,6 +54,21 @@ func (this *FeedbackController) Delete() {
 	err := services.FeedbackService.Delete(id)
 	if err != nil {
 		this.OutJson(1001, "删除反馈失败")
+	}
+
+	this.OutJson(0, "已删除！")
+}
+
+// 批量删除用户反馈
+func (this *FeedbackController) DeleteBatch() {
+	ids := this.GetStrings("ids[]")
+	if len(ids) == 0 {
+		this.OutJson(1001, "参数错误，无法访问")
+	}
+
+	err := services.FeedbackService.DeleteBatch(ids)
+	if err != nil {
+		this.OutJson(1002, "批量删除用户反馈失败")
 	}
 
 	this.OutJson(0, "已删除！")

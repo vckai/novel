@@ -42,7 +42,7 @@
 				$(obj).parents("tr").remove();
 
 				//发异步删除数据
-				ajax_post({{urlfor "admin.NovelController.DelLink"}}, {id: id, nov_id: nov_id, source: source});
+				ajax_post({{urlfor "admin.NovelController.DelLink"}}, {id: id, nov_id: nov_id, source: source}, "", true, false);
 			});
 		}
 	</script>

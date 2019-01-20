@@ -9,14 +9,12 @@
 	</div>
 	<div class="x-body">
 		<xblock>
-			<button class="layui-btn layui-btn-danger" onclick="del_all()"><i class="layui-icon">&#xe640;</i>批量删除</button>
-			<button class="layui-btn" onclick="x_admin_show('添加管理员', '{{urlfor "admin.AdminController.Add"}}', '550', '550')"><i class="layui-icon">&#xe608;</i>添加</button>
+			<button class="layui-btn" onclick="x_admin_show('添加管理员', '{{urlfor "admin.AdminController.Add"}}')"><i class="layui-icon">&#xe608;</i>添加</button>
 			<span class="x-right" style="line-height:40px">共有数据：{{.admins_count}} 条</span>
 		</xblock>
 		<table class="layui-table">
 			<thead>
 				<tr>
-					<th><input type="checkbox" name="" value="" class="all-select"></th>
 					<th>ID</th>
 					<th>账号</th>
 					<th>昵称</th>
@@ -34,7 +32,6 @@
 			<tbody>
 			{{range .admins}}
 				<tr>
-					<td><input type="checkbox" value="{{.Id}}" name="" class="all-x-select"></td>
 					<td>{{.Id}}</td>
 					<td>{{.Account}}</td>
 					<td>{{.Name}}</td>
@@ -47,10 +44,10 @@
 					<td>{{datetime .LastLoginedAt "2006-01-02 15:04"}}</td>
 					<td>{{datetime .CreatedAt "2006-01-02 15:04"}}</td>
 					<td class="td-manage">
-						<a title="编辑管理员" href="javascript:;" onclick="x_admin_show('编辑管理员', {{urlfor "admin.AdminController.Edit" "id" .Id}}, '500', '500')" class="ml-5" style="text-decoration:none">
+						<a title="编辑管理员" href="javascript:;" onclick="x_admin_show('编辑管理员', {{urlfor "admin.AdminController.Edit" "id" .Id}})" class="ml-5" style="text-decoration:none">
 							<i class="layui-icon">&#xe642;</i>
 						</a>
-						<a onclick="x_admin_show('修改密码', '{{urlfor "admin.AdminController.EditPass" "id" .Id}}', '480', '300')" href="javascript:;" title="修改密码">
+						<a onclick="x_admin_show('修改密码', '{{urlfor "admin.AdminController.EditPass" "id" .Id}}')" href="javascript:;" title="修改密码">
 							<i class="layui-icon">&#xe631;</i>
 						</a>
 						<a title="删除" href="javascript:;" onclick="role_del(this,'{{.Id}}')" style="text-decoration:none">
@@ -69,14 +66,6 @@
 				$ = layui.jquery; //jquery
 				laypage = layui.laypage; //分页
 				layer = layui.layer; //弹出层
-			});
-		}
-
-		// 批量删除提交
-		function del_all() {
-			layer.confirm('确认要删除吗？', function(index) {
-				// 捉到所有被选中的，发异步进行删除
-				layer.msg('删除成功', {icon: 1});
 			});
 		}
 

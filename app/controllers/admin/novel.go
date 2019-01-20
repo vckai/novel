@@ -16,6 +16,7 @@ package admin
 
 import (
 	"math"
+	"strings"
 
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
@@ -200,6 +201,24 @@ func (this *NovelController) Delete() {
 
 	// 添加操作日记
 	this.AddLog(3002, "删除", name, id)
+
+	this.OutJson(0, "已删除！")
+}
+
+// 批量删除小说
+func (this *NovelController) DeleteBatch() {
+	ids := this.GetStrings("ids[]")
+	if len(ids) == 0 {
+		this.OutJson(1001, "参数错误，无法访问")
+	}
+
+	err := services.NovelService.DeleteBatch(ids)
+	if err != nil {
+		this.OutJson(1002, "批量删除小说失败")
+	}
+
+	// 添加操作日记
+	this.AddLog(3005, strings.Join(ids, ","))
 
 	this.OutJson(0, "已删除！")
 }

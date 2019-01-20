@@ -233,6 +233,7 @@ func (this *Biquge) GetChapter(rawurl string) (*SnatchInfo, error) {
 		`(?U)一秒记住(.*)免费阅读`,
 		`(?U)笔趣阁(.*)最新章节！`,
 		`(?U)http://(.*)html`,
+		`(?U)https://(.*)html`,
 	}
 
 	for _, v := range keyexs {
@@ -291,6 +292,11 @@ func (this *Biquge) GetChapters(rawurl string) ([]*SnatchInfo, error) {
 
 		// 获取章节名称，去重判断
 		chapText := s.Text()
+		// 过滤空章节目录
+		if strings.Contains(chapText, "章节目录") {
+			return
+		}
+
 		if strings.EqualFold(chapText, lastChap) {
 			return
 		}

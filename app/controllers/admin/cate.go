@@ -15,6 +15,8 @@
 package admin
 
 import (
+	"strings"
+
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
 	"github.com/vckai/novel/app/utils"
@@ -81,11 +83,29 @@ func (this *CateController) Delete() {
 
 	err := services.CateService.Delete(id)
 	if err != nil {
-		this.OutJson(1001, "删除管理员失败")
+		this.OutJson(1001, "删除分类失败")
 	}
 
 	// 添加操作日记
 	this.AddLog(3001, "删除", "", id)
+	this.OutJson(0, "已删除！")
+}
+
+// 批量删除分类
+func (this *CateController) DeleteBatch() {
+	ids := this.GetStrings("ids[]")
+	if len(ids) == 0 {
+		this.OutJson(1001, "参数错误，无法访问")
+	}
+
+	err := services.CateService.DeleteBatch(ids)
+	if err != nil {
+		this.OutJson(1002, "批量删除分类失败")
+	}
+
+	// 添加操作日记
+	this.AddLog(3004, strings.Join(ids, ","))
+
 	this.OutJson(0, "已删除！")
 }
 
@@ -113,8 +133,8 @@ func (this *CateController) save() {
 
 	err := services.CateService.Save(cate)
 	if err != nil {
-		log.Error(mtitle, "管理员失败：", err.Error())
-		this.OutJson(1003, mtitle+"管理员失败："+err.Error())
+		log.Error(mtitle, "分类失败：", err.Error())
+		this.OutJson(1003, mtitle+"分类失败："+err.Error())
 	}
 	// 添加操作日记
 	this.AddLog(3001, mtitle, cate.Name, cate.Id)

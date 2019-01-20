@@ -16,6 +16,7 @@ package models
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -138,13 +139,25 @@ func (m *Chapter) GetByTitle() error {
 // 修改
 func (m *Chapter) Update(fields ...string) error {
 	m.UpdatedAt = uint32(time.Now().Unix())
-	if len(fields) > 0 {
-		fields = append(fields, "updated_at")
+
+	sqlStr := fmt.Sprintf("UPDATE %s SET chapter_no=?, title=?, `desc`=?, updated_at=? WHERE id = ?", m.getTable())
+
+	_, err := m.newOrm().Raw(sqlStr, m.ChapterNo, m.Title, m.Desc, m.UpdatedAt, m.Id).Exec()
+
+	return err
+}
+
+// 批量删除
+func (m *Chapter) DeleteBatch(ids []string) error {
+	marks := make([]string, len(ids))
+	for i := range marks {
+		marks[i] = "?"
 	}
-	if _, err := m.newOrm().Update(m, fields...); err != nil {
-		return err
-	}
-	return nil
+	sqlStr := fmt.Sprintf("DELETE FROM %s WHERE `id` %s", m.getTable(), fmt.Sprintf("IN (%s)", strings.Join(marks, ", ")))
+
+	_, err := m.newOrm().Raw(sqlStr, ids).Exec()
+
+	return err
 }
 
 // 删除

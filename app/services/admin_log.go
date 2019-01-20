@@ -73,6 +73,15 @@ func (this *AdminLog) GetAll(size, offset int, args map[string]interface{}) ([]*
 	return AdminLogs, count
 }
 
+// 批量删除操作日记
+func (this *AdminLog) DeleteBatch(ids []string) error {
+	if len(ids) == 0 {
+		return errors.New("params error")
+	}
+
+	return models.AdminLogModel.DeleteBatch(ids)
+}
+
 // 删除操作日记
 func (this *AdminLog) Delete(id uint32) error {
 	if id < 0 {

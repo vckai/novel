@@ -42,7 +42,7 @@ func NewBanner() *Banner {
 	return &Banner{}
 }
 
-// 获取单个分类信息
+// 获取单个banner信息
 func (this *Banner) Get(id uint32) *models.Banner {
 	if id < 0 {
 		return nil
@@ -57,14 +57,23 @@ func (this *Banner) Get(id uint32) *models.Banner {
 	return banner
 }
 
-// 批量获取小说分类列表
+// 批量获取banner列表
 func (this *Banner) GetAll(args map[string]interface{}) []*models.Banner {
 	banners := models.BannerModel.GetAll(args)
 
 	return banners
 }
 
-// 删除小说分类
+// 批量删除banner
+func (this *Banner) DeleteBatch(ids []string) error {
+	if len(ids) == 0 {
+		return errors.New("params error")
+	}
+
+	return models.BannerModel.DeleteBatch(ids)
+}
+
+// 删除banner
 func (this *Banner) Delete(id uint32) error {
 	if id < 0 {
 		return errors.New("params error")

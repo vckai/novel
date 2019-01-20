@@ -62,6 +62,15 @@ func (this *Feedback) GetAll(size, offset int, args map[string]interface{}) ([]*
 	return feedbacks, count
 }
 
+// 批量删除反馈内容
+func (this *Feedback) DeleteBatch(ids []string) error {
+	if len(ids) == 0 {
+		return errors.New("params error")
+	}
+
+	return models.FeedbackModel.DeleteBatch(ids)
+}
+
 // 删除反馈内容
 func (this *Feedback) Delete(id uint32) error {
 	if id < 0 {

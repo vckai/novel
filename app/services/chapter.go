@@ -37,9 +37,7 @@ func (this *Chapter) Get(id uint64, novId uint32) *models.Chapter {
 		return nil
 	}
 
-	m := models.NewChapter()
-	m.NovId = novId
-	m.Id = id
+	m := &models.Chapter{Id: id, NovId: novId}
 
 	err := m.Read()
 	if err != nil {
@@ -141,6 +139,17 @@ func (this *Chapter) GetNovChaps(novId uint32, size, offset int, sort string, is
 	return chaps, count
 }
 
+// 批量删除小说章节
+func (this *Chapter) DeleteBatch(novId uint32, ids []string) error {
+	if len(ids) == 0 {
+		return errors.New("params error")
+	}
+	m := models.NewChapter()
+	m.NovId = novId
+
+	return m.DeleteBatch(ids)
+}
+
 // 删除操作章节
 func (this *Chapter) Delete(id uint64, novId uint32) error {
 	if id < 1 || novId < 1 {
@@ -154,7 +163,7 @@ func (this *Chapter) Delete(id uint64, novId uint32) error {
 	return m.Delete()
 }
 
-// 删除指定小说章节
+// 清空指定小说章节
 func (this *Chapter) DelByNovId(novId uint32) error {
 	if novId < 0 {
 		return errors.New("params error")
@@ -170,6 +179,7 @@ func (this *Chapter) DelByNovId(novId uint32) error {
 func (this *Chapter) Save(chapter *models.Chapter) error {
 	// 参数校验
 	valid := validation.Validation{}
+	valid.Required(chapter.ChapterNo, "chapterNoEmpty").Message("章节编号不能为空")
 	valid.Required(chapter.Title, "titleEmpty").Message("章节名称不能为空")
 	valid.MaxSize(chapter.Title, 100, "nameMax").Message("章节名称长度不能超过100个字符")
 	valid.Required(chapter.NovId, "novidEmpty").Message("所属小说不能为空")
@@ -183,7 +193,7 @@ func (this *Chapter) Save(chapter *models.Chapter) error {
 
 	var err error
 	if chapter.Id > 0 {
-		err = chapter.Update("nov_id", "title", "desc")
+		err = chapter.Update("nov_id", "title", "desc", "chapter_no")
 	} else {
 		err = chapter.Insert()
 	}

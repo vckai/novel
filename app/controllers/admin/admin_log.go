@@ -43,6 +43,7 @@ func (this *AdminLogController) Index() {
 	p, _ := this.GetInt("p")
 	offset := (p - 1) * size
 	search := map[string]interface{}{
+		"p":     p,
 		"st":    st,
 		"et":    et,
 		"q":     q,
@@ -61,12 +62,27 @@ func (this *AdminLogController) Index() {
 func (this *AdminLogController) Delete() {
 	id, _ := this.GetUint32("id")
 	if id < 1 {
-		this.Msg("参数错误，无法访问")
+		this.OutJson(1001, "参数错误，无法访问")
 	}
 
 	err := services.AdminLogService.Delete(id)
 	if err != nil {
-		this.OutJson(1001, "删除操作日记失败")
+		this.OutJson(1002, "删除操作日记失败")
+	}
+
+	this.OutJson(0, "已删除！")
+}
+
+// 批量删除操作日记
+func (this *AdminLogController) DeleteBatch() {
+	ids := this.GetStrings("ids[]")
+	if len(ids) == 0 {
+		this.OutJson(1001, "参数错误，无法访问")
+	}
+
+	err := services.AdminLogService.DeleteBatch(ids)
+	if err != nil {
+		this.OutJson(1002, "批量删除操作日记失败")
 	}
 
 	this.OutJson(0, "已删除！")

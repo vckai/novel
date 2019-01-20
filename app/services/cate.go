@@ -52,6 +52,15 @@ func (this *Cate) GetAll() []*models.Cate {
 	return cates
 }
 
+// 批量删除小说分类
+func (this *Cate) DeleteBatch(ids []string) error {
+	if len(ids) == 0 {
+		return errors.New("params error")
+	}
+
+	return models.CateModel.DeleteBatch(ids)
+}
+
 // 删除小说分类
 func (this *Cate) Delete(id uint32) error {
 	if id < 0 {

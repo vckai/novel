@@ -17,6 +17,7 @@ package services
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -287,10 +288,33 @@ func (this *Novel) GetList(size, offset int, args map[string]interface{}) ([]*mo
 }
 
 // 批量获取小说列表
-func (this *Novel) GetAll(size, offset int, args map[string]interface{}) ([]*models.Novel, int64) {
-	novs, count := models.NovelModel.GetAll(size, offset, args)
+func (this *Novel) GetAll(size, offset int, args map[string]interface{}, fields ...string) ([]*models.Novel, int64) {
+	novs, count := models.NovelModel.GetAll(size, offset, args, fields...)
 
 	return novs, count
+}
+
+// 批量删除小说
+func (this *Novel) DeleteBatch(ids []string) error {
+	if len(ids) == 0 {
+		return errors.New("params error")
+	}
+
+	err := models.NovelModel.DeleteBatch(ids)
+	if err != nil {
+		return err
+	}
+
+	// 删除小说章节列表
+	for _, id := range ids {
+		u64, err := strconv.ParseUint(id, 10, 32)
+		if err == nil {
+			novId := uint32(u64)
+			ChapterService.DelByNovId(novId)
+		}
+	}
+
+	return nil
 }
 
 // 删除小说
