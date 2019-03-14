@@ -70,8 +70,8 @@ func (this *Bqg5) IsBookURL(rawurl string) bool {
 		return false
 	}
 
-	re, _ := regexp.Compile(`(?U)\/[\d]{1,2}\_[\d]+\/`)
-	return re.MatchString(rawurl) && !strings.Contains(rawurl, ".html")
+	re, _ := regexp.Compile(`(?U)\/[\d]{1,5}\_[\d]+\/`)
+	return re.MatchString(rawurl)
 }
 
 // 是否可爬虫页面

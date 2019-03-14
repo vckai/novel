@@ -22,6 +22,8 @@ import (
 func TestUSGetNovel(t *testing.T) {
 	us := NewUs()
 
+	us.Proxy("http://vxvfoaaib:tL0ttIGxn8egZ@ip4.hahado.cn:35044")
+
 	info, err := us.GetNovel("https://www.x23us.com/book/66656")
 	if err != nil {
 		t.Fatal(err.Error())

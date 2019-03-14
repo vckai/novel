@@ -275,6 +275,8 @@ func (this *Us) GetChapter(rawurl string) (*SnatchInfo, error) {
 		"ＷＥＮｘｕｅＭＩ。ｃＯｍ",
 		"()",
 		"www.siluke.com",
+		"23us.com",
+		"x23us.com",
 	}
 	for _, v := range keywords {
 		chap.Desc = strings.Replace(chap.Desc, v, "", -1)

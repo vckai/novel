@@ -34,7 +34,7 @@ type Xs struct {
 const (
 	XS_SOURCE    = "31xs"
 	XS_TITLE     = "31小说网"
-	XS_URL       = "http://www.31xs.net"
+	XS_URL       = "http://www.31xs.org"
 	XS_NOT_COVER = XS_URL + "/modules/article/images/nocover.jpg"
 	//XS_SEARCH_URL = "http://zhannei.baidu.com/cse/search?s=7845455592055299828&entry=1&q=%s"
 	XS_SEARCH_URL = "http://www.31xs.org/search.php?keywords=%s"
@@ -81,8 +81,8 @@ func (this *Xs) IsBookURL(rawurl string) bool {
 		return false
 	}
 
-	re, _ := regexp.Compile(`(?U)\/[\d]{1,2}\/[\d]+\/`)
-	return re.MatchString(rawurl) && !strings.Contains(rawurl, ".html")
+	re, _ := regexp.Compile(`(?U)\/[\d]{1,5}\/[\d]+\/`)
+	return re.MatchString(rawurl)
 }
 
 // 是否可爬虫页面
