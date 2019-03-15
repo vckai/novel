@@ -147,6 +147,17 @@ func (m *Chapter) Update(fields ...string) error {
 	return err
 }
 
+// 修改章节浏览次数累加
+func (m *Chapter) UpdateViews(fields ...string) error {
+	m.UpdatedAt = uint32(time.Now().Unix())
+
+	sqlStr := fmt.Sprintf("UPDATE %s SET `views`=`views`+1, updated_at=? WHERE id = ?", m.getTable())
+
+	_, err := m.newOrm().Raw(sqlStr, m.UpdatedAt, m.Id).Exec()
+
+	return err
+}
+
 // 修改空章节信息
 func (m *Chapter) UpdateEmpty(fields ...string) error {
 	m.UpdatedAt = uint32(time.Now().Unix())
@@ -198,7 +209,7 @@ func (m *Chapter) GetEmptyChaps() []*Chapter {
 func (m *Chapter) GetNovChaps(size, offset int, sort string) []*Chapter {
 	list := make([]*Chapter, 0)
 
-	m.newOrm().Raw(fmt.Sprintf("SELECT id, title, views, chapter_no, created_at FROM %s WHERE nov_id=? ORDER BY chapter_no %s LIMIT ? OFFSET ?", m.getTable(), sort), m.NovId, size, offset).QueryRows(&list)
+	m.newOrm().Raw(fmt.Sprintf("SELECT id, nov_id, title, views, status, try_views, chapter_no, created_at FROM %s WHERE nov_id=? ORDER BY chapter_no %s LIMIT ? OFFSET ?", m.getTable(), sort), m.NovId, size, offset).QueryRows(&list)
 
 	return list
 }
@@ -240,4 +251,12 @@ func (m *Chapter) GetByChapNo(asc string) error {
 	err := m.newOrm().Raw(fmt.Sprintf("SELECT id, title, link, chapter_no FROM %s WHERE nov_id=? AND chapter_no %s ? ORDER BY chapter_no %s", m.getTable(), lt, sort), m.NovId, m.ChapterNo).QueryRow(m)
 
 	return err
+}
+
+// 获取是否推荐
+func (m Chapter) StatusName() string {
+	if m.Status == 1 {
+		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">采集失败</span>`
+	}
+	return `<span class="layui-btn layui-btn-normal layui-btn-mini">采集成功</span>`
 }

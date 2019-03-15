@@ -216,6 +216,13 @@ func (this *Chapter) Save(chapter *models.Chapter) error {
 	return err
 }
 
+// 章节浏览次数累加
+func (this *Chapter) UpdateViews(chapter *models.Chapter) error {
+	err := chapter.UpdateViews()
+
+	return err
+}
+
 // 更新空章节信息
 func (this *Chapter) UpdateEmpty(chapter *models.Chapter) error {
 	chapter.TryViews++

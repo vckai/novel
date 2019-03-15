@@ -33,6 +33,8 @@
 					<th>编号</th>
 					<th>章节标题</th>
 					<th>浏览次数</th>
+					<th>章节状态</th>
+					<th>采集重试次数</th>
 					<th>更新时间</th>
 					<th>操作</th>
 				</tr>
@@ -42,8 +44,10 @@
 				<tr>
 					<td><input type="checkbox" value="{{.Id}}" name="" class="all-x-select"></td>
 					<td>{{.ChapterNo}}</td>
-					<td>{{.Title}}</td>
+					<td><a href="{{urlfor "home.BookController.Detail" "id" .Id "novid" .NovId}}" target="_blank">{{.Title}}</a></td>
 					<td>{{.Views}}</td>
+					<td>{{str2html .StatusName}}</td>
+					<td>{{.TryViews}}</td>
 					<td>{{datetime .CreatedAt "2006-01-02 15:04:05"}}</td>
 					<td class="td-manage">
 						<a title="编辑章节" href="javascript:;" onclick="x_admin_show('编辑章节', {{urlfor "admin.ChapterController.Edit" "id" .Id "novid" $.Search.novId}})" class="ml-5" style="text-decoration:none">

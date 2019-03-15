@@ -85,6 +85,9 @@ func (this *BookController) Detail() {
 		this.Msg("该章节不存在或者已被删除")
 	}
 
+	// 浏览次数增加
+	services.ChapterService.UpdateViews(chap)
+
 	// 获取小说详情
 	nov := services.NovelService.Get(chap.NovId)
 	if nov == nil {
