@@ -136,13 +136,24 @@ func (m *Chapter) GetByTitle() error {
 	return err
 }
 
-// 修改
+// 修改章节信息
 func (m *Chapter) Update(fields ...string) error {
 	m.UpdatedAt = uint32(time.Now().Unix())
 
 	sqlStr := fmt.Sprintf("UPDATE %s SET chapter_no=?, title=?, `desc`=?, updated_at=? WHERE id = ?", m.getTable())
 
 	_, err := m.newOrm().Raw(sqlStr, m.ChapterNo, m.Title, m.Desc, m.UpdatedAt, m.Id).Exec()
+
+	return err
+}
+
+// 修改空章节信息
+func (m *Chapter) UpdateEmpty(fields ...string) error {
+	m.UpdatedAt = uint32(time.Now().Unix())
+
+	sqlStr := fmt.Sprintf("UPDATE %s SET `desc`=?, `status`=?, `try_views`=?, updated_at=? WHERE id = ?", m.getTable())
+
+	_, err := m.newOrm().Raw(sqlStr, m.Desc, m.Status, m.TryViews, m.UpdatedAt, m.Id).Exec()
 
 	return err
 }
@@ -172,6 +183,15 @@ func (m *Chapter) DelByNovId() error {
 	err := m.newOrm().Raw(fmt.Sprintf("DELETE FROM %s WHERE nov_id=?", m.getTable()), m.NovId).QueryRow(m)
 
 	return err
+}
+
+// 获取小说空章节列表
+func (m *Chapter) GetEmptyChaps() []*Chapter {
+	list := make([]*Chapter, 0)
+
+	m.newOrm().Raw(fmt.Sprintf("SELECT id, nov_id, chapter_no, title, source, link, try_views FROM %s WHERE nov_id=? AND status = 1", m.getTable()), m.NovId).QueryRows(&list)
+
+	return list
 }
 
 // 获取小说章节列表

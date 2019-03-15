@@ -97,6 +97,9 @@ func (this *SnatchTask) Run() {
 		return
 	}
 
+	// 修复空章节
+	this.fixEmptyChaps()
+
 	// 修改运行状态
 	this.upRunStatus(TASKRUNING)
 
@@ -141,6 +144,50 @@ func (this *SnatchTask) IsGc() bool {
 	return false
 }
 
+// 修复采集失败的空章节
+func (this *SnatchTask) fixEmptyChaps() {
+	nov := NovelService.Get(this.novId)
+	if nov == nil {
+		log.Debug("[小说修复任务] ID:", this.novId, " 不存在")
+		return
+	}
+	// 获取小说空章节列表
+	// 用于重试修复空章节
+	emptyChaps := ChapterService.GetEmptyChaps(this.novId)
+	if emptyChaps == nil {
+		log.Debug("[小说修复任务] ID:", this.novId, " 无需修复")
+		return
+	}
+
+	succ := 0
+	errNum := 0
+	novTextNum := 0
+
+	for _, v := range emptyChaps {
+		info, err := SnatchService.GetChapter(v.Source, v.Link)
+		if err != nil {
+			errNum++
+			log.Warn("[小说修复任务] ID:", nov.Id, " 小说:", nov.Name, " provider:", v.Source, " 章节:", v.ChapterNo, " 获取失败:", err.Error())
+			v.Status = 1
+		} else {
+			v.Desc = info.Chap.Desc
+			v.Status = 0
+			succ++
+			novTextNum += utf8.RuneCountInString(info.Chap.Desc)
+		}
+
+		ChapterService.UpdateEmpty(v)
+	}
+
+	// 调整小说字数
+	NovelService.UpChapterTextNum(nov.Id, novTextNum)
+
+	log.Info("[小说修复任务] ID:", nov.Id,
+		" 小说:", nov.Name,
+		" 修复成功:", succ,
+		" 修复失败:", errNum)
+}
+
 // 更新小说章节
 func (this *SnatchTask) upChapter(source, chapLink string) uint8 {
 	nov := NovelService.Get(this.novId)
@@ -169,7 +216,7 @@ func (this *SnatchTask) upChapter(source, chapLink string) uint8 {
 	chapterNo := uint32(0)
 	if lastChap != nil && lastChap.Id > 0 {
 		for k, v := range chapLinks {
-			if lastChap.Title == v.Chap.Title {
+			if lastChap.Title == v.Chap.Title || lastChap.Link == v.Chap.Link {
 				index = k + 1
 				chapterNo = lastChap.ChapterNo
 				break
@@ -202,6 +249,7 @@ func (this *SnatchTask) upChapter(source, chapLink string) uint8 {
 
 		info, err := SnatchService.GetChapter(source, v.Chap.Link)
 
+		// 获取章节失败
 		if err != nil {
 			log.Warn("[小说更新任务] ID:", nov.Id, " 小说:", nov.Name, " provider:", source, " 章节:", chapterNo, " 获取失败:", err.Error())
 			info = v
@@ -213,8 +261,9 @@ func (this *SnatchTask) upChapter(source, chapLink string) uint8 {
 
 		// 跳过无用的章节
 		if strings.Contains(chap.Title, "请假一晚") ||
+			strings.Contains(chap.Title, "请假一天") ||
 			strings.Contains(chap.Title, "今天无更") ||
-			strings.Contains(chap.Title, "今日无更") ||
+			strings.Contains(chap.Title, "晚点更新") ||
 			strings.Contains(chap.Title, "更新延迟") {
 			continue
 		}

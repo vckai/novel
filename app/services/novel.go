@@ -52,7 +52,6 @@ func (this *Novel) IsExists(name string) bool {
 func (this *Novel) GetLinks(novId uint32) []*models.NovelLinks {
 	args := map[string]interface{}{
 		"nov_id": novId,
-		//"source": "31xs",
 	}
 
 	links, _ := models.NovelLinksModel.GetAll(100, 0, args)
@@ -416,11 +415,23 @@ func (this *Novel) UpNovelInfo(nov *models.Novel) error {
 	return err
 }
 
-// 修改章节信息
-func (this *Novel) UpChapterInfo(novId uint32, novTextNum, chapterNum int, chapterId uint64, chapterTitle string, status uint8) {
+// 修改小说文字数
+func (this *Novel) UpChapterTextNum(novId uint32, novTextNum int) error {
 	nov := this.Get(novId)
 	if nov == nil {
-		return
+		return errors.New("小说不存在")
+	}
+
+	nov.TextNum += uint32(novTextNum)
+
+	return nov.Update("text_num")
+}
+
+// 修改章节信息
+func (this *Novel) UpChapterInfo(novId uint32, novTextNum, chapterNum int, chapterId uint64, chapterTitle string, status uint8) error {
+	nov := this.Get(novId)
+	if nov == nil {
+		return errors.New("小说不存在")
 	}
 
 	nov.ChapterNum += uint32(chapterNum)
@@ -433,7 +444,7 @@ func (this *Novel) UpChapterInfo(novId uint32, novTextNum, chapterNum int, chapt
 		nov.Status = status
 	}
 
-	nov.Update("text_num", "chapter_num", "chapter_id", "chapter_title", "chapter_updated_at", "status")
+	return nov.Update("text_num", "chapter_num", "chapter_id", "chapter_title", "chapter_updated_at", "status")
 }
 
 // 添加/修改

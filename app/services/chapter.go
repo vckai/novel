@@ -118,6 +118,21 @@ func (this *Chapter) GetLast(novId uint32) *models.Chapter {
 	return m
 }
 
+// 获取小说空章节列表
+func (this *Chapter) GetEmptyChaps(novId uint32) []*models.Chapter {
+	if novId < 1 {
+		return nil
+	}
+
+	m := models.NewChapter()
+	m.NovId = novId
+
+	// 获取小说空章节列表
+	chaps := m.GetEmptyChaps()
+
+	return chaps
+}
+
 // 获取小说章节列表
 func (this *Chapter) GetNovChaps(novId uint32, size, offset int, sort string, isCount bool) ([]*models.Chapter, int64) {
 	if novId < 1 {
@@ -197,6 +212,14 @@ func (this *Chapter) Save(chapter *models.Chapter) error {
 	} else {
 		err = chapter.Insert()
 	}
+
+	return err
+}
+
+// 更新空章节信息
+func (this *Chapter) UpdateEmpty(chapter *models.Chapter) error {
+	chapter.TryViews++
+	err := chapter.UpdateEmpty()
 
 	return err
 }
