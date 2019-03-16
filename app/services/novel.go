@@ -416,13 +416,17 @@ func (this *Novel) UpNovelInfo(nov *models.Novel) error {
 }
 
 // 修改小说文字数
-func (this *Novel) UpChapterTextNum(novId uint32, novTextNum int) error {
+func (this *Novel) UpChapterTextNum(novId uint32, novTextNum int, isAdded bool) error {
 	nov := this.Get(novId)
 	if nov == nil {
 		return errors.New("小说不存在")
 	}
 
-	nov.TextNum += uint32(novTextNum)
+	if isAdded {
+		nov.TextNum += uint32(novTextNum)
+	} else {
+		nov.TextNum -= uint32(novTextNum)
+	}
 
 	return nov.Update("text_num")
 }

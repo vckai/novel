@@ -37,6 +37,7 @@ type Chapter struct {
 	Link      string `orm:"size(100)"`
 	Source    string `orm:"size(10)"`
 	Views     uint32 `orm:"size(11);default(0);"`
+	TextNum   uint32 `orm:"size(11);default(0);"`
 	Status    uint8  `orm:"size(1);default(0);"`
 	TryViews  uint8  `orm:"size(2);default(0);"`
 	CreatedAt uint32 `orm:"size(11);default(0);"`
@@ -90,9 +91,9 @@ func (m *Chapter) Insert() error {
 	m.CreatedAt = uint32(time.Now().Unix())
 	m.UpdatedAt = uint32(time.Now().Unix())
 
-	sqlStr := fmt.Sprintf("INSERT INTO %s SET nov_id=?, chapter_no=?, title=?, `desc`=?, link=?, source=?, views=?, status=?, created_at=?, updated_at=?", m.getTable())
+	sqlStr := fmt.Sprintf("INSERT INTO %s SET nov_id=?, chapter_no=?, title=?, `desc`=?, link=?, source=?, views=?, text_num=?, status=?, created_at=?, updated_at=?", m.getTable())
 
-	_, err := m.newOrm().Raw(sqlStr, m.NovId, m.ChapterNo, m.Title, m.Desc, m.Link, m.Source, m.Views, m.Status, m.CreatedAt, m.UpdatedAt).Exec()
+	_, err := m.newOrm().Raw(sqlStr, m.NovId, m.ChapterNo, m.Title, m.Desc, m.Link, m.Source, m.Views, m.TextNum, m.Status, m.CreatedAt, m.UpdatedAt).Exec()
 
 	return err
 }
@@ -110,8 +111,8 @@ func (m *Chapter) InsertMulti(chapters []*Chapter) error {
 		v.CreatedAt = uint32(time.Now().Unix())
 		v.UpdatedAt = uint32(time.Now().Unix())
 
-		sqlStr := fmt.Sprintf("INSERT INTO %s SET nov_id=?, chapter_no=?, title=?, `desc`=?, link=?, source=?, views=?, status=?, created_at=?, updated_at=?", v.getTable())
-		_, err := o.Raw(sqlStr, v.NovId, v.ChapterNo, v.Title, v.Desc, v.Link, v.Source, v.Views, v.Status, v.CreatedAt, v.UpdatedAt).Exec()
+		sqlStr := fmt.Sprintf("INSERT INTO %s SET nov_id=?, chapter_no=?, title=?, `desc`=?, link=?, source=?, views=?, text_num, status=?, created_at=?, updated_at=?", v.getTable())
+		_, err := o.Raw(sqlStr, v.NovId, v.ChapterNo, v.Title, v.Desc, v.Link, v.Source, v.Views, v.TextNum, v.Status, v.CreatedAt, v.UpdatedAt).Exec()
 		if err != nil {
 			o.Rollback()
 			return err
@@ -162,9 +163,9 @@ func (m *Chapter) UpdateViews(fields ...string) error {
 func (m *Chapter) UpdateEmpty(fields ...string) error {
 	m.UpdatedAt = uint32(time.Now().Unix())
 
-	sqlStr := fmt.Sprintf("UPDATE %s SET `desc`=?, `status`=?, `try_views`=?, updated_at=? WHERE id = ?", m.getTable())
+	sqlStr := fmt.Sprintf("UPDATE %s SET `desc`=?, `status`=?, `try_views`=?, `text_num`=?, updated_at=? WHERE id = ?", m.getTable())
 
-	_, err := m.newOrm().Raw(sqlStr, m.Desc, m.Status, m.TryViews, m.UpdatedAt, m.Id).Exec()
+	_, err := m.newOrm().Raw(sqlStr, m.Desc, m.Status, m.TryViews, m.TextNum, m.UpdatedAt, m.Id).Exec()
 
 	return err
 }
@@ -203,6 +204,20 @@ func (m *Chapter) GetEmptyChaps() []*Chapter {
 	m.newOrm().Raw(fmt.Sprintf("SELECT id, nov_id, chapter_no, title, source, link, try_views FROM %s WHERE nov_id=? AND status = 1", m.getTable()), m.NovId).QueryRows(&list)
 
 	return list
+}
+
+// 获取多个章节字数统计
+func (m *Chapter) GetChapsTextNum(ids []string) int64 {
+	marks := make([]string, len(ids))
+	for i := range marks {
+		marks[i] = "?"
+	}
+
+	var total int64
+
+	m.newOrm().Raw(fmt.Sprintf("SELECT sum(text_num) FROM %s WHERE id IN (%s)", m.getTable(), strings.Join(marks, ", "))).QueryRow(&total)
+
+	return total
 }
 
 // 获取小说章节列表

@@ -162,7 +162,16 @@ func (this *Chapter) DeleteBatch(novId uint32, ids []string) error {
 	m := models.NewChapter()
 	m.NovId = novId
 
-	return m.DeleteBatch(ids)
+	// 获取章节字数，用于更新小说主信息
+	textNum := m.GetChapsTextNum(ids)
+
+	err := m.DeleteBatch(ids)
+
+	if err == nil {
+		NovelService.UpChapterTextNum(novId, int(textNum), false)
+	}
+
+	return err
 }
 
 // 删除操作章节
@@ -171,11 +180,19 @@ func (this *Chapter) Delete(id uint64, novId uint32) error {
 		return errors.New("params error")
 	}
 
-	m := models.NewChapter()
-	m.NovId = novId
-	m.Id = id
+	chapter := ChapterService.Get(id, novId)
 
-	return m.Delete()
+	if chapter == nil {
+		return errors.New("章节不存在")
+	}
+
+	err := chapter.Delete()
+
+	if err == nil {
+		NovelService.UpChapterTextNum(novId, int(chapter.TextNum), false)
+	}
+
+	return err
 }
 
 // 清空指定小说章节
@@ -187,7 +204,9 @@ func (this *Chapter) DelByNovId(novId uint32) error {
 	m := models.NewChapter()
 	m.NovId = novId
 
-	return m.DelByNovId()
+	err := m.DelByNovId()
+
+	return err
 }
 
 // 添加编辑小说章节内容

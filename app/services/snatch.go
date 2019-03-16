@@ -170,17 +170,22 @@ func (this *SnatchTask) fixEmptyChaps() {
 			log.Warn("[小说修复任务] ID:", nov.Id, " 小说:", nov.Name, " provider:", v.Source, " 章节:", v.ChapterNo, " 获取失败:", err.Error())
 			v.Status = 1
 		} else {
+			succ++
 			v.Desc = info.Chap.Desc
 			v.Status = 0
-			succ++
-			novTextNum += utf8.RuneCountInString(info.Chap.Desc)
+
+			// 字数计算
+			textNum := utf8.RuneCountInString(info.Chap.Desc)
+			novTextNum += textNum
+
+			v.TextNum = uint32(textNum)
 		}
 
 		ChapterService.UpdateEmpty(v)
 	}
 
 	// 调整小说字数
-	NovelService.UpChapterTextNum(nov.Id, novTextNum)
+	NovelService.UpChapterTextNum(nov.Id, novTextNum, true)
 
 	log.Info("[小说修复任务] ID:", nov.Id,
 		" 小说:", nov.Name,
@@ -274,8 +279,12 @@ func (this *SnatchTask) upChapter(source, chapLink string) uint8 {
 		}
 
 		chapterNum += 1
-		novTextNum += utf8.RuneCountInString(chap.Desc)
 
+		// 章节数统计
+		textNum := utf8.RuneCountInString(info.Chap.Desc)
+		novTextNum += textNum
+
+		chap.TextNum = uint32(textNum)
 		chap.NovId = nov.Id
 		chap.ChapterNo = chapterNo
 		chap.Source = source
