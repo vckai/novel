@@ -38,9 +38,6 @@
 				<div class="layui-input-inline">
 					<input type="text" id="mail" name="mail" value="{{.admin.Mail}}" autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-form-mid layui-word-aux">
-					<span class="x-red">*</span>
-				</div>
 			</div>
 			<div class="layui-form-item">
 				<label for="role" class="layui-form-label">

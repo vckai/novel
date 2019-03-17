@@ -9,7 +9,7 @@
 				  <li class="layui-nav-item">
 					<a href="javascript:;">{{.LoginUserName}}</a>
 					<dl class="layui-nav-child"> <!-- 二级菜单 -->
-					  <dd><a>个人信息</a></dd>
+                      <dd><a href="javascript:;" onclick="x_admin_show('个人信息',  '{{urlfor "admin.AdminController.Edit"}}')">个人信息</a></dd>
 					  <dd><a href="{{urlfor "admin.LoginController.Logout"}}">退出</a></dd>
 					</dl>
 				  </li>
@@ -36,3 +36,11 @@
 		<div class="site-mobile-shade">
 		</div>
 	</div>
+        <script>
+        window.onload = function() {
+            layui.use(['layer'], function() {
+                $ = layui.jquery; //jquery
+                layer = layui.layer; //弹出层
+            });
+        }
+    </script>
