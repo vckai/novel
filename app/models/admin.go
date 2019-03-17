@@ -113,7 +113,7 @@ func (m *Admin) GetByAccount(account string) *Admin {
 	}
 
 	var a Admin
-	m.query().Filter("account", account).One(&a, "id", "account", "password", "mail", "mobile", "group_id", "login_visit", "last_login_ip", "last_logined_at", "created_at")
+	m.query().Filter("account", account).One(&a, "id", "account", "password", "name", "mail", "mobile", "group_id", "login_visit", "last_login_ip", "last_logined_at", "created_at")
 
 	if a.Id < 1 {
 		return nil
