@@ -111,7 +111,7 @@ func (m *Chapter) InsertMulti(chapters []*Chapter) error {
 		v.CreatedAt = uint32(time.Now().Unix())
 		v.UpdatedAt = uint32(time.Now().Unix())
 
-		sqlStr := fmt.Sprintf("INSERT INTO %s SET nov_id=?, chapter_no=?, title=?, `desc`=?, link=?, source=?, views=?, text_num, status=?, created_at=?, updated_at=?", v.getTable())
+		sqlStr := fmt.Sprintf("INSERT INTO %s SET nov_id=?, chapter_no=?, title=?, `desc`=?, link=?, source=?, views=?, text_num=?, status=?, created_at=?, updated_at=?", v.getTable())
 		_, err := o.Raw(sqlStr, v.NovId, v.ChapterNo, v.Title, v.Desc, v.Link, v.Source, v.Views, v.TextNum, v.Status, v.CreatedAt, v.UpdatedAt).Exec()
 		if err != nil {
 			o.Rollback()
