@@ -35,8 +35,8 @@ Go环境和MySQL请自行安装。
 
 1. 下载源码
 ```
-git clone http://github.com/vckai/novel.git
-cd novel
+go get -u github.com/vckai/novel
+cd $GOPATH/src/github.com/vckai/novel
 go build
 ```
 
