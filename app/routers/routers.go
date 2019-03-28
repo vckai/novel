@@ -33,6 +33,15 @@ func init() {
 	beego.AutoRouter(&home.HomeController{})
 	beego.AutoRouter(&home.BookController{})
 
+	// 禁止浏览器页面缓存
+	var FilterNoCache = func(ctx *context.Context) {
+		ctx.Output.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+		ctx.Output.Header("Pragma", "no-cache")
+		ctx.Output.Header("Expires", "0")
+	}
+
+	beego.InsertFilter("/*", beego.BeforeStatic, FilterNoCache)
+
 	// APP接口
 	appRouters()
 
