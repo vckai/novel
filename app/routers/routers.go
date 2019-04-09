@@ -19,7 +19,6 @@ import (
 	"github.com/astaxie/beego/context"
 
 	"github.com/vckai/novel/app/controllers/admin"
-	"github.com/vckai/novel/app/controllers/api"
 	"github.com/vckai/novel/app/controllers/home"
 	"github.com/vckai/novel/app/controllers/m"
 )
@@ -42,37 +41,11 @@ func init() {
 
 	beego.InsertFilter("/*", beego.BeforeStatic, FilterNoCache)
 
-	// APP接口
-	appRouters()
-
 	// H5网站
 	mRouters()
 
 	// 管理后台
 	adminRouters()
-}
-
-func appRouters() {
-	// APP接口
-	ns := beego.NewNamespace("/api",
-		// 路由执行前置条件
-		beego.NSCond(func(ctx *context.Context) bool {
-			return true
-		}),
-
-		beego.NSRouter("/", &api.HomeController{}, "GET:Index"),
-
-		// 首页路由
-		beego.NSAutoRouter(&api.HomeController{}),
-
-		// 小说路由
-		beego.NSAutoRouter(&api.BookController{}),
-
-		// 转发小说路由
-		beego.NSAutoRouter(&api.SnatchController{}),
-	)
-
-	beego.AddNamespace(ns)
 }
 
 func mRouters() {
