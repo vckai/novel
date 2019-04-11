@@ -15,9 +15,12 @@
 package controllers
 
 import (
+	"strings"
+
 	"github.com/astaxie/beego"
 	"github.com/beego/i18n"
 
+	"github.com/vckai/novel/app/services"
 	"github.com/vckai/novel/app/utils"
 )
 
@@ -42,10 +45,15 @@ func (this *BaseController) Prepare() {
 func (this *BaseController) View(tpl string) {
 	// 系统参数
 	aOut := make(map[string]interface{})
-	aOut["ViewUrl"] = beego.AppConfig.String("static::viewurl")
-	aOut["Title"] = beego.AppConfig.String("website::title")
-	aOut["Keyword"] = beego.AppConfig.String("website::keyword")
-	aOut["Description"] = beego.AppConfig.String("website::description")
+	aOut["ViewUrl"] = services.ConfigService.String("ViewURL")
+	aOut["Title"] = services.ConfigService.String("Title")
+	aOut["SubTitle"] = services.ConfigService.String("SubTitle")
+	aOut["Keyword"] = services.ConfigService.String("Keyword")
+	aOut["Description"] = services.ConfigService.String("Description")
+	aOut["Icp"] = services.ConfigService.String("Icp")
+	aOut["Copyright"] = services.ConfigService.String("Copyright")
+	aOut["Logo"] = services.ConfigService.String("Logo")
+	aOut["Favicon"] = services.ConfigService.String("Favicon")
 	aOut["Version"] = beego.AppConfig.String("version")
 
 	// 获取控制器名称和方法名称
@@ -123,9 +131,24 @@ func (this *BaseController) Msg(msg string, args ...interface{}) {
 	this.Data["Msg"] = msg
 	this.Data["Wait"] = 2
 	this.Data["IsTop"] = isTop
-	this.Data["Title"] = beego.AppConfig.String("website::title")
+	this.Data["Title"] = services.ConfigService.String("Title")
 	this.Layout = ""
 	this.TplName = "message.tpl"
 	this.Render()
 	this.StopRun()
+}
+
+// 去除URLFor生成的URL前缀
+func (this *BaseController) URLFor(endpoint string, values ...interface{}) string {
+	url := beego.URLFor(endpoint, values...)
+
+	if url := services.ConfigService.String("MobileURL"); url != "" {
+		url = strings.Replace(url, "/m/", "/", 1)
+	}
+
+	if url := services.ConfigService.String("AdminURL"); url != "" {
+		url = strings.Replace(url, "/admin/", "/", 1)
+	}
+
+	return url
 }

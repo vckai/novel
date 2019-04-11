@@ -17,7 +17,6 @@ package admin
 import (
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
-	"github.com/vckai/novel/app/utils"
 	"github.com/vckai/novel/app/utils/log"
 )
 
@@ -47,7 +46,7 @@ func (this *BannerController) Add() {
 	this.Data["Zones"] = services.BannerService.Zones()
 	this.Data["Banner"] = models.NewBanner()
 	this.Data["IsAdd"] = true
-	this.Data["PostUrl"] = utils.URLFor("admin.BannerController.Add")
+	this.Data["PostUrl"] = this.URLFor("admin.BannerController.Add")
 	this.View("banner/add.tpl")
 }
 
@@ -72,7 +71,7 @@ func (this *BannerController) Edit() {
 	this.Data["Zones"] = services.BannerService.Zones()
 	this.Data["Banner"] = banner
 	this.Data["IsAdd"] = false
-	this.Data["PostUrl"] = utils.URLFor("admin.BannerController.Edit")
+	this.Data["PostUrl"] = this.URLFor("admin.BannerController.Edit")
 	this.View("banner/add.tpl")
 }
 

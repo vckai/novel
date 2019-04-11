@@ -42,7 +42,7 @@ CREATE TABLE `nov_admin` (
   `deleted_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `account` (`account`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='后台管理员表';
 
 LOCK TABLES `nov_admin` WRITE;
 /*!40000 ALTER TABLE `nov_admin` DISABLE KEYS */;
@@ -71,7 +71,7 @@ CREATE TABLE `nov_admin_log` (
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0',
   `deleted_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='后台操作日记表';
 
 
 
@@ -93,7 +93,7 @@ CREATE TABLE `nov_banner` (
   `deleted_at` int(10) unsigned NOT NULL DEFAULT '0',
   `ext` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网站banner配置表';
 
 
 
@@ -111,7 +111,7 @@ CREATE TABLE `nov_cate` (
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0',
   `deleted_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='小说分类表';
 
 LOCK TABLES `nov_cate` WRITE;
 /*!40000 ALTER TABLE `nov_cate` DISABLE KEYS */;
@@ -155,7 +155,7 @@ CREATE TABLE `nov_feedback` (
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0',
   `deleted_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='游客会员反馈表';
 
 
 
@@ -173,7 +173,7 @@ CREATE TABLE `nov_group` (
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0',
   `deleted_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='后台用户群组表';
 
 LOCK TABLES `nov_group` WRITE;
 /*!40000 ALTER TABLE `nov_group` DISABLE KEYS */;
@@ -218,7 +218,7 @@ CREATE TABLE `nov_novel` (
   `is_man_like` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否男生喜欢',
   `is_girl_like` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否女生喜欢',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='小说主信息表';
 
 
 
@@ -239,7 +239,7 @@ CREATE TABLE `nov_novel_links` (
   PRIMARY KEY (`id`),
   KEY `udx_link_source` (`source`,`link`),
   KEY `idx_novid` (`nov_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='小说采集站点链接关联表';
 
 
 
@@ -263,7 +263,7 @@ CREATE TABLE `nov_role` (
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0',
   `deleted_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='后台菜单权限表';
 
 LOCK TABLES `nov_role` WRITE;
 /*!40000 ALTER TABLE `nov_role` DISABLE KEYS */;
@@ -287,7 +287,47 @@ VALUES
 /*!40000 ALTER TABLE `nov_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
+# Dump of table nov_config
+# ------------------------------------------------------------
 
+DROP TABLE IF EXISTS `nov_config`;
+
+CREATE TABLE `nov_config` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `key` varchar(50) NOT NULL DEFAULT '' COMMENT '健值名',
+  `value` varchar(255) NOT NULL DEFAULT '' COMMENT '健值内容',
+  `created_at` int(11) unsigned NOT NULL DEFAULT '0',
+  `updated_at` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `udx_key` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网站配置表';
+
+LOCK TABLES `nov_role` WRITE;
+/*!40000 ALTER TABLE `nov_role` DISABLE KEYS */;
+
+INSERT INTO `nov_config` (`id`, `key`, `value`, `created_at`, `updated_at`)
+VALUES
+	(1, 'Title', '卡丘小说', 1554814419, 1554814419),
+	(2, 'SubTitle', '海量小说', 1554814419, 1554814419),
+	(3, 'Keyword', '小说,免费小说,热门小说,言情小说,小说下载,漫画,好文章,电子书', 1554814419, 1554814419),
+	(4, 'Description', '精彩小说尽在卡丘小说，提供海量热门小说免费在线阅读和下载，玄幻小说，武侠小说，原创小说，网游小说，都市小说，言情小说，青春小说，>    历史小说，军事小说，网游小说，科幻小说等多种丰富的内容类型', 1554814419, 1554814419),
+	(5, 'MobileURL', '', 1554814419, 1554814419),
+	(6, 'AdminURL', '', 1554814419, 1554814419),
+	(7, 'ViewURL', '/public/', 1554814419, 1554814419),
+	(8, 'Theme', 'default', 1554814419, 1554814419),
+	(9, 'MobileTheme', 'default', 1554814419, 1554814419),
+	(10, 'Logo', '/public/home/default/img/logo.png', 1554814419, 1554814419),
+	(11, 'Favicon', '/public/img/favicon.ico', 1554814419, 1554814419),
+	(12, 'Copyright', '© 2017 - 2019 KAQIU8.COM', 1554814419, 1554814419),
+	(13, 'Icp', '', 1554814419, 1554814419),
+	(14, 'IsSnatch', '0', 1554814419, 1554814419),
+	(15, 'Uptime', '1', 1554814419, 1554814419),
+	(16, 'NotUpStopDays', '10', 1554814419, 1554814419),
+	(17, 'ProxyMode', '0', 1554814419, 1554814419),
+	(18, 'ProxyURL', '', 1554814419, 1554814419);
+
+/*!40000 ALTER TABLE `nov_role` ENABLE KEYS */;
+UNLOCK TABLES;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

@@ -20,7 +20,6 @@ import (
 
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
-	"github.com/vckai/novel/app/utils"
 	"github.com/vckai/novel/app/utils/log"
 )
 
@@ -67,7 +66,7 @@ func (this *NovelController) Add() {
 	this.Data["IsUpdate"] = false
 	this.Data["Cates"] = services.CateService.GetAll()
 	this.Data["Snatchs"] = services.SnatchService.GetSnatchs()
-	this.Data["PostUrl"] = utils.URLFor("admin.NovelController.Add")
+	this.Data["PostUrl"] = this.URLFor("admin.NovelController.Add")
 	this.View("novel/add.tpl")
 }
 
@@ -182,7 +181,7 @@ func (this *NovelController) Edit() {
 	this.Data["IsUpdate"] = true
 	this.Data["Cates"] = services.CateService.GetAll()
 	this.Data["Snatchs"] = services.SnatchService.GetSnatchs()
-	this.Data["PostUrl"] = utils.URLFor("admin.NovelController.Edit")
+	this.Data["PostUrl"] = this.URLFor("admin.NovelController.Edit")
 	this.View("novel/add.tpl")
 }
 

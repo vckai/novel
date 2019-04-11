@@ -13,8 +13,8 @@
             <a id="footer_login" href="javascript:void(0)">登录</a>
         </nav>
  
-        <div class="foot-copyright">© 2017 kaqiu8.com</div>
-		<div class="foot-copyright" style="font-size: 12px;">所有内容均来自互联网和用户上传，如果侵权请联系我们删除！</div>
+        <div class="foot-copyright">{{.aOut.Copyright}} {{.aOut.Icp}}</div>
+		<div class="foot-copyright" style="font-size: 12px;">{{.aOut.Title}}所有内容均来自互联网和用户上传，如果侵权请联系我们删除！</div>
     </footer>
 
     <script type="text/javascript" src="{{.mOut.ViewUrl}}js/util.js" charset="utf-8"></script>

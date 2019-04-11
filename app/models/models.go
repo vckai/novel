@@ -31,6 +31,7 @@ var (
 	ChapterModel    *Chapter
 	FeedbackModel   *Feedback
 	BannerModel     *Banner
+	ConfigModel     *Config
 )
 
 // db初始化操作
@@ -84,4 +85,5 @@ func InitModel() {
 	ChapterModel = NewChapter()
 	FeedbackModel = NewFeedback()
 	BannerModel = NewBanner()
+	ConfigModel = NewConfig()
 }

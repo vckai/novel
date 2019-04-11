@@ -38,11 +38,6 @@ const (
 	IP_AUTO_PROXY
 )
 
-// 初始化小说采集列表
-func InitProxy() {
-	ProxyService.Run()
-}
-
 // 定义CrawlerService
 type Proxy struct {
 	ips  []string
@@ -50,11 +45,13 @@ type Proxy struct {
 }
 
 func NewProxy() *Proxy {
-	return &Proxy{}
+	p := &Proxy{}
+	p.Init()
+	return p
 }
 
 // 运行入口
-func (this *Proxy) Run() {
+func (this *Proxy) Init() {
 	// 代理配置模式
 	this.mode, _ = beego.AppConfig.Int("proxy_mode")
 	if this.mode != IP_AUTO_PROXY {

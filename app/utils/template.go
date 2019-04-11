@@ -30,7 +30,6 @@ func RegisterFuncMap() {
 	beego.AddFuncMap("add", Add)
 	beego.AddFuncMap("css", Css)
 	beego.AddFuncMap("num_format", NumFormat)
-	beego.AddFuncMap("urlfor", URLFor)
 }
 
 // 数字转换字符串
@@ -58,18 +57,6 @@ func SubstrNoHtml(s string, start, length int) string {
 	s = beego.Substr(s, start, length)
 
 	return s
-}
-
-// 去除URLFor生成的URL前缀
-func URLFor(endpoint string, values ...interface{}) string {
-	url := beego.URLFor(endpoint, values...)
-
-	if ok, _ := beego.AppConfig.Bool("domain"); ok {
-		url = strings.Replace(url, "/m/", "/", 1)
-		url = strings.Replace(url, "/admin/", "/", 1)
-	}
-
-	return url
 }
 
 // 加法计算

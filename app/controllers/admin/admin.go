@@ -17,7 +17,6 @@ package admin
 import (
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
-	"github.com/vckai/novel/app/utils"
 	"github.com/vckai/novel/app/utils/log"
 )
 
@@ -47,7 +46,7 @@ func (this *AdminController) Add() {
 	this.Data["admin"] = models.NewAdmin()
 	this.Data["IsAdd"] = true
 	this.Data["groups"] = groups
-	this.Data["PostUrl"] = utils.URLFor("admin.AdminController.Add")
+	this.Data["PostUrl"] = this.URLFor("admin.AdminController.Add")
 	this.View("admin/add.tpl")
 }
 
@@ -75,7 +74,7 @@ func (this *AdminController) Edit() {
 	this.Data["admin"] = admin
 	this.Data["IsAdd"] = false
 	this.Data["groups"] = groups
-	this.Data["PostUrl"] = utils.URLFor("admin.AdminController.Edit")
+	this.Data["PostUrl"] = this.URLFor("admin.AdminController.Edit")
 	this.View("admin/add.tpl")
 }
 

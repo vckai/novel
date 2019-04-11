@@ -15,10 +15,10 @@
 package home
 
 import (
-	"github.com/astaxie/beego"
 	"github.com/mssola/user_agent"
 
 	"github.com/vckai/novel/app/controllers"
+	"github.com/vckai/novel/app/services"
 )
 
 // 前台首页基类
@@ -33,22 +33,23 @@ func (this *BaseController) Prepare() {
 	// 判断是否移动端浏览器
 	ua := user_agent.New(this.Ctx.Input.UserAgent())
 	if ua.Mobile() {
-		mobile_url := beego.AppConfig.String("website::mobile_url")
-		if mobile_url == "" {
-			mobile_url = "/m"
+		mobileURL := services.ConfigService.String("MobileURL")
+
+		if mobileURL == "" {
+			mobileURL = "/m"
 		}
-		this.Ctx.Redirect(302, mobile_url)
+		this.Ctx.Redirect(302, mobileURL)
 	}
 
-	theme := beego.AppConfig.String("website::theme")
+	theme := services.ConfigService.String("Theme")
 
 	this.Module = "home/" + theme
 	this.Layout = "home/" + theme + "/layout.tpl"
 
 	// 模板参数
 	mOut := make(map[string]interface{})
-	mOut["ViewUrl"] = beego.AppConfig.String("static::viewurl") + this.Module + "/"
+	mOut["ViewUrl"] = services.ConfigService.String("ViewURL") + this.Module + "/"
 	this.Data["mOut"] = mOut
 
-	this.Data["Title"] = "海量小说、图书、免费小说、漫画，免费畅读"
+	this.Data["Title"] = services.ConfigService.String("Title")
 }

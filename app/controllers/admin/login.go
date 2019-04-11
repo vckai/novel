@@ -16,7 +16,6 @@ package admin
 
 import (
 	"github.com/vckai/novel/app/services"
-	"github.com/vckai/novel/app/utils"
 )
 
 type LoginController struct {
@@ -42,7 +41,7 @@ func (this *LoginController) Index() {
 // 退出登录
 func (this *LoginController) Logout() {
 	this.SetLogout()
-	this.Redirect(utils.URLFor("admin.LoginController.Index"), 301)
+	this.Redirect(this.URLFor("admin.LoginController.Index"), 301)
 }
 
 // 登录操作
@@ -73,5 +72,5 @@ func (this *LoginController) login() {
 	// 添加登录日记
 	this.AddLog(1001)
 
-	this.OutJson(0, "登录成功", "", utils.URLFor("admin.MainController.Index"), true)
+	this.OutJson(0, "登录成功", "", this.URLFor("admin.MainController.Index"), true)
 }

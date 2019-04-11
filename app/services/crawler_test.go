@@ -18,6 +18,6 @@ import (
 
 func TestCrawlerRun(t *testing.T) {
 	//CrawlerService.Init("us").Run()
-	cra, _ := CrawlerService.Init("31xs")
-	cra.Run()
+	//cra, _ := CrawlerService.Init("31xs")
+	//cra.Run()
 }

@@ -19,8 +19,6 @@ import (
 	"time"
 
 	"github.com/astaxie/beego/orm"
-
-	"github.com/vckai/novel/app/utils"
 )
 
 // 权限模型
@@ -134,7 +132,7 @@ func (m *Role) GetByPurview(module, action string) *Role {
 
 // 拼接URL地址
 func (m Role) Url() string {
-	return utils.URLFor(fmt.Sprintf("admin.%sController.%s", m.Module, m.Action))
+	return fmt.Sprintf("admin.%sController.%s", m.Module, m.Action)
 }
 
 // 获取是否菜单

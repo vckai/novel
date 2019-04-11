@@ -42,7 +42,7 @@ const (
 	TASKWAITGC
 
 	// gc运行时间间隔（分钟）
-	GCRUNTIME = 5
+	GCRUNTIME = 10
 
 	// 每次gc运行查找的数量
 	GCNUM = 100
@@ -51,13 +51,7 @@ const (
 var manager = NewSnatchTaskManager()
 
 // 初始化小说采集列表
-func InitSnatch() {
-	// 是否开启采集
-	isSnatch := beego.AppConfig.DefaultBool("novel::is_snatch", false)
-	if !isSnatch {
-		return
-	}
-
+func initSnatch() {
 	novLen := manager.LoadNovels()
 	log.Info("初始化小说更新任务:", novLen, "本")
 
@@ -130,7 +124,7 @@ func (this *SnatchTask) IsGc() bool {
 		return true
 	}
 
-	gcTime := beego.AppConfig.DefaultInt64("novel::upgcday", 10) * 60 * 60 * 24
+	gcTime := ConfigService.Int64("NotUpStopDays", 10) * 60 * 60 * 24
 	lastUpTime := time.Now().Unix() - this.lastUpChapTime
 
 	// 超过N天没更新章节的放入gc中
@@ -378,7 +372,7 @@ func (this *SnatchTaskManager) LoadNovels() int {
 // 获取章节小说更新
 func (this *SnatchTaskManager) Run() {
 
-	upTime := beego.AppConfig.DefaultInt64("novel::uptime", 10)
+	upTime := ConfigService.Int64("Uptime", 10)
 	ticker := time.NewTicker(time.Minute * time.Duration(upTime))
 	this.taskChans = make(chan *SnatchTask, 3000)
 
@@ -390,7 +384,10 @@ func (this *SnatchTaskManager) Run() {
 					return
 				}
 
-				task.Run()
+				// 是否开启自动采集更新
+				if ConfigService.Bool("IsSnatch", true) {
+					task.Run()
+				}
 			}
 		}()
 	}
@@ -398,7 +395,6 @@ func (this *SnatchTaskManager) Run() {
 	go func() {
 		for _ = range ticker.C {
 			for _, task := range this.tasks {
-				//task.Run()
 				this.taskChans <- task
 			}
 		}
@@ -452,18 +448,21 @@ func (this *SnatchTaskManager) gc() {
 
 	go func() {
 		for _ = range ticker.C {
-			log.Debug("gc running...")
-			i := 0
-			for novId, task := range this.tasks {
-				if i > GCNUM {
-					break
-				}
-				if task.IsGc() {
-					log.Debug("GC删除任务:", novId)
-					this.DelTask(novId)
-				}
+			// 是否开启自动采集更新
+			if ConfigService.Bool("IsSnatch", true) {
+				log.Debug("gc running...")
+				i := 0
+				for novId, task := range this.tasks {
+					if i > GCNUM {
+						break
+					}
+					if task.IsGc() {
+						log.Debug("GC删除任务:", novId)
+						this.DelTask(novId)
+					}
 
-				i++
+					i++
+				}
 			}
 		}
 	}()
@@ -602,7 +601,7 @@ func (this *Snatch) InitNovel(url string) error {
 			log.Warn("下载图片失败：", nov.Cover, err)
 			nov.Cover = ""
 		} else {
-			nov.Cover = beego.AppConfig.String("static::viewurl") + imgFile
+			nov.Cover = ConfigService.String("ViewURL") + imgFile
 		}
 		isUp = true
 		nv.Cover = nov.Cover

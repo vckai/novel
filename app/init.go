@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	VERSION = "0.0.5"
+	VERSION = "0.0.6"
 )
 
 var (
@@ -29,11 +29,10 @@ func init() {
 	// 初始化语言选项
 	initLang()
 
-	// 初始化采集
-	services.InitSnatch()
+	// 服务初始化配置
+	services.Init()
 
-	// 代理IP获取
-	services.InitProxy()
+	beego.AddFuncMap("urlfor", URLFor)
 
 	// 注册模板函数
 	utils.RegisterFuncMap()
@@ -55,4 +54,19 @@ func initLang() {
 	}
 
 	beego.AddFuncMap("i18n", i18n.Tr)
+}
+
+// 去除URLFor生成的URL前缀
+func URLFor(endpoint string, values ...interface{}) string {
+	url := beego.URLFor(endpoint, values...)
+
+	if url := services.ConfigService.String("MobileURL"); url != "" {
+		url = strings.Replace(url, "/m/", "/", 1)
+	}
+
+	if url := services.ConfigService.String("AdminURL"); url != "" {
+		url = strings.Replace(url, "/admin/", "/", 1)
+	}
+
+	return url
 }

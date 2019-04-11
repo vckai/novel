@@ -2,7 +2,7 @@
 	<div class="header" style="height:78px">
 	  <div class="searchbox">
 	      <a href="/" class="logo">
-	          <img src="{{.mOut.ViewUrl}}img/logo.png" alt="{{.aOut.Title}}">
+	          <img src="{{.aOut.Logo}}" alt="{{.aOut.Title}}">
 	      </a>
 	      <form action="{{urlfor "home.HomeController.Search"}}" method="get" class="searchform" id="searchForm" onsubmit="return checkSearch()">
 	          <div class="querybox">
@@ -10,7 +10,7 @@
 	              	<input type="text" value="{{.Search.q}}" name="kw" id="query" class="query" autocomplete="off">
 	             </div>
 	          </div>
-	          <div class="sbtn1"><input type="submit" value="卡丘搜索" onmouseout="this.className='btn1'" onmouseup="this.className='sbtn1'" onmousedown="this.className='btnactive'" id="searchBtn"></div>
+	          <div class="sbtn1"><input type="submit" value="搜索" onmouseout="this.className='btn1'" onmouseup="this.className='sbtn1'" onmousedown="this.className='btnactive'" id="searchBtn"></div>
 	          <div class="hotwords">热搜书籍：
 	          		<a href="{{urlfor "home.HomeController.Search" "kw" "圣墟"}}" target="_blank">圣墟</a>
 	          		<a href="{{urlfor "home.HomeController.Search" "kw" "雪鹰领主"}}" target="_blank">雪鹰领主</a>

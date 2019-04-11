@@ -2,13 +2,13 @@
 <!-- saved from url=(0023)http://yuedu.sogou.com/ -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>{{.Title}} - {{.aOut.Title}}</title>
+    <title>{{.aOut.Title}} - {{.aOut.SubTitle}}</title>
 	<meta name="keywords" content="{{.aOut.Keyword}}">
 	<meta name="description" content="{{.aOut.Description}}">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-	<link rel="icon" href="{{.aOut.ViewUrl}}img/favicon.ico" mce_href="{{.aOut.ViewUrl}}img/favicon.ico" type="image/x-icon"> 
-    <link rel="shortcut icon" href="{{.aOut.ViewUrl}}img/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="{{.aOut.Favicon}}" mce_href="{{.aOut.Favicon}}" type="image/x-icon"> 
+    <link rel="shortcut icon" href="{{.aOut.Favicon}}" type="image/x-icon" />
 	<link href="{{.mOut.ViewUrl}}css/header.css" rel="stylesheet" type="text/css">
   	<link href="{{.mOut.ViewUrl}}css/official-web.css" rel="stylesheet" type="text/css">
   	<link href="{{.mOut.ViewUrl}}css/detail.css" rel="stylesheet" type="text/css">

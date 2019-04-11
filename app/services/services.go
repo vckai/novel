@@ -27,13 +27,18 @@ var (
 	BannerService   *Banner
 	CrawlerService  *Crawler
 	ProxyService    *Proxy
+	ConfigService   *Config
 )
 
-func init() {
+func Init() {
 	initServices()
+
+	// 初始化采集
+	initSnatch()
 }
 
 func initServices() {
+	ConfigService = NewConfig()
 	RoleService = NewRole()
 	GroupService = NewGroup()
 	AdminService = NewAdmin()

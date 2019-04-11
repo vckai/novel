@@ -76,7 +76,7 @@ function ajax_post(url, data, tourl, is_alert, is_parent) {
 				if (typeof tourl == "function") {
 					tourl(res.data);
 				} else if (typeof tourl == "string") {
-					setTimeout(is_parent + "location.href='" + tourl + "'", is_alert ? 1000 : 0);
+					setTimeout(parent_script+ "location.href='" + tourl + "'", is_alert ? 1000 : 0);
 				}
 			}
 		} else {
@@ -88,7 +88,7 @@ function ajax_post(url, data, tourl, is_alert, is_parent) {
 			if (typeof res.is_top != "undefined" && res.is_top == true) {
 				setTimeout("top.location.href='" + res.url + "'", is_alert ? 1000 : 0);
 			} else {
-				setTimeout(is_parent + "location.href='" + res.url + "'", is_alert ? 1000 : 0);
+				setTimeout(parent_script+ "location.href='" + res.url + "'", is_alert ? 1000 : 0);
 			}
 		}
 		is_submit = true;

@@ -51,7 +51,7 @@ func (this *GroupController) Add() {
 	this.Data["group"] = models.NewGroup()
 	this.Data["IsUpdate"] = false
 	this.Data["roleHtml"] = roleHtml
-	this.Data["PostUrl"] = utils.URLFor("admin.GroupController.Add")
+	this.Data["PostUrl"] = this.URLFor("admin.GroupController.Add")
 	this.View("group/add.tpl")
 }
 
@@ -80,7 +80,7 @@ func (this *GroupController) Edit() {
 	this.Data["group"] = group
 	this.Data["IsUpdate"] = true
 	this.Data["roleHtml"] = roleHtml
-	this.Data["PostUrl"] = utils.URLFor("admin.GroupController.Edit")
+	this.Data["PostUrl"] = this.URLFor("admin.GroupController.Edit")
 	this.View("group/add.tpl")
 }
 

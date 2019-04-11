@@ -12,31 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package m
+package admin
 
 import (
-	"github.com/vckai/novel/app/controllers"
 	"github.com/vckai/novel/app/services"
 )
 
-// 前台首页基类
-type BaseController struct {
-	controllers.BaseController
+type ConfigController struct {
+	BaseController
 }
 
-// 初始化执行
-func (this *BaseController) Prepare() {
-	this.BaseController.Prepare()
+// 配置页面
+func (this *ConfigController) Index() {
+	tab := this.GetString("tab", "")
 
-	theme := services.ConfigService.String("MobileTheme")
+	this.Data["Tab"] = tab
 
-	this.Module = "m/" + theme
-	this.Layout = "m/" + theme + "/layout.tpl"
+	// 获取配置
+	this.Data["Config"] = services.ConfigService.GetAll()
 
-	// 模板参数
-	mOut := make(map[string]interface{})
-	mOut["ViewUrl"] = services.ConfigService.String("ViewURL") + this.Module + "/"
-	this.Data["mOut"] = mOut
+	this.View("config/index.tpl")
+}
 
-	this.Data["Title"] = services.ConfigService.String("Title")
+// 保存数据
+func (this *ConfigController) Save() {
+	configs := this.Input()
+
+	for key, val := range configs {
+		services.ConfigService.Set(key, val[0])
+	}
+
+	this.OutJson(0, "修改成功")
 }

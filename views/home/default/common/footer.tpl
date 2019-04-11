@@ -1,8 +1,7 @@
 <div id="footer">
 	{{.aOut.Title}}的所有小说由网友上传，如有侵犯版权，请来信告知，本站立即予以处理。
     <p>
-		© 2017 - <script type="text/javascript">document.write(new Date().getFullYear());</script> KAQIU8.COM 
-		<!--<a href="" target="_blank">免责声明</a>-->
+        {{.aOut.Copyright}} {{.aOut.Icp}}
 	</p>
 </div>
 

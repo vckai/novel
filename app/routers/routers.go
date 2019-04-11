@@ -114,6 +114,9 @@ func adminRouters() {
 		// 用户反馈
 		beego.NSAutoRouter(&admin.FeedbackController{}),
 
+		// 系统设置
+		beego.NSAutoRouter(&admin.ConfigController{}),
+
 		// 轮播管理
 		beego.NSAutoRouter(&admin.BannerController{}),
 	)

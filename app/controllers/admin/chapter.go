@@ -20,7 +20,6 @@ import (
 
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
-	"github.com/vckai/novel/app/utils"
 	"github.com/vckai/novel/app/utils/log"
 )
 
@@ -71,7 +70,7 @@ func (this *ChapterController) Add() {
 	this.Data["NovId"] = novId
 	this.Data["Chapter"] = models.NewChapter()
 	this.Data["IsUpdate"] = false
-	this.Data["PostUrl"] = utils.URLFor("admin.ChapterController.Add")
+	this.Data["PostUrl"] = this.URLFor("admin.ChapterController.Add")
 	this.View("chapter/add.tpl")
 }
 
@@ -97,7 +96,7 @@ func (this *ChapterController) Edit() {
 	this.Data["NovId"] = novId
 	this.Data["Chapter"] = chapter
 	this.Data["IsUpdate"] = true
-	this.Data["PostUrl"] = utils.URLFor("admin.ChapterController.Edit")
+	this.Data["PostUrl"] = this.URLFor("admin.ChapterController.Edit")
 	this.View("chapter/add.tpl")
 }
 

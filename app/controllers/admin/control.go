@@ -125,10 +125,10 @@ func (this *BaseController) Auth() {
 	// 未登录
 	if this.GetUid() < 1 {
 		if this.IsAjax() {
-			this.OutJson(1, "请先登录", "", utils.URLFor("admin.LoginController.Index"), true)
+			this.OutJson(1, "请先登录", "", this.URLFor("admin.LoginController.Index"), true)
 		}
 
-		this.Msg("请先登录", utils.URLFor("admin.LoginController.Index"), true)
+		this.Msg("请先登录", this.URLFor("admin.LoginController.Index"), true)
 	}
 
 	if services.AdminService.ValidPurview(this.GetUid(), this.controllerName, this.actionName) {
