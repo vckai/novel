@@ -42,6 +42,7 @@
 					<th>小说分类</th>
 					<th>小说状态</th>
 					<th>章节数</th>
+					<th>原创</th>
 					<th>热门</th>
 					<th>推荐</th>
 					<th>精品</th>
@@ -59,6 +60,7 @@
 					<td>{{.CateName}}</td>
 					<td>{{map_get .StatusList .Status}}</td>
 					<td>{{.ChapterNum}}</td>
+					<td>{{str2html .IsOriginalName}}</td>
 					<td>{{str2html .IsHotName}}</td>
 					<td>{{str2html .IsRecName}}</td>
 					<td>{{str2html .IsVipRecName}}</td>

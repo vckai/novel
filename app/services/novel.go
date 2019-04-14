@@ -66,7 +66,6 @@ func (this *Novel) GetByLink(link, source string) *models.NovelLinks {
 
 // 添加小说采集站点
 func (this *Novel) AddLink(novId uint32, link, source, chapterLink string) error {
-
 	// 采集点已存在则直接返回
 	novLink := this.GetByLink(link, source)
 	if novLink.Id > 0 {
@@ -459,7 +458,6 @@ func (this *Novel) Save(novel *models.Novel) error {
 	valid.MaxSize(novel.Name, 50, "nameMax").Message("小说名称长度不能超过50个字符")
 	valid.Required(novel.Author, "authorEmpty").Message("小说作者不能为空")
 	valid.MaxSize(novel.Author, 20, "authorMax").Message("作者名称不能超过20个字符")
-
 	valid.Required(novel.CateId, "cidEmpty").Message("小说分类不能为空")
 
 	if valid.HasErrors() {
@@ -478,10 +476,14 @@ func (this *Novel) Save(novel *models.Novel) error {
 
 	var err error
 	if novel.Id > 0 {
-		err = novel.Update("name", "desc", "cover", "cate_id", "cate_name", "author", "is_hot", "is_rec", "is_vip_rec", "is_today_rec", "status", "is_man_like", "is_girl_like")
+		err = novel.Update("name", "desc", "cover", "cate_id", "cate_name", "author", "is_original", "is_hot", "is_rec", "is_vip_rec", "is_today_rec", "status", "is_man_like", "is_girl_like")
 	} else {
 		novel.Status = models.BOOKOPEN
 		err = novel.Insert()
+	}
+
+	if err == nil && novel.IsOriginal == 0 {
+		manager.AddTask(novel.Id)
 	}
 
 	return err

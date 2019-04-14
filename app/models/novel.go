@@ -38,6 +38,7 @@ type Novel struct {
 	CateId           uint32 `orm:"size(11);default(0);"`
 	CateName         string `orm:"size(30);"`
 	Author           string `orm:"size(30);"`
+	IsOriginal       uint8  `orm:"size(1);default(0);"`
 	IsHot            uint8  `orm:"size(1);default(0);"`
 	IsRec            uint8  `orm:"size(1);default(0);"`
 	IsTodayRec       uint8  `orm:"size(1);default(0);"`
@@ -167,7 +168,7 @@ func (m *Novel) GetAll(size, offset int, args map[string]interface{}, fields ...
 
 	if count > 0 || isCount == false {
 		if len(fields) == 0 {
-			fields = []string{"id", "name", "author", "cate_id", "cate_name", "status", "is_hot", "is_rec", "is_vip_rec", "chapter_updated_at", "chapter_num"}
+			fields = []string{"id", "name", "author", "cate_id", "cate_name", "status", "is_original", "is_hot", "is_rec", "is_vip_rec", "chapter_updated_at", "chapter_num"}
 		}
 		qs.OrderBy(orderBy).Limit(size, offset).All(&list, fields...)
 	}
@@ -192,6 +193,15 @@ func (m Novel) StatusName() string {
 	}
 
 	return "未开始"
+}
+
+// 获取是否原创小说
+func (m Novel) IsOriginalName() string {
+	if m.IsOriginal == 0 {
+		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">否</span>`
+	}
+
+	return `<span class="layui-btn layui-btn-normal layui-btn-mini">是</span>`
 }
 
 // 获取是否热门
@@ -231,7 +241,7 @@ func (m *Novel) optionHandle(args map[string]interface{}) orm.QuerySeter {
 		qs = qs.Filter("name__contains", q.(string))
 	}
 
-	argsFilters := []string{"status", "is_hot", "is_rec", "is_vip_rec", "is_today_rec", "cate_id", "is_man_like", "is_girl_like"}
+	argsFilters := []string{"status", "is_original", "is_hot", "is_rec", "is_vip_rec", "is_today_rec", "cate_id", "is_man_like", "is_girl_like"}
 	for _, v := range argsFilters {
 		if c, ok := args[v]; ok && c.(int) > 0 {
 			qs = qs.Filter(v, c.(int))

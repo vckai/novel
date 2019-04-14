@@ -105,6 +105,14 @@
 				  <input type="checkbox" {{if .Novel.IsGirlLike}}checked="1"{{end}} name="is_girl_like" lay-skin="switch" lay-filter="switchTest" title="女生喜欢" value="1">
 				</div>
 			</div>
+			<div class="layui-form-item">
+				<label for="is_original" class="layui-form-label">
+					是否原创 
+				</label>
+				<div class="layui-input-inline">
+				  <input type="checkbox" {{if .Novel.IsOriginal}}checked="1"{{end}} name="is_original" lay-skin="switch" lay-filter="switchTest" title="原创" value="1">
+				</div>
+			</div>
 	
 			<div class="layui-form-item">
 				<input type="hidden" id="novel_id" name="novel_id" value="{{.Novel.Id}}">

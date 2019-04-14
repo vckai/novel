@@ -66,9 +66,14 @@ func (this *ChapterController) Add() {
 		this.save()
 		return
 	}
+	// 获取最后一章节
+	lastChap := services.ChapterService.GetLast(novId)
+
+	c := models.NewChapter()
+	c.ChapterNo = lastChap.ChapterNo + 1
 
 	this.Data["NovId"] = novId
-	this.Data["Chapter"] = models.NewChapter()
+	this.Data["Chapter"] = c
 	this.Data["IsUpdate"] = false
 	this.Data["PostUrl"] = this.URLFor("admin.ChapterController.Add")
 	this.View("chapter/add.tpl")

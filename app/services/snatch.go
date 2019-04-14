@@ -194,6 +194,10 @@ func (this *SnatchTask) upChapter(source, chapLink string) uint8 {
 		log.Debug("[小说更新任务] ID:", this.novId, " 不存在")
 		return TASKWAITGC
 	}
+	if nov.IsOriginal == 1 {
+		log.Debug("[小说更新任务] ID:", this.novId, " 原创小说不更新")
+		return TASKWAITGC
+	}
 
 	if nov.Status != snatchs.BOOKOPEN {
 		log.Debug("[小说更新任务] ID:", nov.Id, " 小说:", nov.Name, " 状态为:", nov.StatusName())

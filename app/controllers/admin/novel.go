@@ -284,6 +284,7 @@ func (this *NovelController) save() {
 	novel.Cover = this.GetString("cover")
 	novel.Author = this.GetString("author")
 	novel.CateId, _ = this.GetUint32("cate_id")
+	novel.IsOriginal, _ = this.GetUint8("is_original")
 	novel.IsHot, _ = this.GetUint8("is_hot")
 	novel.IsRec, _ = this.GetUint8("is_rec")
 	novel.IsVipRec, _ = this.GetUint8("is_vip_rec")
