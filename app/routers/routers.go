@@ -119,6 +119,12 @@ func adminRouters() {
 
 		// 轮播管理
 		beego.NSAutoRouter(&admin.BannerController{}),
+
+		// 搜索记录管理
+		beego.NSAutoRouter(&admin.SearchController{}),
+
+		// 搜索日记管理
+		beego.NSAutoRouter(&admin.SearchLogController{}),
 	)
 
 	beego.AddNamespace(ns)

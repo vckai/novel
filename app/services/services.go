@@ -15,19 +15,21 @@
 package services
 
 var (
-	RoleService     *Role
-	GroupService    *Group
-	AdminService    *Admin
-	AdminLogService *AdminLog
-	NovelService    *Novel
-	CateService     *Cate
-	ChapterService  *Chapter
-	FeedbackService *Feedback
-	SnatchService   *Snatch
-	BannerService   *Banner
-	CrawlerService  *Crawler
-	ProxyService    *Proxy
-	ConfigService   *Config
+	RoleService      *Role
+	GroupService     *Group
+	AdminService     *Admin
+	AdminLogService  *AdminLog
+	NovelService     *Novel
+	CateService      *Cate
+	ChapterService   *Chapter
+	FeedbackService  *Feedback
+	SnatchService    *Snatch
+	BannerService    *Banner
+	CrawlerService   *Crawler
+	ProxyService     *Proxy
+	ConfigService    *Config
+	SearchService    *Search
+	SearchLogService *SearchLog
 )
 
 func Init() {

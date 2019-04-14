@@ -153,9 +153,9 @@ func (m *Novel) GetAll(size, offset int, args map[string]interface{}, fields ...
 
 	// 统计
 	var count int64 = 0
-	c := false
+	isCount := false
 	if c, ok := args["count"]; ok && c.(bool) == true {
-		c = true
+		isCount = true
 		count, _ = qs.Count()
 	}
 
@@ -165,7 +165,7 @@ func (m *Novel) GetAll(size, offset int, args map[string]interface{}, fields ...
 		orderBy = c.(string)
 	}
 
-	if count > 0 || c == false {
+	if count > 0 || isCount == false {
 		if len(fields) == 0 {
 			fields = []string{"id", "name", "author", "cate_id", "cate_name", "status", "is_hot", "is_rec", "is_vip_rec", "chapter_updated_at", "chapter_num"}
 		}

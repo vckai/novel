@@ -89,9 +89,9 @@ func (m *Feedback) DeleteBatch(ids []string) error {
 	for i := range marks {
 		marks[i] = "?"
 	}
-	sqlStr := fmt.Sprintf("DELETE FROM nov_feedback WHERE `id` %s", fmt.Sprintf("IN (%s)", strings.Join(marks, ", ")))
+	sqlStr := fmt.Sprintf("UPDATE nov_feedback SET deleted_at=? WHERE `id` %s", fmt.Sprintf("IN (%s)", strings.Join(marks, ", ")))
 
-	_, err := orm.NewOrm().Raw(sqlStr, ids).Exec()
+	_, err := orm.NewOrm().Raw(sqlStr, uint32(time.Now().Unix()), ids).Exec()
 
 	return err
 }
@@ -118,12 +118,13 @@ func (m *Feedback) GetAll(size, offset int, args map[string]string) ([]*Feedback
 	qs = qs.Filter("deleted_at", 0)
 
 	var count int64 = 0
-	c := ""
+	isCount := false
 	if c, ok := args["count"]; ok && len(c) > 0 {
+		isCount = true
 		count, _ = qs.Count()
 	}
 
-	if count > 0 || len(c) == 0 {
+	if count > 0 || isCount == false {
 		qs.OrderBy("-id").Limit(size, offset).All(&list, "id", "name", "content", "contact", "ip", "created_at")
 	}
 

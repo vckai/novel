@@ -68,6 +68,9 @@ func (this *BookController) Index() {
 	slices := services.BannerService.GetAll(args)
 	this.Data["BannerSlices"] = slices
 
+	// 获取推荐的搜索关键字
+	this.Data["RecKw"] = services.SearchService.GetRes(5)
+
 	this.View("book/index.tpl")
 }
 

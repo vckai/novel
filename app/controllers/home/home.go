@@ -93,6 +93,9 @@ func (this *HomeController) Index() {
 	}
 	this.Data["BannerSmalls"] = services.BannerService.GetAll(args)
 
+	// 获取推荐的搜索关键字
+	this.Data["RecKw"] = services.SearchService.GetRes(5)
+
 	this.Data["Title"] = "首页"
 	this.View("home/index.tpl")
 }
@@ -133,6 +136,9 @@ func (this *HomeController) Cate() {
 	this.Data["NovCount"] = count
 	this.Data["Novs"] = novs
 
+	// 获取推荐的搜索关键字
+	this.Data["RecKw"] = services.SearchService.GetRes(5)
+
 	// 获取菜单分类
 	this.Data["Cates"] = services.CateService.GetAll()
 
@@ -159,7 +165,20 @@ func (this *HomeController) Search() {
 	}
 	p, _ := this.GetInt("p", 1)
 	offset := (p - 1) * size
+
+	// 搜索小说
 	novs, count := services.NovelService.GetList(size, offset, search)
+
+	log := &models.SearchLog{
+		Kw: q,
+		Ip: this.Ctx.Input.IP(),
+	}
+
+	if len(novs) > 0 {
+		log.IsResult = 1
+	}
+	services.SearchService.InsertOrIncrement(q, log)
+
 	// 设置分页
 	this.SetPaginator(size, count)
 
@@ -168,6 +187,9 @@ func (this *HomeController) Search() {
 
 	// 获取菜单分类
 	this.Data["Cates"] = services.CateService.GetAll()
+
+	// 获取推荐的搜索关键字
+	this.Data["RecKw"] = services.SearchService.GetRes(5)
 
 	this.Data["Search"] = search
 	this.Data["NovCount"] = count

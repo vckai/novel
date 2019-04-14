@@ -12,10 +12,9 @@
 	          </div>
 	          <div class="sbtn1"><input type="submit" value="搜索" onmouseout="this.className='btn1'" onmouseup="this.className='sbtn1'" onmousedown="this.className='btnactive'" id="searchBtn"></div>
 	          <div class="hotwords">热搜书籍：
-	          		<a href="{{urlfor "home.HomeController.Search" "kw" "圣墟"}}" target="_blank">圣墟</a>
-	          		<a href="{{urlfor "home.HomeController.Search" "kw" "雪鹰领主"}}" target="_blank">雪鹰领主</a>
-	          		<a href="{{urlfor "home.HomeController.Search" "kw" "一念永恒"}}" target="_blank">一念永恒</a>
-	          		<a href="{{urlfor "home.HomeController.Search" "kw" "择天记"}}" target="_blank">择天记</a>
+                {{range .RecKw}}
+	          		<a href="{{urlfor "home.HomeController.Search" "kw" .Kw}}" target="_blank">{{.Kw}}</a>
+                {{end}}
 	          </div>
 	      </form>
 	  </div>

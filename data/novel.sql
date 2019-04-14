@@ -283,6 +283,10 @@ VALUES
 	(11,7,'分类管理','',1,'','Cate','Index',0,0,1493983980,1493983980,0),
 	(12,6,'轮播管理','',1,'','Banner','Index',0,0,1494999793,1494999824,0),
 	(13,6,'操作日记','',1,'','AdminLog','Index',0,0,1495004798,1495004798,0);
+	(14,6,'网站设置','',1,'','Config','Index',0,0,1555230351,1555230351,0);
+	(15,0,'搜索管理','&#xe615;',1,'','','',40,0,1555230351,1555230351,0);
+	(16,15,'搜索记录','',1,'','Search','Index',0,0,1555230351,1555230351,0);
+	(17,15,'搜索日记','',1,'','SearchLog','Index',0,0,1555230351,1555230351,0);
 
 /*!40000 ALTER TABLE `nov_role` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -328,6 +332,42 @@ VALUES
 
 /*!40000 ALTER TABLE `nov_role` ENABLE KEYS */;
 UNLOCK TABLES;
+
+# Dump of table nov_search
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `nov_search`;
+
+CREATE TABLE `nov_search` (
+  `id` bigint(21) unsigned NOT NULL AUTO_INCREMENT,
+  `kw` varchar(100) NOT NULL COMMENT '关键词',
+  `views` int(11) NOT NULL COMMENT '搜索次数',
+  `is_rec` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否推荐',
+  `created_at` int(11) unsigned NOT NULL,
+  `updated_at` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `udx_kw` (`kw`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='搜索记录统计表';
+
+
+# Dump of table nov_search_log
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `nov_search_log`;
+
+CREATE TABLE `nov_search_log` (
+  `id` bigint(21) unsigned NOT NULL AUTO_INCREMENT,
+  `kw` varchar(100) NOT NULL COMMENT '搜索关键词',
+  `uid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '搜索用户，0游客',
+  `source` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '搜索来源，0：PC，1：手机站',
+  `is_result` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否有搜索结果，0：否，1：是',
+  `ip` varchar(15) NOT NULL COMMENT '搜索用户IP',
+  `created_at` int(11) unsigned NOT NULL,
+  `updated_at` int(11) unsigned NOT NULL,
+  `deleted_at` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='搜索日记表';
+
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

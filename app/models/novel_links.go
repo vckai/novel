@@ -92,9 +92,9 @@ func (m *NovelLinks) GetAll(size, offset int, args map[string]interface{}, field
 
 	// 统计
 	var count int64 = 0
-	c := false
+	isCount := false
 	if c, ok := args["count"]; ok && c.(bool) == true {
-		c = true
+		isCount = true
 		count, _ = qs.Count()
 	}
 
@@ -104,7 +104,7 @@ func (m *NovelLinks) GetAll(size, offset int, args map[string]interface{}, field
 		orderBy = c.(string)
 	}
 
-	if count > 0 || c == false {
+	if count > 0 || isCount == false {
 		if len(fields) == 0 {
 			fields = []string{"id", "nov_id", "link", "source", "chapter_link", "created_at"}
 		}

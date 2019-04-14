@@ -78,7 +78,7 @@ func (this *Feedback) Delete(id uint32) error {
 	}
 
 	log := models.Feedback{Id: id}
-	err := log.Delete(true)
+	err := log.Delete()
 	if err != nil {
 		return err
 	}

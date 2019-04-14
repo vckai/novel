@@ -155,6 +155,17 @@ func (this *BookController) Search() {
 	}
 	novels, _ := services.NovelService.GetList(PAGESIZE, 0, search)
 
+	log := &models.SearchLog{
+		Kw:     q,
+		Source: 1,
+		Ip:     this.Ctx.Input.IP(),
+	}
+
+	if len(novels) > 0 {
+		log.IsResult = 1
+	}
+	services.SearchService.InsertOrIncrement(q, log)
+
 	this.Data["SnatchNovels"] = nil
 	// 非正式环境从采集点中搜索
 	if beego.AppConfig.String("runmode") != "prod" {

@@ -32,6 +32,8 @@ var (
 	FeedbackModel   *Feedback
 	BannerModel     *Banner
 	ConfigModel     *Config
+	SearchModel     *Search
+	SearchLogModel  *SearchLog
 )
 
 // db初始化操作
@@ -86,4 +88,6 @@ func InitModel() {
 	FeedbackModel = NewFeedback()
 	BannerModel = NewBanner()
 	ConfigModel = NewConfig()
+	SearchModel = NewSearch()
+	SearchLogModel = NewSearchLog()
 }

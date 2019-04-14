@@ -21,31 +21,16 @@ import (
 	"github.com/vckai/novel/app/utils"
 )
 
-// 定义AdminLogService
-type AdminLog struct {
+// 定义SearchLogService
+type SearchLog struct {
 }
 
-func NewAdminLog() *AdminLog {
-	return &AdminLog{}
+func NewSearchLog() *SearchLog {
+	return &SearchLog{}
 }
 
-// 获取单个管理员信息
-func (this *AdminLog) Get(id uint32) *models.AdminLog {
-	if id < 0 {
-		return nil
-	}
-
-	AdminLog := &models.AdminLog{Id: id}
-	err := AdminLog.Read()
-	if err != nil {
-		return nil
-	}
-
-	return AdminLog
-}
-
-// 批量获取管理员列表
-func (this *AdminLog) GetAll(size, offset int, args map[string]interface{}) ([]*models.AdminLog, int64) {
+// 获取搜索日记列表
+func (this *SearchLog) GetAll(size, offset int, args map[string]interface{}) ([]*models.SearchLog, int64) {
 	qs := map[string]string{}
 
 	if st, ok := args["st"]; ok && len(st.(string)) > 0 {
@@ -68,27 +53,27 @@ func (this *AdminLog) GetAll(size, offset int, args map[string]interface{}) ([]*
 		qs["count"] = "1"
 	}
 
-	AdminLogs, count := models.AdminLogModel.GetAll(size, offset, qs)
+	searchLogs, count := models.SearchLogModel.GetAll(size, offset, qs)
 
-	return AdminLogs, count
+	return searchLogs, count
 }
 
-// 批量删除操作日记
-func (this *AdminLog) DeleteBatch(ids []string) error {
+// 批量删除搜索日记
+func (this *SearchLog) DeleteBatch(ids []string) error {
 	if len(ids) == 0 {
 		return errors.New("params error")
 	}
 
-	return models.AdminLogModel.DeleteBatch(ids)
+	return models.SearchLogModel.DeleteBatch(ids)
 }
 
 // 删除操作日记
-func (this *AdminLog) Delete(id uint32) error {
+func (this *SearchLog) Delete(id uint64) error {
 	if id < 0 {
 		return errors.New("params error")
 	}
 
-	log := models.AdminLog{Id: id}
+	log := models.SearchLog{Id: id}
 	err := log.Delete()
 	if err != nil {
 		return err
@@ -97,12 +82,8 @@ func (this *AdminLog) Delete(id uint32) error {
 	return nil
 }
 
-// 添加操作日记
-func (this *AdminLog) Add(a *models.AdminLog) error {
-	if a.Uid == 0 {
-		return errors.New("缺少操作对象")
-	}
-
+// 添加搜索日记
+func (this *SearchLog) Add(a *models.SearchLog) error {
 	err := a.Insert()
 
 	return err
