@@ -52,16 +52,14 @@ func NewProxy() *Proxy {
 
 // 运行入口
 func (this *Proxy) Init() {
-	// 代理配置模式
-	this.mode, _ = beego.AppConfig.Int("proxy_mode")
-	if this.mode != IP_AUTO_PROXY {
-		return
-	}
 
 	go func() {
 		for {
-			this.run()
-
+			// 代理配置模式
+			this.mode = ConfigService.Int("proxy_mode", NO_PROXY)
+			if this.mode == IP_AUTO_PROXY {
+				this.run()
+			}
 			// 休眠12分钟更新一次
 			time.Sleep(PROXY_IP_UP_TIME * time.Minute)
 		}
@@ -70,7 +68,7 @@ func (this *Proxy) Init() {
 
 // 获取代理IP池
 func (this *Proxy) run() {
-	resp, err := utils.HttpGet(beego.AppConfig.String("proxy_url"), nil, "")
+	resp, err := utils.HttpGet(ConfigService.String("proxy_url", ""), nil, "")
 	if err != nil {
 		log.Error("Request Proxy URL Error: ", err)
 		return

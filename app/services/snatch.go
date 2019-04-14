@@ -375,9 +375,6 @@ func (this *SnatchTaskManager) LoadNovels() int {
 
 // 获取章节小说更新
 func (this *SnatchTaskManager) Run() {
-
-	upTime := ConfigService.Int64("Uptime", 10)
-	ticker := time.NewTicker(time.Minute * time.Duration(upTime))
 	this.taskChans = make(chan *SnatchTask, 3000)
 
 	for i := 0; i < 5; i++ {
@@ -397,11 +394,11 @@ func (this *SnatchTaskManager) Run() {
 	}
 
 	go func() {
-		for _ = range ticker.C {
-			for _, task := range this.tasks {
-				this.taskChans <- task
-			}
+		for _, task := range this.tasks {
+			this.taskChans <- task
 		}
+		// 休眠指定时间更新一次
+		time.Sleep(time.Duration(ConfigService.Int64("Uptime", 10)) * time.Minute)
 	}()
 
 	this.gc()
