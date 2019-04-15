@@ -45,6 +45,7 @@ func (this *BaseController) Prepare() {
 func (this *BaseController) View(tpl string) {
 	// 系统参数
 	aOut := make(map[string]interface{})
+	aOut["WebURL"] = services.ConfigService.String("WebURL")
 	aOut["ViewUrl"] = services.ConfigService.String("ViewURL")
 	aOut["Title"] = services.ConfigService.String("Title")
 	aOut["SubTitle"] = services.ConfigService.String("SubTitle")

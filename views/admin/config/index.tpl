@@ -36,6 +36,14 @@ img {padding: 5px 0 0 10px}
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">
+                        PC网站URL
+                    </label>
+                    <div class="layui-input-block">
+                        <input type="text" name="WebURL" autocomplete="off" class="layui-input" placeholder="PC网站主域名配置" value="{{.Config.WebURL}}" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
                         手机网站URL
                     </label>
                     <div class="layui-input-block">
