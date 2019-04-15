@@ -55,19 +55,17 @@ function changeSide(element, url, title) {
     $.cookie('x_iframe_url', url);
     $.cookie('x_iframe_title', title);
 
-    for (var i = 0; i < $('.x-iframe').length; i++) {
-        if ($('.x-iframe').eq(i).attr('src') == url) {
-            element.tabChange('x-tab', i);
-            element.init();
-            // 刷新页面
-            $('.x-iframe').eq(i).attr('src', url);
-            return;
-        }
-    };
+	$(".x-iframe").css({"display": "none"});
+
+    $(".loading-box").css({"display": "flex"});
 
     res = element.tabAdd('x-tab', {
         title: title,
-        content: '<iframe frameborder="0" src="'+url+'" class="x-iframe"></iframe>'
+        content: '<iframe style="display: none" frameborder="0" src="'+url+'" class="x-iframe"></iframe>'
+    });
+    $('.x-iframe').one("load", function() {
+        $(".loading-box").hide();
+        $(".x-iframe").fadeIn(200);
     });
 
     $('.layui-nav').removeClass('layui-this');

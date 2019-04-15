@@ -502,5 +502,57 @@ body .site-demo-nav .layui-nav-item{line-height: 40px}
   .layui-nav .x-index{display: none;}
 }
 
+.loading-box{
+     position: fixed; left: 0;right: 0;top: 0;bottom: 0; /*使得loading层浮动到其他层上面，并且尺寸和整个屏幕大小一样*/
+     z-index: 10;    /*给个 z-index 覆盖到主题内容上面*/
+     display: none;  /*采用flex布局*/
+     justify-content:center; /*loading-box中的内容 水平居中*/
+     align-items: center;    /*loading-box中的内容 垂直居中*/
+ }
+.loading{
+    text-align: center; /*文本水平居中*/
+}
 
+.layui-btn-group {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 0!important;
+}
 
+.layui-btn-group .layui-btn {
+	margin-left: 0!important;
+	margin-right: 0!important;
+	border-left: 1px solid rgba(255,255,255,.5);
+	border-radius: 0;
+	font-size: 0;
+}
+
+.layui-btn-group .layui-btn-primary {
+	border-left: none
+}
+
+.layui-btn-group .layui-btn-primary:hover {
+	border-color: #C9C9C9;
+	color: #009688
+}
+
+.layui-btn-group .layui-btn:first-child {
+	border-left: none;
+	border-radius: 2px 0 0 2px;
+}
+
+.layui-btn-group .layui-btn-primary:first-child {
+	border-left: 1px solid #c9c9c9
+}
+
+.layui-btn-group .layui-btn:last-child {
+	border-radius: 0 2px 2px 0
+}
+
+.layui-btn-group .layui-btn+.layui-btn {
+	margin-left: 0
+}
+
+.layui-btn-group+.layui-btn-group {
+	margin-left: 10px;
+}

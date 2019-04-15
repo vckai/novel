@@ -132,9 +132,7 @@
 	<div class="layui-footer footer footer-demo">
 		<div class="layui-main">
 			<p>
-				<a href="/">
-					Copyright ©2017 {{.aOut.Title}} v{{.aOut.Version}} All Rights Reserved.
-				</a>
+                Copyright ©2017 <a href="https://github.com/vckai/novel" target="_blank">vckai/novel</a> v{{.aOut.Version}} All Rights Reserved.
 			</p>
 		</div>
 	</div>

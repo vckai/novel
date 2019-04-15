@@ -5,13 +5,21 @@
 .layui-form-pane .layui-input-block {margin-left: 152px;}
 img {padding: 5px 0 0 10px}
 </style>
+<div class="x-nav">
+    <span class="layui-breadcrumb">
+      <a><cite>首页</cite></a>
+      <a><cite>系统设置</cite></a>
+      <a><cite>网站配置</cite></a>
+    </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
 
 <div class="x-body">
     <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
       <ul class="layui-tab-title">
-        <li class="{{if eq .Tab ""}}layui-this{{end}}">网站设置</li>
-        <li class="{{if eq .Tab "snatch"}}layui-this{{end}}">采集设置</li>
-        <li class="{{if eq .Tab "proxy"}}layui-this{{end}}">代理设置</li>
+        <li class="{{if eq .Tab ""}}layui-this{{end}}">网站配置</li>
+        <li class="{{if eq .Tab "snatch"}}layui-this{{end}}">采集配置</li>
+        <li class="{{if eq .Tab "proxy"}}layui-this{{end}}">代理配置</li>
       </ul>
       <div class="layui-tab-content" >
         <div class="layui-tab-item {{if eq .Tab ""}}layui-show{{end}}">

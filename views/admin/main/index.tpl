@@ -21,7 +21,7 @@
 		</div>
 		<div class="layui-tab layui-tab-card site-demo-title x-main" lay-filter="x-tab" lay-allowclose="true">
 			<div class="x-slide_left"></div>
-			<ul class="layui-tab-title">
+			<ul class="layui-tab-title" style="display:none">
 				<li class="layui-this">
 					首页
 					<i class="layui-icon layui-unselect layui-tab-close">ဆ</i>
@@ -36,7 +36,13 @@
 		<div class="site-mobile-shade">
 		</div>
 	</div>
-        <script>
+    <!--loading-->
+    <div class="loading-box">
+        <div class="loading">
+            <img src="{{.aOut.ViewUrl}}img/admin/loading.gif" alt="">
+        </div>
+    </div>
+    <script>
         window.onload = function() {
             layui.use(['layer'], function() {
                 $ = layui.jquery; //jquery
