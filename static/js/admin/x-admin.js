@@ -21,62 +21,67 @@ layui.use(['element'], function() {
 	}
 
     // 记录上一次跳转页面
-    if ($.cookie('x_iframe_url') && $.cookie('x_iframe_title')) {
-        changeSide(element, $.cookie('x_iframe_url'), $.cookie('x_iframe_title'));
+    if ($.cookie('x_iframe_url')) {
+        load_page($.cookie('x_iframe_url'));
     }
 
 	$('.x-slide_left').click(function(event) {
 		if (trun) {
 			$('.x-side').animate({left: '-200px'}, 200).siblings('.x-main').animate({left: '0px'},200);
 			$(this).css('background-position','0px -61px');
-			trun=0;
+			trun = 0;
 		} else {
 			$('.x-side').animate({left: '0px'},200).siblings('.x-main').animate({left: '200px'},200);
 			$(this).css('background-position','0px 0px');
-			trun=1;
+			trun = 1;
 		}
 	});
 
   	// 监听导航点击
   	element.on('nav(side)', function(elem) {
-    	title = elem.find('cite').text();
-    	url = elem.find('a').attr('_href');
+    	var title = elem.find('cite').text();
+    	var url   = elem.find('a').attr('_href');
 
-        changeSide(element, url, title);
+        load_page(url);
 	});
 
 	// 全选
 	$(".all-select").click(function() {   
 		$(".all-x-select").prop("checked", this.checked);
 	});
+
+    $(".load-page").click(function () {
+        top.load_page($(this).attr('_href'));
+    });
 });
 
-function changeSide(element, url, title) {
+function reload() {
+    if ($.cookie('x_iframe_url')) {
+        load_page($.cookie('x_iframe_url'));
+    }
+}
+
+function load_page(url) {
     $.cookie('x_iframe_url', url);
-    $.cookie('x_iframe_title', title);
 
 	$(".x-iframe").css({"display": "none"});
 
     $(".loading-box").css({"display": "flex"});
 
-    res = element.tabAdd('x-tab', {
-        title: title,
-        content: '<iframe style="display: none" frameborder="0" src="'+url+'" class="x-iframe"></iframe>'
-    });
+    $('.x-iframe').attr("src", url);
     $('.x-iframe').one("load", function() {
         $(".loading-box").hide();
         $(".x-iframe").fadeIn(200);
     });
 
-    $('.layui-nav').removeClass('layui-this');
     $('.layui-nav').find('a').each(function() {
         var _url = $(this).attr('_href');
-        if (_url && _url == url) {
+        var urls = url.split("?");
+        if (_url && _url == urls[0]) {
+            $('.layui-nav').removeClass('layui-this');
             $(this).parent().addClass('layui-this');
         }
     });
-
-    element.tabChange('x-tab', $('.layui-tab-title li').length-1);
 
     $('.layui-tab-title li').eq(0).find('i').remove();
 }

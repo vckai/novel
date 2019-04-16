@@ -70,13 +70,18 @@ function ajax_post(url, data, tourl, is_alert, is_parent) {
 				layer.msg(res.msg, {icon: 1});
 			}
 
+            var delay_time = 0;
+            if (is_alert) {
+                delay_time = 1000; 
+            }
+
 			if (!tourl) {
-				setTimeout(parent_script + "location.reload()", is_alert ? 1000 : 0);
+				setTimeout(parent_script + "location.reload()", delay_time);
 			} else {
 				if (typeof tourl == "function") {
-					tourl(res.data);
+					setTimeout(function () {tourl(res.data)}, delay_time);
 				} else if (typeof tourl == "string") {
-					setTimeout(parent_script+ "location.href='" + tourl + "'", is_alert ? 1000 : 0);
+					setTimeout(parent_script + "location.href='" + tourl + "'", delay_time);
 				}
 			}
 		} else {
@@ -86,9 +91,9 @@ function ajax_post(url, data, tourl, is_alert, is_parent) {
 		// 返回URL跳转
 		if (typeof res.url != "undefined" && res.url) {
 			if (typeof res.is_top != "undefined" && res.is_top == true) {
-				setTimeout("top.location.href='" + res.url + "'", is_alert ? 1000 : 0);
+				setTimeout("top.location.href='" + res.url + "'", delay_time);
 			} else {
-				setTimeout(parent_script+ "location.href='" + res.url + "'", is_alert ? 1000 : 0);
+				setTimeout(parent_script + "location.href='" + res.url + "'", delay_time);
 			}
 		}
 		is_submit = true;

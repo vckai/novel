@@ -22,12 +22,12 @@
 			layui.use(['form', 'layer'], function() {
 				$ = layui.jquery;
 
-				var form = layui.form()
+				var form = layui.form
 					,layer = layui.layer;
 
 				// 监听提交
 				form.on('submit(save)', function(data) {
-					ajax_post({{urlfor "admin.NovelController.AddSnatch"}}, data.field);
+					ajax_post({{urlfor "admin.NovelController.AddSnatch"}}, data.field, top.reload);
 					return false;
 				});
 			});

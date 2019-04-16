@@ -63,7 +63,7 @@
 				form.on("submit(save)", function(data) {
 					data.field.pass = md5(data.field.pass);
 					delete data.field.repass;
-					ajax_post({{urlfor "admin.AdminController.EditPass"}}, data.field);
+					ajax_post({{urlfor "admin.AdminController.EditPass"}}, data.field, top.reload);
 					return false;
 				});
 			});

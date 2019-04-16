@@ -128,7 +128,7 @@
 					data.field.pass = md5(data.field.pass);
 					delete data.field.repass;
 				{{end}}
-					ajax_post("{{.PostUrl}}", data.field);
+					ajax_post("{{.PostUrl}}", data.field, top.reload);
 					return false;
 				});
 			});

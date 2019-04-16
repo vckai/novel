@@ -11,7 +11,7 @@ img {padding: 5px 0 0 10px}
       <a><cite>系统设置</cite></a>
       <a><cite>网站配置</cite></a>
     </span>
-    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    <a class="layui-btn layui-btn-small" style="line-height: 1.6em; margin-top: 3px; float: right"  href="javascript:top.reload();" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
 </div>
 
 <div class="x-body">
@@ -259,7 +259,10 @@ img {padding: 5px 0 0 10px}
 
             // 监听提交
             form.on('submit(base)', function(data) {
-                ajax_post(url, data.field, tourl, true, false);
+                ajax_post(url, data.field, function () {
+                    top.load_page(tourl); 
+                }, true, false);
+
                 return false;
             });
 
@@ -270,13 +273,19 @@ img {padding: 5px 0 0 10px}
                 } else {
                     data.field.IsSnatch = "1";
                 }
-                ajax_post(url, data.field, tourl + '?tab=snatch', true, false);
+                ajax_post(url, data.field, function () {
+                    top.load_page(tourl + '?tab=snatch')
+                }, true, false);
+
                 return false;
             });
 
             // 监听提交
             form.on('submit(proxy)', function(data) {
-                ajax_post(url, data.field, tourl + '?tab=proxy', true, false);
+                ajax_post(url, data.field, function () {
+                    top.load_page(tourl + '?tab=proxy')
+                }, true, false);
+
                 return false;
             });
         });

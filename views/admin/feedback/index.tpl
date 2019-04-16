@@ -5,7 +5,7 @@
 		  <a><cite>系统管理</cite></a>
 		  <a><cite>用户反馈</cite></a>
 		</span>
-		<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
+		<a class="layui-btn layui-btn-small" style="line-height: 1.6em; margin-top: 3px; float: right"  href="javascript:top.reload();" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
 	</div>
 	<div class="x-body">
 		<xblock>
@@ -49,7 +49,7 @@
 		window.onload = function () {
 			layui.use(['element', 'layer', 'laypage'], function() {
 				var $ = layui.jquery;//jquery
-				var lement = layui.element();//面包导航
+				var lement = layui.element;//面包导航
 				var layer = layui.layer;//弹出层
 				var laypage = layui.laypage;//分页
 
@@ -65,7 +65,7 @@
 					skip: false,
 					jump: function (obj, first) {
 						if (first != true) {
-							window.location.href = {{urlfor "admin.FeedbackController.Index"}} + "?p=" + obj.curr;
+							top.load_page({{urlfor "admin.FeedbackController.Index"}} + "?p=" + obj.curr);
 						}
 					}
 				}); 

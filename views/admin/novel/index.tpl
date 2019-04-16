@@ -5,17 +5,17 @@
 		  <a><cite>小说管理</cite></a>
 		  <a><cite>小说列表</cite></a>
 		</span>
-		<a class="layui-btn layui-btn-small" style="line-height: 1.6em; margin-top: 3px; float: right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
+		<a class="layui-btn layui-btn-small" style="line-height: 1.6em; margin-top: 3px; float: right"  href="javascript:top.reload();" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
 	</div>
 	<div class="x-body">
-		<form class="layui-form x-center" action="" style="width:80%">
+		<form class="layui-form x-center x-search-form" style="width:80%">
 			<div class="layui-form-pane" style="margin-top: 15px;">
 			  <div class="layui-form-item">
 				<div class="layui-input-inline">
-				  <input type="text" name="q"  placeholder="请输入小说名称" autocomplete="off" class="layui-input" value="{{.Search.q}}">
+				  <input type="text" name="q" placeholder="请输入小说名称" autocomplete="off" class="layui-input" value="{{.Search.q}}">
 				</div>
 				<div class="layui-input-inline" style="width:80px">
-					<button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+					<button class="layui-btn" type="button" id="btn-search"><i class="layui-icon">&#xe615;</i></button>
 				</div>
 			  </div>
 			</div> 
@@ -26,8 +26,9 @@
 			<button class="layui-btn" onclick="x_admin_show('运行爬虫', '{{urlfor "admin.NovelController.Crawler"}}')"><i class="layui-icon">&#xe608;</i>运行爬虫</button>
 			<button class="layui-btn" onclick="x_admin_show('添加小说采集', '{{urlfor "admin.NovelController.AddSnatch"}}')"><i class="layui-icon">&#xe608;</i>添加采集</button>
 
+            
 			<div class="layui-input-inline" style="width:250px">
-			<input type="text" id="nov_name" placeholder="请输入采集小说名称" autocomplete="off" class="layui-input" value="">
+            <input type="text" id="nov_name" placeholder="请输入采集小说名称" autocomplete="off" class="layui-input" value="">
 			</div>
 			<button class="layui-btn" onclick="find_snatch()"><i class="layui-icon">&#xe615;</i>搜索采集小说</button>
 			<span class="x-right" style="line-height:40px">共有数据：{{.NovelsCount}} 条</span>
@@ -78,11 +79,11 @@
 						<a title="执行采集" href="javascript:;" onclick="snatch_novel('{{.Id}}', '{{.Name}}')" class="ml-5" style="text-decoration:none">
 							<i class="layui-icon">&#xe623;</i>
 						</a>
-						<a title="删除" href="javascript:;" onclick="del(this, '{{.Id}}', '{{.Name}}')" style="text-decoration:none">
-							<i class="layui-icon">&#xe640;</i>
-						</a>
 						<a title="清空章节内容" href="javascript:;" onclick="del_chapter(this, '{{.Id}}', '{{.Name}}')" style="text-decoration:none">
 							<i class="layui-icon">&#x1007;</i>
+						</a>
+						<a title="删除" href="javascript:;" onclick="del(this, '{{.Id}}', '{{.Name}}')" style="text-decoration:none">
+							<i class="layui-icon">&#xe640;</i>
 						</a>
 					</td>
 				</tr>
@@ -109,11 +110,23 @@
 					skip: false,
 					jump: function (obj, first) {
 						if (first != true) {
-							window.location.href = {{urlfor "admin.NovelController.Index"}} + "?p=" + obj.curr + "&q={{.Search.q}}";
+							top.load_page({{urlfor "admin.NovelController.Index"}} + "?p=" + obj.curr + "&q={{.Search.q}}");
 						}
 					}
 				}); 
 			});
+
+            $("input[name='q']").on("keydown", function (event) {
+                if (event.keyCode == 13) {
+                    $("#btn-search").click(); 
+                } 
+            });
+
+            // 搜索
+            $("#btn-search").click(function () {
+                var query = $('.x-search-form').serialize();
+                top.load_page({{urlfor "admin.NovelController.Index"}} + '?' + query);
+            });
 		}
 
 		function find_snatch() {

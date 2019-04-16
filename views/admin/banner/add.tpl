@@ -85,7 +85,7 @@
 
 				// 监听提交
 				form.on('submit(save)', function(data) {
-					ajax_post("{{.PostUrl}}", data.field);
+					ajax_post("{{.PostUrl}}", data.field, top.reload);
 					return false;
 				});
 			});
