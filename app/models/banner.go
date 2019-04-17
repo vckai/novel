@@ -123,10 +123,10 @@ func (m *Banner) GetAll(args map[string]interface{}) []*Banner {
 // 获取是否显示
 func (m Banner) StatusName() string {
 	if m.Status == 0 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">不显示</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs">不显示</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">已显示</span>`
+	return `<span class="layui-btn layui-btn-xs">已显示</span>`
 }
 
 // 过滤条件

@@ -32,8 +32,8 @@ type GroupController struct {
 func (this *GroupController) Index() {
 	groups := services.GroupService.GetAll()
 
-	this.Data["groups"] = groups
-	this.Data["groups_count"] = len(groups)
+	this.Data["List"] = groups
+	this.Data["Count"] = len(groups)
 	this.View("group/index.tpl")
 }
 
@@ -48,9 +48,9 @@ func (this *GroupController) Add() {
 	roles := services.RoleService.GetRoles(true)
 	roleHtml := this.getRolesHtml(roles, make([]string, 0))
 
-	this.Data["group"] = models.NewGroup()
+	this.Data["Group"] = models.NewGroup()
 	this.Data["IsUpdate"] = false
-	this.Data["roleHtml"] = roleHtml
+	this.Data["RoleHtml"] = roleHtml
 	this.Data["PostUrl"] = this.URLFor("admin.GroupController.Add")
 	this.View("group/add.tpl")
 }
@@ -77,9 +77,9 @@ func (this *GroupController) Edit() {
 	roles := services.RoleService.GetRoles(true)
 	roleHtml := this.getRolesHtml(roles, group.GetRoleIds())
 
-	this.Data["group"] = group
+	this.Data["Group"] = group
 	this.Data["IsUpdate"] = true
-	this.Data["roleHtml"] = roleHtml
+	this.Data["RoleHtml"] = roleHtml
 	this.Data["PostUrl"] = this.URLFor("admin.GroupController.Edit")
 	this.View("group/add.tpl")
 }
@@ -139,7 +139,7 @@ func (this *GroupController) save() {
 func (this GroupController) getRolesHtml(roles []*models.Role, selRoleIds []string) string {
 	htmltpl := `
 			<tr>
-				<td><input class="roles-select" type="checkbox" lay-skin="primary" value="%d" lay-ignore>%s</td>
+				<td><input class="roles-select" type="checkbox" value="%d" lay-skin="primary" %s title="%s"></td>
 				<td>
 					<div class="layui-input-block">
 					%s
@@ -151,11 +151,18 @@ func (this GroupController) getRolesHtml(roles []*models.Role, selRoleIds []stri
 
 	html := ""
 	for _, role := range roles {
+		childHtml, isDef := this.getRolesChildHtml(role.Child, role.Id, selRoleIds)
+		checked := ""
+		if isDef {
+			checked = "checked"
+		}
+		shtml, _ := this.getRoleFormatHtml(role, role.Id, selRoleIds)
 		html += fmt.Sprintf(htmltpl,
 			role.Id,
+			checked,
 			role.Name,
-			this.getRoleFormatHtml(role, role.Id, selRoleIds),
-			this.getRolesChildHtml(role.Child, role.Id, selRoleIds),
+			shtml,
+			childHtml,
 		)
 	}
 
@@ -163,32 +170,48 @@ func (this GroupController) getRolesHtml(roles []*models.Role, selRoleIds []stri
 }
 
 // child class html
-func (this GroupController) getRolesChildHtml(roles []*models.Role, rootId uint32, selRoleIds []string) string {
+func (this GroupController) getRolesChildHtml(roles []*models.Role, rootId uint32, selRoleIds []string) (string, bool) {
 	html := ""
+	isAllchecked := true
 	for _, role := range roles {
 		// 格式化返回复选框html
-		html += this.getRoleFormatHtml(role, rootId, selRoleIds)
+		shtml, isChecked := this.getRoleFormatHtml(role, rootId, selRoleIds)
+
+		html += shtml
+
+		if isChecked == false {
+			isAllchecked = false
+		}
 
 		if len(role.Child) > 0 {
-			html += this.getRolesChildHtml(role.Child, rootId, selRoleIds)
+			shtml, isChecked := this.getRolesChildHtml(role.Child, rootId, selRoleIds)
+
+			html += shtml
+
+			if isChecked == false {
+				isAllchecked = false
+			}
 		}
 	}
+	println(isAllchecked)
 
-	return html
+	return html, isAllchecked
 }
 
 // 格式化返回复选框html
-func (this GroupController) getRoleFormatHtml(role *models.Role, rootId uint32, selRoleIds []string) string {
+func (this GroupController) getRoleFormatHtml(role *models.Role, rootId uint32, selRoleIds []string) (string, bool) {
 	sel := ""
+	isChecked := false
 	if role.IsDefault == 1 || utils.InArray(fmt.Sprint(role.Id), selRoleIds) {
 		sel = "checked"
+		isChecked = true
 	}
-	html := fmt.Sprintf(`<input class="role_ids" name="role_ids[]" type="checkbox" value="%d" lay-skin="primary" pid="%d" %s> %s`,
+	html := fmt.Sprintf(`<input class="role_ids" lay-skin="primary" name="role_ids[]" type="checkbox" value="%d" pid="%d" %s title="%s">`,
 		role.Id,
 		rootId,
 		sel,
 		role.Name,
 	)
 
-	return html
+	return html, isChecked
 }

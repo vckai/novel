@@ -116,17 +116,17 @@ func (m *Cate) GetAll() []*Cate {
 // 获取是否菜单
 func (m Cate) IsMenuName() string {
 	if m.IsMenu == 0 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">否</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs">否</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">是</span>`
+	return `<span class="layui-btn layui-btn-xs">是</span>`
 }
 
 // 获取是否首页显示
 func (m Cate) IsHomeName() string {
 	if m.IsHome == 0 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">否</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs">否</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">是</span>`
+	return `<span class="layui-btn layui-btn-xs">是</span>`
 }

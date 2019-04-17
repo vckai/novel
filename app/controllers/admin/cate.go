@@ -30,8 +30,8 @@ type CateController struct {
 func (this *CateController) Index() {
 	cates := services.CateService.GetAll()
 
-	this.Data["Cates"] = cates
-	this.Data["CatesTotal"] = len(cates)
+	this.Data["List"] = cates
+	this.Data["Count"] = len(cates)
 	this.View("cate/index.tpl")
 }
 

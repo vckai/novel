@@ -39,7 +39,7 @@
 			layui.use(['form', 'layer', 'layedit'], function() {
 				$ = layui.jquery;
 
-				var form = layui.form()
+				var form = layui.form
 					,layer = layui.layer;
   
 				//创建一个编辑器

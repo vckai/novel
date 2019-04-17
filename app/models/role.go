@@ -138,8 +138,8 @@ func (m Role) Url() string {
 // 获取是否菜单
 func (m Role) IsMenuName() string {
 	if m.IsMenu == 0 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">否</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs">否</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">是</span>`
+	return `<span class="layui-btn layui-btn-xs">是</span>`
 }

@@ -28,8 +28,8 @@ type AdminController struct {
 func (this *AdminController) Index() {
 	admins := services.AdminService.GetAll()
 
-	this.Data["admins"] = admins
-	this.Data["admins_count"] = len(admins)
+	this.Data["List"] = admins
+	this.Data["Count"] = len(admins)
 	this.View("admin/index.tpl")
 }
 

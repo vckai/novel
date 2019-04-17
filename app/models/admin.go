@@ -125,8 +125,8 @@ func (m *Admin) GetByAccount(account string) *Admin {
 // 获取用户状态
 func (m Admin) StatusName() string {
 	if m.Status == 1 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">禁用</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs">禁用</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">启用</span>`
+	return `<span class="layui-btn layui-btn-xs">启用</span>`
 }

@@ -15,8 +15,6 @@
 package admin
 
 import (
-	"math"
-
 	"github.com/vckai/novel/app/services"
 )
 
@@ -28,7 +26,7 @@ type FeedbackController struct {
 func (this *FeedbackController) Index() {
 	q := this.GetString("q")
 	size := 10
-	p, _ := this.GetInt("p")
+	p, _ := this.GetInt("p", 1)
 	offset := (p - 1) * size
 	search := map[string]interface{}{
 		"q":     q,
@@ -38,9 +36,9 @@ func (this *FeedbackController) Index() {
 	feeds, count := services.FeedbackService.GetAll(size, offset, search)
 
 	this.Data["Search"] = search
-	this.Data["Feeds"] = feeds
-	this.Data["FeedCount"] = count
-	this.Data["MaxPages"] = math.Ceil(float64(count) / float64(size))
+	this.Data["Limit"] = feeds
+	this.Data["Count"] = count
+	this.Data["Limit"] = size
 	this.View("feedback/index.tpl")
 }
 

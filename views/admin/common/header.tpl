@@ -5,11 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-	<link rel="icon" href="{{.aOut.ViewUrl}}img/favicon.ico" mce_href="{{.aOut.ViewUrl}}img/favicon.ico" type="image/x-icon"> 
     <link rel="shortcut icon" href="{{.aOut.ViewUrl}}img/favicon.ico" type="image/x-icon" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
     <link rel="stylesheet" href="{{.aOut.ViewUrl}}plugin/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="{{.aOut.ViewUrl}}css/admin/x-admin.css" media="all">
+    <script src="{{.aOut.ViewUrl}}plugin/layui/layui.js" charset="utf-8"></script>
 </head>

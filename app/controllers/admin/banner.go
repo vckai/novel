@@ -15,6 +15,8 @@
 package admin
 
 import (
+	"strings"
+
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
 	"github.com/vckai/novel/app/utils/log"
@@ -30,8 +32,8 @@ func (this *BannerController) Index() {
 	banners := services.BannerService.GetAll(args)
 
 	this.Data["Zones"] = services.BannerService.Zones()
-	this.Data["Banners"] = banners
-	this.Data["BannersCount"] = len(banners)
+	this.Data["List"] = banners
+	this.Data["Count"] = len(banners)
 	this.View("banner/index.tpl")
 }
 
@@ -93,6 +95,23 @@ func (this *BannerController) Delete() {
 	this.OutJson(0, "已删除！")
 }
 
+// 批量删除操作日记
+func (this *BannerController) DeleteBatch() {
+	ids := this.GetStrings("ids[]")
+	if len(ids) == 0 {
+		this.OutJson(1001, "参数错误，无法访问")
+	}
+
+	err := services.BannerService.DeleteBatch(ids)
+	if err != nil {
+		this.OutJson(1002, "批量删除操作banner失败")
+	}
+	// 添加操作日记
+	this.AddLog(4002, strings.Join(ids, ","))
+
+	this.OutJson(0, "已删除！")
+}
+
 // 保存数据
 // 提供修改/新增处理
 func (this *BannerController) save() {
@@ -128,19 +147,4 @@ func (this *BannerController) save() {
 	this.AddLog(4001, mtitle, banner.Name, banner.Id)
 
 	this.OutJson(0, mtitle+"成功")
-}
-
-// 批量删除操作日记
-func (this *BannerController) DeleteBatch() {
-	ids := this.GetStrings("ids[]")
-	if len(ids) == 0 {
-		this.OutJson(1001, "参数错误，无法访问")
-	}
-
-	err := services.BannerService.DeleteBatch(ids)
-	if err != nil {
-		this.OutJson(1002, "批量删除操作banner失败")
-	}
-
-	this.OutJson(0, "已删除！")
 }

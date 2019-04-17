@@ -31,8 +31,8 @@ type RoleController struct {
 func (this *RoleController) Index() {
 	roles := services.RoleService.GetRoles()
 
-	this.Data["roles"] = roles
-	this.Data["roles_count"] = len(roles)
+	this.Data["List"] = roles
+	this.Data["Count"] = len(roles)
 	this.View("role/index.tpl")
 }
 

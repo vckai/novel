@@ -15,7 +15,6 @@
 package admin
 
 import (
-	"math"
 	"time"
 
 	"github.com/vckai/novel/app/services"
@@ -40,7 +39,7 @@ func (this *AdminLogController) Index() {
 	}
 	q := this.GetString("q")
 	size := 10
-	p, _ := this.GetInt("p")
+	p, _ := this.GetInt("p", 1)
 	offset := (p - 1) * size
 	search := map[string]interface{}{
 		"p":     p,
@@ -52,9 +51,9 @@ func (this *AdminLogController) Index() {
 	logs, count := services.AdminLogService.GetAll(size, offset, search)
 
 	this.Data["Search"] = search
-	this.Data["Logs"] = logs
-	this.Data["LogCount"] = count
-	this.Data["MaxPages"] = math.Ceil(float64(count) / float64(size))
+	this.Data["List"] = logs
+	this.Data["Count"] = count
+	this.Data["Limit"] = size
 	this.View("admin_log/index.tpl")
 }
 

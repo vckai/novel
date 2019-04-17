@@ -32,7 +32,7 @@
 
 				// 监听提交
 				form.on('submit(save)', function(data) {
-					ajax_post({{urlfor "admin.NovelController.Crawler"}}, data.field);
+					ajax_post({{urlfor "admin.NovelController.Crawler"}}, data.field, top.reload_page);
 					return false;
 				});
 			});

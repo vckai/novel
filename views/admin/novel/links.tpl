@@ -17,8 +17,8 @@
                         <td>{{.Link}}</td>
                         <td>{{datetime .CreatedAt "01-02 15:04:05"}}</td>
                         <td class="td-manage">
-                            <a title="删除" href="javascript:;" onclick="del(this, '{{.Id}}', '{{.NovId}}', '{{.Source}}')" style="text-decoration:none">
-                                <i class="layui-icon">&#xe640;</i>
+                            <a class="layui-btn layui-btn-xs layui-btn-danger" href="javascript:;" onclick="del(this, '{{.Id}}', '{{.NovId}}', '{{.Source}}')">
+                                <i class="layui-icon">&#xe640;</i>删除
                             </a>
                         </td>
                     </tr>

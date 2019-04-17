@@ -50,12 +50,12 @@
 			layui.use(['form','layer'], function() {
 				$ = layui.jquery;
 
-				var form = layui.form()
+				var form = layui.form
 					,layer = layui.layer;
 
 				// 监听提交
 				form.on('submit(save)', function(data) {
-					ajax_post("{{.PostUrl}}", data.field, top.reload);
+					ajax_post("{{.PostUrl}}", data.field, top.reload_page);
 					return false;
 				});
 			});

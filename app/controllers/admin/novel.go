@@ -15,7 +15,6 @@
 package admin
 
 import (
-	"math"
 	"strings"
 
 	"github.com/vckai/novel/app/models"
@@ -31,19 +30,21 @@ type NovelController struct {
 func (this *NovelController) Index() {
 	q := this.GetString("q")
 	size := 10
-	p, _ := this.GetInt("p")
+	p, _ := this.GetInt("p", 1)
 	offset := (p - 1) * size
 	search := map[string]interface{}{
 		"q":     q,
+		"p":     p,
 		"count": true,
 	}
 	novels, count := services.NovelService.GetAll(size, offset, search)
 
-	search["p"] = p
 	this.Data["Search"] = search
-	this.Data["Novels"] = novels
-	this.Data["NovelsCount"] = count
-	this.Data["MaxPages"] = math.Ceil(float64(count) / float64(size))
+	this.Data["List"] = novels
+	this.Data["Count"] = count
+	this.Data["Limit"] = size
+
+	// 获取采集点
 	snatchs := services.SnatchService.GetSnatchs()
 	snatchsData := make(map[string]string)
 	for k, v := range snatchs {

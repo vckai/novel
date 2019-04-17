@@ -122,8 +122,8 @@ func (m *Search) GetAll(size, offset int, args map[string]string) ([]*Search, in
 // 获取是否推荐
 func (m Search) IsRecName() string {
 	if m.IsRec == 0 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">否</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs btn-set-rec">未推荐</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">是</span>`
+	return `<span class="layui-btn layui-btn-xs btn-set-un-rec">已推荐</span>`
 }

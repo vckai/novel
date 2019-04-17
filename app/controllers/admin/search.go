@@ -15,7 +15,6 @@
 package admin
 
 import (
-	"math"
 	"strings"
 
 	"github.com/vckai/novel/app/services"
@@ -29,7 +28,7 @@ type SearchController struct {
 func (this *SearchController) Index() {
 	q := this.GetString("q")
 	size := 10
-	p, _ := this.GetInt("p")
+	p, _ := this.GetInt("p", 1)
 	offset := (p - 1) * size
 	search := map[string]interface{}{
 		"q":     q,
@@ -41,7 +40,7 @@ func (this *SearchController) Index() {
 	this.Data["Search"] = search
 	this.Data["List"] = list
 	this.Data["Count"] = count
-	this.Data["MaxPages"] = math.Ceil(float64(count) / float64(size))
+	this.Data["Limit"] = size
 	this.View("search/index.tpl")
 }
 

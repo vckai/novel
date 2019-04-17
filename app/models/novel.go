@@ -198,37 +198,37 @@ func (m Novel) StatusName() string {
 // 获取是否原创小说
 func (m Novel) IsOriginalName() string {
 	if m.IsOriginal == 0 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">否</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs">否</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">是</span>`
+	return `<span class="layui-btn layui-btn-xs">是</span>`
 }
 
 // 获取是否热门
 func (m Novel) IsHotName() string {
 	if m.IsHot == 0 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">否</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs">否</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">是</span>`
+	return `<span class="layui-btn layui-btn-xs">是</span>`
 }
 
 // 获取是否推荐
 func (m Novel) IsRecName() string {
 	if m.IsRec == 0 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">否</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs">否</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">是</span>`
+	return `<span class="layui-btn layui-btn-xs">是</span>`
 }
 
 // 获取是否精品
 func (m Novel) IsVipRecName() string {
 	if m.IsVipRec == 0 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">否</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs">否</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">是</span>`
+	return `<span class="layui-btn layui-btn-xs">是</span>`
 }
 
 // 条件生成

@@ -271,7 +271,7 @@ func (m *Chapter) GetByChapNo(asc string) error {
 // 获取是否推荐
 func (m Chapter) StatusName() string {
 	if m.Status == 1 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">采集失败</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs">采集失败</span>`
 	}
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">采集成功</span>`
+	return `<span class="layui-btn layui-btn-xs">采集成功</span>`
 }

@@ -20,9 +20,16 @@ function x_admin_show(title, url, w, h) {
 	if (h == null || h == '') {
 		h=($(window).height() - 50);
 	};
+
+    if (!isNaN(w) || w.charAt('px') < 0 || w.charAt('%') < 0) {
+        w += 'px';
+    }
+    if (!isNaN(h) || h.charAt('px') < 0 || h.charAt('%') < 0) {
+        h += 'px';
+    }
 	layer.open({
 		type: 2,
-		area: [w+'px', h +'px'],
+		area: [w, h],
 		fix: false, //不固定
 		maxmin: true,
 		shadeClose: true,

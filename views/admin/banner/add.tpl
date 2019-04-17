@@ -29,7 +29,9 @@
 
 				<div class="layui-input-inline">
 				  <div class="site-demo-upbar">
-					<input type="file" name="upimg" class="layui-upload-file" id="upimg">
+                    <button type="button" class="layui-btn layui-btn-primary" id="upimg">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
 				  </div>
 				</div>
 			</div>
@@ -67,13 +69,15 @@
 			layui.use(['form', 'layer', 'upload'], function() {
 				$ = layui.jquery;
 
-				var form = layui.form()
+				var form = layui.form
 					,layer = layui.layer;
   
 				//图片上传接口
-				layui.upload({
+				layui.upload.render({
+                    elem: '#upimg',
+                    field: 'upimg',
 					url: {{urlfor "admin.HomeController.UpImg"}},
-					success: function(res) { //上传成功后的回调
+					done: function(res) { //上传成功后的回调
 						if (res.ret == 0) {
 							$('#LAY_upload').attr('src', res.data.url);
 							$('#upload_cover').val(res.data.url);
@@ -85,7 +89,7 @@
 
 				// 监听提交
 				form.on('submit(save)', function(data) {
-					ajax_post("{{.PostUrl}}", data.field, top.reload);
+					ajax_post("{{.PostUrl}}", data.field, top.reload_page);
 					return false;
 				});
 			});

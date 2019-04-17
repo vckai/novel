@@ -1,6 +1,7 @@
-layui.use(['element'], function() {
+layui.use(['element', 'form'], function() {
 	$ = layui.jquery;
-  	element = layui.element(); 
+  	var element = layui.element; 
+  	var form = layui.form; 
   
     //导航的hover效果、二级菜单等功能，需要依赖element模块
     // 侧边栏点击隐藏兄弟元素
@@ -23,6 +24,8 @@ layui.use(['element'], function() {
     // 记录上一次跳转页面
     if ($.cookie('x_iframe_url')) {
         load_page($.cookie('x_iframe_url'));
+    } else if (typeof def_main_page != "undefined") {
+        load_page(def_main_page);
     }
 
 	$('.x-slide_left').click(function(event) {
@@ -40,22 +43,19 @@ layui.use(['element'], function() {
   	// 监听导航点击
   	element.on('nav(side)', function(elem) {
     	var title = elem.find('cite').text();
-    	var url   = elem.find('a').attr('_href');
+    	var url   = elem.parent().find('a').attr('_href');
 
         load_page(url);
 	});
 
 	// 全选
-	$(".all-select").click(function() {   
-		$(".all-x-select").prop("checked", this.checked);
+	form.on('checkbox(all-select)', function(data) {   
+		$(".all-x-select").prop("checked", data.elem.checked);
+        form.render('checkbox');
 	});
-
-    $(".load-page").click(function () {
-        top.load_page($(this).attr('_href'));
-    });
 });
 
-function reload() {
+function reload_page() {
     if ($.cookie('x_iframe_url')) {
         load_page($.cookie('x_iframe_url'));
     }

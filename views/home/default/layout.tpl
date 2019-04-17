@@ -7,7 +7,6 @@
 	<meta name="description" content="{{.aOut.Description}}">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-	<link rel="icon" href="{{.aOut.Favicon}}" mce_href="{{.aOut.Favicon}}" type="image/x-icon"> 
     <link rel="shortcut icon" href="{{.aOut.Favicon}}" type="image/x-icon" />
 	<link href="{{.mOut.ViewUrl}}css/header.css" rel="stylesheet" type="text/css">
   	<link href="{{.mOut.ViewUrl}}css/official-web.css" rel="stylesheet" type="text/css">

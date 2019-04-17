@@ -15,7 +15,6 @@
 package admin
 
 import (
-	"math"
 	"strings"
 	"time"
 
@@ -29,11 +28,9 @@ type SearchLogController struct {
 
 // 管理搜索日记列表
 func (this *SearchLogController) Index() {
-
 	st := this.GetString("st")
 	if len(st) == 0 {
 		st = utils.GetDate(uint32(time.Now().AddDate(0, -1, 0).Unix()))
-
 	}
 	et := this.GetString("et")
 	if len(et) == 0 {
@@ -41,7 +38,7 @@ func (this *SearchLogController) Index() {
 	}
 	q := this.GetString("q")
 	size := 10
-	p, _ := this.GetInt("p")
+	p, _ := this.GetInt("p", 1)
 	offset := (p - 1) * size
 	search := map[string]interface{}{
 		"p":     p,
@@ -53,9 +50,9 @@ func (this *SearchLogController) Index() {
 	logs, count := services.SearchLogService.GetAll(size, offset, search)
 
 	this.Data["Search"] = search
-	this.Data["Logs"] = logs
+	this.Data["List"] = logs
 	this.Data["Count"] = count
-	this.Data["MaxPages"] = math.Ceil(float64(count) / float64(size))
+	this.Data["Limit"] = size
 	this.View("search_log/index.tpl")
 }
 

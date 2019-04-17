@@ -134,17 +134,17 @@ func (m *SearchLog) GetAll(size, offset int, args map[string]string) ([]*SearchL
 // 获取是否推荐
 func (m SearchLog) IsResultName() string {
 	if m.IsResult == 0 {
-		return `<span class="layui-btn layui-btn-disabled layui-btn-mini">否</span>`
+		return `<span class="layui-btn layui-btn-primary layui-btn-xs">否</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">是</span>`
+	return `<span class="layui-btn layui-btn-xs">是</span>`
 }
 
 // 获取是否推荐
 func (m SearchLog) SourceName() string {
 	if m.Source == 0 {
-		return `<span class="layui-btn layui-btn-warm layui-btn-mini">PC站点</span>`
+		return `<span class="layui-btn layui-btn-warm layui-btn-xs">PC站点</span>`
 	}
 
-	return `<span class="layui-btn layui-btn-normal layui-btn-mini">手机站</span>`
+	return `<span class="layui-btn layui-btn-normal layui-btn-xs">手机站</span>`
 }

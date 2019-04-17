@@ -230,11 +230,13 @@ func (this *SnatchTask) upChapter(source, chapLink string) uint8 {
 		// 最后一章节没有匹配到内容，继续匹配倒数第二章节
 		if index == 0 {
 			pre := ChapterService.GetPre(nov.Id, lastChap.ChapterNo)
-			for k, v := range chapLinks {
-				if pre.Title == v.Chap.Title || pre.Link == v.Chap.Link {
-					index = k + 1
-					chapterNo = lastChap.ChapterNo
-					break
+			if pre != nil && pre.Id > 0 {
+				for k, v := range chapLinks {
+					if pre.Title == v.Chap.Title || pre.Link == v.Chap.Link {
+						index = k + 1
+						chapterNo = lastChap.ChapterNo
+						break
+					}
 				}
 			}
 		}

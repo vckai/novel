@@ -46,7 +46,7 @@
 			layui.use(['form', 'layer'], function() {
 				$ = layui.jquery;
 
-				var form = layui.form()
+				var form = layui.form
 					,layer = layui.layer;
 
 				//自定义验证规则
@@ -63,7 +63,7 @@
 				form.on("submit(save)", function(data) {
 					data.field.pass = md5(data.field.pass);
 					delete data.field.repass;
-					ajax_post({{urlfor "admin.AdminController.EditPass"}}, data.field, top.reload);
+					ajax_post({{urlfor "admin.AdminController.EditPass"}}, data.field, top.reload_page);
 					return false;
 				});
 			});

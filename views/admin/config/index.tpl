@@ -1,9 +1,9 @@
-<body>
+<body class="x-iframe-body">
 
 <style>
-.layui-form-pane .layui-form-label {width: 120px;}
-.layui-form-pane .layui-input-block {margin-left: 152px;}
-img {padding: 5px 0 0 10px}
+html{color: #666}
+.layui-form .layui-form-label {width: 100px;}
+.layui-form .layui-input-block {margin-left: 130px;}
 </style>
 <div class="x-nav">
     <span class="layui-breadcrumb">
@@ -11,210 +11,221 @@ img {padding: 5px 0 0 10px}
       <a><cite>系统设置</cite></a>
       <a><cite>网站配置</cite></a>
     </span>
-    <a class="layui-btn layui-btn-small" style="line-height: 1.6em; margin-top: 3px; float: right"  href="javascript:top.reload();" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
 </div>
 
 <div class="x-body">
-    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-      <ul class="layui-tab-title">
-        <li class="{{if eq .Tab ""}}layui-this{{end}}">网站配置</li>
-        <li class="{{if eq .Tab "snatch"}}layui-this{{end}}">采集配置</li>
-        <li class="{{if eq .Tab "proxy"}}layui-this{{end}}">代理配置</li>
-      </ul>
-      <div class="layui-tab-content" >
-        <div class="layui-tab-item {{if eq .Tab ""}}layui-show{{end}}">
-            <form class="layui-form layui-form-pane" action="">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        <span class='x-red'>*</span>网站名称
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Title" autocomplete="off" placeholder="最好控制在10个字、50个字节以内"
-                        class="layui-input" lay-verify="required" value="{{.Config.Title}}" />
+    <div class="layui-card">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+          <ul class="layui-tab-title">
+            <li class="{{if eq .Tab ""}}layui-this{{end}}">网站配置</li>
+            <li class="{{if eq .Tab "snatch"}}layui-this{{end}}">采集配置</li>
+            <li class="{{if eq .Tab "proxy"}}layui-this{{end}}">代理配置</li>
+          </ul>
+          <div class="layui-tab-content layui-card-body">
+            <div class="layui-tab-item {{if eq .Tab ""}}layui-show{{end}}">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>网站名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Title" autocomplete="off" placeholder="最好控制在10个字、50个字节以内"
+                            class="layui-input" lay-verify="required" value="{{.Config.Title}}" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        网站副标题
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="SubTitle" autocomplete="off" placeholder="控制在25个字、50个字节以内"
-                        class="layui-input" value="{{.Config.SubTitle}}" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            网站副标题
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="SubTitle" autocomplete="off" placeholder="控制在25个字、50个字节以内"
+                            class="layui-input" value="{{.Config.SubTitle}}" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        PC网站URL
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="WebURL" autocomplete="off" class="layui-input" placeholder="PC网站主域名配置" value="{{.Config.WebURL}}" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            PC网站URL
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="WebURL" autocomplete="off" class="layui-input" placeholder="PC网站主域名配置" value="{{.Config.WebURL}}" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        手机网站URL
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="MobileURL" autocomplete="off" class="layui-input" placeholder="默认为/m，可配置指向其他域名" value="{{.Config.MobileURL}}" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            手机网站URL
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="MobileURL" autocomplete="off" class="layui-input" placeholder="默认为/m，可配置指向其他域名" value="{{.Config.MobileURL}}" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        管理后台URL
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="AdminURL" autocomplete="off" class="layui-input" placeholder="默认为/admin，可配置指向其他域名" value="{{.Config.AdminURL}}" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            管理后台URL
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="AdminURL" autocomplete="off" class="layui-input" placeholder="默认为/admin，可配置指向其他域名" value="{{.Config.AdminURL}}" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        静态资源URL
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="ViewURL" autocomplete="off" placeholder="默认为/public/，可配置指向其他域名"
-                        class="layui-input" value="{{.Config.ViewURL}}" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            静态资源URL
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ViewURL" autocomplete="off" placeholder="默认为/public/，可配置指向其他域名"
+                            class="layui-input" value="{{.Config.ViewURL}}" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        <span class='x-red'>*</span>PC网站模板
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Theme" autocomplete="off" class="layui-input" lay-verify="required" value="{{.Config.Theme}}" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>PC网站模板
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Theme" autocomplete="off" class="layui-input" lay-verify="required" value="{{.Config.Theme}}" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        <span class='x-red'>*</span>手机网站模板
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="MobielTheme" autocomplete="off" class="layui-input" lay-verify="required" value="{{.Config.MobileTheme}}" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>手机网站模板
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="MobielTheme" autocomplete="off" class="layui-input" lay-verify="required" value="{{.Config.MobileTheme}}" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">网站LOGO</label>
-                    <div class="layui-input-inline">
-                        <img id="LAY_upload_logo" width="100" src="{{.Config.Logo}}" />
-                        <input type="hidden" id="logo" name="Logo" value="{{.Config.Logo}}" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">网站LOGO</label>
+                        <div class="layui-input-inline" style="width: 60px;">
+                            <img id="LAY_upload_logo" width="50" src="{{.Config.Logo}}" />
+                            <input type="hidden" id="logo" name="Logo" value="{{.Config.Logo}}" />
+                        </div>
+                        <div class="layui-input-inline">
+                          <div class="site-demo-upbar">
+                            <button type="button" name="upimg" class="layui-btn layui-btn-primary" id="upimg_logo">
+                                <i class="layui-icon">&#xe67c;</i>上传图片
+                            </button>
+                          </div>
+                        </div>
                     </div>
-                    <div class="layui-input-inline">
-                      <div class="site-demo-upbar">
-                        <input type="file" name="upimg" class="layui-upload-file" id="upimg_logo">
-                      </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Favicon图标</label>
+                        <div class="layui-input-inline" style="width: 60px;">
+                            <img id="LAY_upload_favicon" width="32" height="32" src="{{.Config.Favicon}}">
+                            <input type="hidden" id="favicon" name="Favicon" value="{{.Config.Favicon}}" />
+                        </div>
+                        <div class="layui-input-inline">
+                          <div class="site-demo-upbar">
+                            <button type="button" name="upimg" class="layui-btn layui-btn-primary" id="upimg_favicon">
+                                <i class="layui-icon">&#xe67c;</i>上传图片
+                            </button>
+                          </div>
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">网站Favicon图标</label>
-                    <div class="layui-input-inline">
-                        <img id="LAY_upload_favicon" width="32" height="32" src="{{.Config.Favicon}}">
-                        <input type="hidden" id="favicon" name="Favicon" value="{{.Config.Favicon}}" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            网站关键词
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Keyword" autocomplete="off" placeholder="5个左右，8汉字以内，用英文,隔开"
+                            class="layui-input" value="{{.Config.Keyword}}" />
+                        </div>
                     </div>
-                    <div class="layui-input-inline">
-                      <div class="site-demo-upbar">
-                        <input type="file" name="upimg" class="layui-upload-file" id="upimg_favicon">
-                      </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            网站描述
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Description" autocomplete="off" placeholder="空制在80个汉字，160个字符以内"
+                            class="layui-input" value="{{.Config.Description}}" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        网站关键词
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Keyword" autocomplete="off" placeholder="5个左右，8汉字以内，用英文,隔开"
-                        class="layui-input" value="{{.Config.Keyword}}" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            底部版权信息
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Copyright" autocomplete="off" placeholder="&copy; 2017 - 2019 KAQIU8.COM" class="layui-input" value="{{.Config.Copyright}}" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        网站描述
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Description" autocomplete="off" placeholder="空制在80个汉字，160个字符以内"
-                        class="layui-input" value="{{.Config.Description}}" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            备案号
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Icp" autocomplete="off" placeholder="京ICP备00000000号"
+                            class="layui-input" value="{{.Config.Icp}}" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        底部版权信息
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Copyright" autocomplete="off" placeholder="&copy; 2017 - 2019 KAQIU8.COM" class="layui-input" value="{{.Config.Copyright}}" />
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <input type="submit" class="layui-btn" lay-submit="" lay-filter="base" value="保存" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        备案号
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Icp" autocomplete="off" placeholder="京ICP备00000000号"
-                        class="layui-input" value="{{.Config.Icp}}" />
+                </form>
+                <div style="height:100px;"></div>
+            </div>
+            <div class="layui-tab-item {{if eq .Tab "snatch"}}layui-show{{end}}">
+                <form class="layui-form" action="">
+                      <div class="layui-form-item">
+                        <label for="AppId" class="layui-form-label">
+                            <span class="x-red">*</span>开启自动更新
+                        </label>
+                        <div class="layui-input-block">
+                          <input type="checkbox" {{if eq (or .Config.IsSnatch "") "1"}}checked{{end}} name="IsSnatch" lay-skin="switch" lay-filter="switchTest" title="开关" vlaue="1" />
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <input type="submit" class="layui-btn" lay-submit="" lay-filter="base" value="保存" />
-                </div>
-            </form>
-            <div style="height:100px;"></div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            更新间隔
+                        </label>
+                        <div class="layui-input-inline" >
+                            <input type="number" name="Uptime" autocomplete="off" class="layui-input" placeholder="每次更新小说的时间间隔，单位：秒" value="{{.Config.Uptime}}" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            停更天数
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="NotUpStopDays" autocomplete="off" class="layui-input" placeholder="小说无新内容后停止更新，单位：天" value="{{.Config.NotUpStopDays}}" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <input type="submit" class="layui-btn" lay-submit="" lay-filter="snatch" value="保存" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="layui-tab-item {{if eq .Tab "proxy"}}layui-show{{end}}">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <label for="cate_id" class="layui-form-label">
+                            代理模式
+                        </label>
+                        <div class="layui-input-inline">
+                          <select name="ProxyMode" lay-verify="proxy_mode">
+                            <option value="0">不启用</option>
+                            <option value="1" {{if eq (or .Config.ProxyMode "") "1"}}selected{{end}}>代理IP</option>
+                            <option value="2" {{if eq (or .Config.ProxyMode "") "2"}}selected{{end}}>自动代理</option>
+                          </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" >
+                            代理URL
+                        </label>
+                        <div class="layui-input-block" >
+                            <input type="text" name="ProxyURL" autocomplete="off" class="layui-input" value="{{.Config.ProxyURL}}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <input type="submit" class="layui-btn" lay-submit="" lay-filter="proxy" value="保存" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+          </div>
         </div>
-        <div class="layui-tab-item {{if eq .Tab "snatch"}}layui-show{{end}}">
-            <form class="layui-form layui-form-pane" action="">
-                  <div class="layui-form-item">
-                    <label for="AppId" class="layui-form-label">
-                        <span class="x-red">*</span>开启自动更新
-                    </label>
-                    <div class="layui-input-block">
-                      <input type="checkbox" {{if eq (or .Config.IsSnatch "") "1"}}checked{{end}} name="IsSnatch" lay-skin="switch" lay-filter="switchTest" title="开关" vlaue="1" />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        更新间隔
-                    </label>
-                    <div class="layui-input-inline" >
-                        <input type="number" name="Uptime" autocomplete="off" class="layui-input" placeholder="每次更新小说的时间间隔，单位：秒" value="{{.Config.Uptime}}" />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        停更天数
-                    </label>
-                    <div class="layui-input-inline">
-                        <input type="number" name="NotUpStopDays" autocomplete="off" class="layui-input" placeholder="小说无新内容后停止更新，单位：天" value="{{.Config.NotUpStopDays}}" />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <input type="submit" class="layui-btn" lay-submit="" lay-filter="snatch" value="保存" />
-                </div>
-            </form>
-        </div>
-        <div class="layui-tab-item {{if eq .Tab "proxy"}}layui-show{{end}}">
-            <form class="layui-form layui-form-pane" action="">
-                <div class="layui-form-item">
-                    <label for="cate_id" class="layui-form-label">
-                        代理模式
-                    </label>
-                    <div class="layui-input-inline">
-                      <select name="ProxyMode" lay-verify="proxy_mode">
-                        <option value="0">不启用</option>
-                        <option value="1" {{if eq (or .Config.ProxyMode "") "1"}}selected{{end}}>代理IP</option>
-                        <option value="2" {{if eq (or .Config.ProxyMode "") "2"}}selected{{end}}>自动代理</option>
-                      </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" >
-                        代理URL
-                    </label>
-                    <div class="layui-input-block" >
-                        <input type="text" name="ProxyURL" autocomplete="off" class="layui-input" value="{{.Config.ProxyURL}}">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <input type="submit" class="layui-btn" lay-submit="" lay-filter="proxy" value="保存" />
-                </div>
-            </form>
-        </div>
-      </div>
     </div> 
 </div>
 
@@ -223,14 +234,15 @@ img {padding: 5px 0 0 10px}
         layui.use(['form', 'layer', 'upload'], function() {
             $ = layui.jquery;
 
-            var form = layui.form()
+            var form = layui.form
                 ,layer = layui.layer;
 
             // logo图片上传接口
-            layui.upload({
+            layui.upload.render({
                 elem: '#upimg_logo', // 绑定元素
+                field: 'upimg',
                 url: {{urlfor "admin.HomeController.UpImg"}},
-                success: function(res) { //上传成功后的回调
+                done: function(res) { //上传成功后的回调
                     if (res.ret == 0) {
                         $('#LAY_upload_logo').attr('src', res.data.url);
                         $('#logo').val(res.data.url);
@@ -241,10 +253,11 @@ img {padding: 5px 0 0 10px}
             });
 
             // favicon图片上传接口
-            layui.upload({
+            layui.upload.render({
                 elem: '#upimg_favicon', // 绑定元素
+                field: 'upimg',
                 url: {{urlfor "admin.HomeController.UpImg"}},
-                success: function(res) { //上传成功后的回调
+                done: function(res) { //上传成功后的回调
                     if (res.ret == 0) {
                         $('#LAY_upload_favicon').attr('src', res.data.url);
                         $('#favicon').val(res.data.url);

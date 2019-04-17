@@ -1,24 +1,22 @@
-<div class="layui-side-scroll">
-    <ul class="layui-nav layui-nav-tree site-demo-nav" lay-filter="side">
-		{{range .Menus}}
-        <li class="layui-nav-item  layui-nav-itemed">
-            <a class="javascript:;" href="javascript:;" _href="{{urlfor .Url}}">
-                <i class="layui-icon" style="top: 3px;">{{str2html .Icon}}</i><cite>{{.Name}}</cite>
-            </a>
-			{{if compare (urlfor .Url) ""}}
-            <dl class="layui-nav-child">
-				{{range $k, $v := .Child}}
+<ul class="layui-nav layui-nav-tree site-demo-nav" lay-filter="side">
+    {{range .Menus}}
+    <li class="layui-nav-item  layui-nav-itemed">
+        <a class="javascript:;" href="javascript:;" _href="{{urlfor .Url}}">
+            <i class="layui-icon">{{str2html .Icon}}</i><cite>{{.Name}}</cite>
+        </a>
+        {{if compare (urlfor .Url) ""}}
+        <dl class="layui-nav-child">
+            {{range $k, $v := .Child}}
+            <dd class="">
                 <dd class="">
-                    <dd class="">
-                        <a href="javascript:;" _href="{{urlfor $v.Url}}">
-                            <cite>{{$v.Name}}</cite>
-                        </a>
-                    </dd>
+                    <a href="javascript:;" _href="{{urlfor $v.Url}}">
+                        <cite>{{$v.Name}}</cite>
+                    </a>
                 </dd>
-				{{end}}
-            </dl>
-			{{end}}
-        </li>
-		{{end}}
-    </ul>
-</div>
+            </dd>
+            {{end}}
+        </dl>
+        {{end}}
+    </li>
+    {{end}}
+</ul>

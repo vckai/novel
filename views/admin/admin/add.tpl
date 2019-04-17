@@ -99,7 +99,7 @@
 			layui.use(['form', 'layer'], function() {
 				$ = layui.jquery;
 
-				var form = layui.form()
+				var form = layui.form
 					,layer = layui.layer;
 
 				//自定义验证规则
@@ -128,7 +128,7 @@
 					data.field.pass = md5(data.field.pass);
 					delete data.field.repass;
 				{{end}}
-					ajax_post("{{.PostUrl}}", data.field, top.reload);
+					ajax_post("{{.PostUrl}}", data.field, top.reload_page);
 					return false;
 				});
 			});

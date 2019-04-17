@@ -15,7 +15,6 @@
 package admin
 
 import (
-	"math"
 	"strings"
 
 	"github.com/vckai/novel/app/models"
@@ -47,9 +46,9 @@ func (this *ChapterController) Index() {
 
 	chapters, count := services.ChapterService.GetNovChaps(novId, size, offset, "desc", true)
 	this.Data["Search"] = search
-	this.Data["Chapters"] = chapters
-	this.Data["ChaptersCount"] = count
-	this.Data["MaxPages"] = math.Ceil(float64(count) / float64(size))
+	this.Data["List"] = chapters
+	this.Data["Count"] = count
+	this.Data["Limit"] = size
 	this.View("chapter/index.tpl")
 }
 
