@@ -31,9 +31,15 @@
                             <a href="javascript:;" onclick="x_admin_show('编辑群组', {{urlfor "admin.GroupController.Edit" "id" .Id}})" class="layui-btn layui-btn-xs layui-btn-normal">
                                 <i class="layui-icon">&#xe642;</i>编辑
                             </a>
-                            <a class="layui-btn layui-btn-xs layui-btn-danger {{if eq "1" (itoa .Id)}} layui-btn-disabled"{{else}}" href="javascript:;" onclick="role_del(this,'{{.Id}}')"{{end}}>
+                            {{if eq "1" (itoa .Id)}
+                            <a class="layui-btn layui-btn-xs layui-btn-disabled" href="javascript:;">
                                 <i class="layui-icon">&#xe640;</i>删除
                             </a>
+                            {{else}}
+                            <a class="layui-btn layui-btn-xs layui-btn-danger" href="javascript:;" onclick="role_del(this,'{{.Id}}')">
+                                <i class="layui-icon">&#xe640;</i>删除
+                            </a>
+                            {{end}}
                         </td>
                     </tr>
                 {{end}}
@@ -52,7 +58,7 @@
 
 		// 删除
 		function role_del(obj, id) {
-			layer.confirm('确认要删除吗？', function(index) {
+			top.layer.confirm('确认要删除吗？', function(index) {
 				$(obj).parents("tr").remove();
 
 				//发异步删除数据

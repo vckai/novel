@@ -56,11 +56,11 @@
 
 		// 删除
 		function role_del(obj, id) {
-			layer.confirm('确认要删除吗？', function(index) {
+			top.layer.confirm('确认要删除吗？', function(index) {
 				$(obj).parents("tr").remove();
 
 				//发异步删除数据
-				ajax_post({{urlfor "admin.CateController.Delete"}}, {id: id});
+				ajax_post({{urlfor "admin.CateController.Delete"}}, {id: id}, top.reload_page);
 			});
 		}
 	</script>

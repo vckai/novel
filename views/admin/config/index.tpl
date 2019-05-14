@@ -160,7 +160,6 @@ html{color: #666}
                         </div>
                     </div>
                 </form>
-                <div style="height:100px;"></div>
             </div>
             <div class="layui-tab-item {{if eq .Tab "snatch"}}layui-show{{end}}">
                 <form class="layui-form" action="">
@@ -169,7 +168,7 @@ html{color: #666}
                             <span class="x-red">*</span>开启自动更新
                         </label>
                         <div class="layui-input-block">
-                          <input type="checkbox" {{if eq (or .Config.IsSnatch "") "1"}}checked{{end}} name="IsSnatch" lay-skin="switch" lay-filter="switchTest" title="开关" vlaue="1" />
+                          <input type="checkbox" {{if eq (or .Config.IsSnatch "") "1"}}checked{{end}} name="IsSnatch" lay-skin="switch" lay-filter="switchTest" lay-text="开启|关闭" vlaue="1" />
                         </div>
                     </div>
                     <div class="layui-form-item">

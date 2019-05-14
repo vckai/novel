@@ -38,7 +38,7 @@
 
 		// 删除
 		function del(obj, id, nov_id, source) {
-			layer.confirm('确认要删除吗？', function(index) {
+			top.layer.confirm('确认要删除吗？', function(index) {
 				$(obj).parents("tr").remove();
 
 				//发异步删除数据

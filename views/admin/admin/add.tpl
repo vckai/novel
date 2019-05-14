@@ -13,6 +13,19 @@
 				</div>
 			</div>
 			<div class="layui-form-item">
+				<label for="role" class="layui-form-label">
+					<span class="x-red">*</span>群组
+				</label>
+				<div class="layui-input-inline">
+				  <select name="group_id" lay-verify="group">
+					<option value="0">请选择群组</option>
+					{{range $k, $v := .groups}}
+					<option value="{{$v.Id}}" {{if eq $v.Id $.admin.GroupId}}selected{{end}}>{{$v.Name}}</option>
+					{{end}}
+				  </select>
+				</div>
+			</div>
+			<div class="layui-form-item">
 				<label for="nickname" class="layui-form-label">
 					<span class="x-red">*</span>昵称
 				</label>
@@ -37,19 +50,6 @@
 				</label>
 				<div class="layui-input-inline">
 					<input type="text" id="mail" name="mail" value="{{.admin.Mail}}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<label for="role" class="layui-form-label">
-					<span class="x-red">*</span>群组
-				</label>
-				<div class="layui-input-inline">
-				  <select name="group_id" lay-verify="group">
-					<option value="0">请选择群组</option>
-					{{range $k, $v := .groups}}
-					<option value="{{$v.Id}}" {{if eq $v.Id $.admin.GroupId}}selected{{end}}>{{$v.Name}}</option>
-					{{end}}
-				  </select>
 				</div>
 			</div>
 			{{if .IsAdd}}
@@ -79,7 +79,7 @@
 					状态
 				</label>
 				<div class="layui-input-block">
-				  <input type="checkbox" {{if compare .admin.Status 0}}checked="1"{{end}} name="status" lay-skin="switch" lay-filter="switchTest" title="状态" value="1">
+				  <input type="checkbox" {{if compare .admin.Status 0}}checked="1"{{end}} name="status" lay-skin="switch" lay-filter="switchTest" title="状态" value="1" lay-text="启用|禁用">
 				</div>
 			</div>
 
@@ -128,7 +128,7 @@
 					data.field.pass = md5(data.field.pass);
 					delete data.field.repass;
 				{{end}}
-					ajax_post("{{.PostUrl}}", data.field, top.reload_page);
+					ajax_post("{{.PostUrl}}", data.field, top.reload_page, true, true, true);
 					return false;
 				});
 			});

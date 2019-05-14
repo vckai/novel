@@ -11,9 +11,11 @@
 			</div>
 	
 			<div class="layui-form-item">
-				<button  class="layui-btn" lay-filter="save" lay-submit="">
-					采集
-				</button>
+                <div class="layui-input-block">
+                    <button  class="layui-btn" lay-filter="save" lay-submit="">
+                        采集
+                    </button>
+                </div>
 			</div>
 		</form>
 	</div>
@@ -27,7 +29,7 @@
 
 				// 监听提交
 				form.on('submit(save)', function(data) {
-					ajax_post({{urlfor "admin.NovelController.AddSnatch"}}, data.field, top.reload_page);
+					ajax_post({{urlfor "admin.NovelController.AddSnatch"}}, data.field, top.reload_page, true, true, true);
 					return false;
 				});
 			});

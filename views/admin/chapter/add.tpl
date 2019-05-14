@@ -48,7 +48,7 @@
 				// 监听提交
 				form.on('submit(save)', function(data) {
                     data.field.desc = layui.layedit.getContent(editIndex)
-					ajax_post("{{.PostUrl}}", data.field);
+					ajax_post("{{.PostUrl}}", data.field, "", true, false, true);
 					return false;
 				});
 			});

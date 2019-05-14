@@ -9,7 +9,9 @@
 	<div class="x-body">
         <div class="layui-card">
             <xblock>
-                <button class="layui-btn" onclick="x_admin_show('添加管理员', '{{urlfor "admin.AdminController.Add"}}')"><i class="layui-icon">&#xe608;</i>添加</button>
+                <button class="layui-btn" onclick="x_admin_show('添加管理员', '{{urlfor "admin.AdminController.Add"}}', 550, 580)">
+                    <i class="layui-icon">&#xe608;</i>添加
+                </button>
                 <span class="x-right" style="line-height:40px">共有数据：{{.Count}} 条</span>
             </xblock>
             <table class="layui-table">
@@ -44,16 +46,21 @@
                         <td>{{datetime .LastLoginedAt "2006-01-02 15:04"}}</td>
                         <td>{{datetime .CreatedAt "2006-01-02 15:04"}}</td>
                         <td class="td-manage">
-                            <a href="javascript:;" onclick="x_admin_show('编辑管理员', {{urlfor "admin.AdminController.Edit" "id" .Id}})" class="layui-btn layui-btn-normal layui-btn-xs">
+                            <a href="javascript:;" onclick="x_admin_show('编辑管理员', {{urlfor "admin.AdminController.Edit" "id" .Id}}, 550, 500)" class="layui-btn layui-btn-normal layui-btn-xs">
                                 <i class="layui-icon">&#xe642;</i>编辑
                             </a>
-                            <a onclick="x_admin_show('修改密码', '{{urlfor "admin.AdminController.EditPass" "id" .Id}}')" href="javascript:;" class="layui-btn layui-btn-warm layui-btn-xs">
+                            <a onclick="x_admin_show('修改密码', '{{urlfor "admin.AdminController.EditPass" "id" .Id}}', 550, 300)" href="javascript:;" class="layui-btn layui-btn-warm layui-btn-xs">
                                 <i class="layui-icon">&#xe631;</i>修改密码
                             </a>
-                            
-                            <a class="layui-btn layui-btn-xs layui-btn-danger {{if eq "1" (itoa .Id)}} layui-btn-disabled"{{else}}" href="javascript:;" onclick="role_del(this,'{{.Id}}')" {{end}}>
+                            {{if eq "1" (itoa .Id)}}
+                            <a class="layui-btn layui-btn-xs layui-btn-disabled" href="javascript:;">
                                 <i class="layui-icon">&#xe640;</i>删除
                             </a>
+                            {{else}}
+                            <a class="layui-btn layui-btn-xs layui-btn-danger" href="javascript:;" onclick="role_del(this,'{{.Id}}')">
+                                <i class="layui-icon">&#xe640;</i>删除
+                            </a>
+                            {{end}}
                         </td>
                     </tr>
                 {{end}}
@@ -73,11 +80,11 @@
 
 		// 删除
 		function role_del(obj, id) {
-			layer.confirm('确认要删除吗？', function(index) {
+			top.layer.confirm('确认要删除吗？', function(index) {
 				$(obj).parents("tr").remove();
 
 				//发异步删除数据
-				ajax_post({{urlfor "admin.AdminController.Delete"}}, {id: id});
+				ajax_post({{urlfor "admin.AdminController.Delete"}}, {id: id}, top.reload_page);
 			});
 		}
 	</script>

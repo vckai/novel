@@ -23,8 +23,8 @@
             <xblock>
                 <button class="layui-btn layui-btn-danger" onclick="del_all()"><i class="layui-icon">&#xe640;</i>批量删除</button>
                 <button class="layui-btn" onclick="x_admin_show('添加小说', '{{urlfor "admin.NovelController.Add"}}')"><i class="layui-icon">&#xe608;</i>添加</button>
-                <button class="layui-btn" onclick="x_admin_show('运行爬虫', '{{urlfor "admin.NovelController.Crawler"}}')"><i class="layui-icon">&#xe608;</i>运行爬虫</button>
-                <button class="layui-btn" onclick="x_admin_show('添加小说采集', '{{urlfor "admin.NovelController.AddSnatch"}}')"><i class="layui-icon">&#xe608;</i>添加采集</button>
+                <button class="layui-btn" onclick="x_admin_show('运行爬虫', '{{urlfor "admin.NovelController.Crawler"}}', 450, 180)"><i class="layui-icon">&#xe608;</i>运行爬虫</button>
+                <button class="layui-btn" onclick="x_admin_show('添加小说采集', '{{urlfor "admin.NovelController.AddSnatch"}}', 550, 180)"><i class="layui-icon">&#xe608;</i>添加采集</button>
 
                 
                 <div class="layui-input-inline" style="width:250px">
@@ -136,12 +136,12 @@
 				return ;
 			}
 
-			x_admin_show('搜索采集小说', '{{urlfor "admin.NovelController.FindSnatchs"}}?kw='+kw);
+			x_admin_show('搜索采集小说', '{{urlfor "admin.NovelController.FindSnatchs"}}?kw='+kw, '80%', '80%');
 		}
 
 		// 批量删除提交
 		function del_all() {
-			layer.confirm('确认要删除吗？', function(index) {
+			top.layer.confirm('确认要删除吗？', function(index) {
                 var ids = get_list_ids('all-x-select');
 				//发异步删除数据
 				ajax_post({{urlfor "admin.NovelController.DeleteBatch"}}, {ids: ids}, top.reload_page);
@@ -150,7 +150,7 @@
 
 		// 删除
 		function del(obj, id, name) {
-			layer.confirm('确认要删除吗？', function(index) {
+			top.layer.confirm('确认要删除吗？', function(index) {
 				$(obj).parents("tr").remove();
 
 				//发异步删除数据
@@ -160,7 +160,7 @@
 
 		// 删除章节内容
 		function del_chapter(obj, id, name) {
-			layer.confirm('确认要清空小说章节吗？', function(index) {
+			top.layer.confirm('确认要清空小说章节吗？', function(index) {
 				//发异步删除数据
 				ajax_post({{urlfor "admin.NovelController.DelChapters"}}, {id: id, name: name}, top.reload_page);
 			});
@@ -168,7 +168,7 @@
 
 		// 执行采集操作
 		function snatch_novel(id, name) {
-			layer.confirm('确认要手动执行【'+name+'】采集任务吗？', function(index) {
+			top.layer.confirm('确认要手动执行【'+name+'】采集任务吗？', function(index) {
 				//发异步删除数据
 				ajax_post({{urlfor "admin.NovelController.Snatch"}}, {id: id, name: name}, top.reload_page);
 			});

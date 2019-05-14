@@ -2,7 +2,7 @@
 	<div class="layui-layout layui-layout-admin">
 		<div class="layui-header">
             <ul class="layui-nav layui-layout-left">
-              <li class="layui-nav-item layui-hide-xs" lay-unselect="">
+              <li class="layui-nav-item layui-hide-xs" lay-unselect="" style="margin-left:30px;">
                 <a href="{{.aOut.WebURL}}" target="_blank" title="前台">
                   <i class="layui-icon layui-icon-website"></i>
                 </a>
@@ -24,8 +24,8 @@
                 </a> 
                 <!-- 二级菜单 -->
                 <dl class="layui-nav-child layui-anim layui-anim-upbit x-nav-child">
-                  <dd><a href="javascript:;" onclick="x_admin_show('个人信息', '{{urlfor "admin.AdminController.Edit"}}')">个人信息</a></dd>
-                  <dd><a href="javascript:;" onclick="x_admin_show('修改密码', '{{urlfor "admin.AdminController.EditPass"}}')">修改密码</a></dd>
+                  <dd><a href="javascript:;" onclick="x_admin_show('个人信息', '{{urlfor "admin.AdminController.Edit"}}', 550, 500)">个人信息</a></dd>
+                  <dd><a href="javascript:;" onclick="x_admin_show('修改密码', '{{urlfor "admin.AdminController.EditPass"}}', 550, 300)">修改密码</a></dd>
                   <hr />
                   <dd><a href="{{urlfor "admin.LoginController.Logout"}}">退出</a></dd>
                 </dl>
@@ -35,11 +35,11 @@
               </li>
             </ul>
 		</div>
+        <div class="layui-logo">
+            <span>{{.aOut.Title}}</span>
+        </div>
 		<div class="layui-side layui-side-menu x-side">
             <div class="layui-side-scroll">
-                 <div class="layui-logo">
-                    <span>{{.aOut.Title}}</span>
-                 </div>
                 {{template "admin/common/menu.tpl" .}} 
             </div>
 		</div>

@@ -1,9 +1,15 @@
 <body>
+<style>
+html {background-color: #f2f2f2}
+.layui-breadcrumb .layui-btn .layui-icon {margin-right: 0px;}
+</style>
 	<div class="x-nav">
 		<span class="layui-breadcrumb">
 		  <a><cite>首页</cite></a>
 		  <a><cite>小说管理</cite></a>
 		  <a><cite>章节列表</cite></a>
+          <a class="layui-btn layui-btn-xs" style="line-height: 1.6em; margin-top: 8px; float: right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:23px; color: #fff">&#xe669;
+</i></a>
 		</span>
 	</div>
 	<div class="x-body">
@@ -90,7 +96,7 @@
 
 		// 批量删除提交
 		function del_all() {
-			layer.confirm('确认要删除吗？', function(index) {
+			top.layer.confirm('确认要删除吗？', function(index) {
                 var ids = get_list_ids('all-x-select');
 				//发异步删除数据
 				ajax_post({{urlfor "admin.ChapterController.DeleteBatch"}}, {ids: ids, novid: {{.Search.novId}}}, "", true, false);
@@ -99,7 +105,7 @@
 
 		// 删除
 		function del(obj, id, name) {
-			layer.confirm('确认要删除吗？', function(index) {
+			top.layer.confirm('确认要删除吗？', function(index) {
 				$(obj).parents("tr").remove();
 
 				//发异步删除数据

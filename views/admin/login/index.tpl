@@ -19,7 +19,7 @@
 		window.onload = function() {
 			layui.use(['form'], function() {
 				$ = layui.jquery;
-				var form = layui.form(),
+				var form = layui.form,
 				layer = layui.layer;
 				// 自定义验证规则
 				form.verify({

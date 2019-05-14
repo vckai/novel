@@ -53,7 +53,7 @@
 				// 监听提交
 				form.on('submit(save)', function(data) {
 					data.field.role_ids = get_list_ids("role_ids");
-					ajax_post("{{.PostUrl}}", data.field, top.reload_page);
+					ajax_post("{{.PostUrl}}", data.field, top.reload_page, true, true, true);
 					return false;
 				});
 

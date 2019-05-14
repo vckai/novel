@@ -74,7 +74,7 @@
 		  
 		//批量删除提交
 		 function delAll () {
-			layer.confirm('确认要删除吗？', function(index) {
+			top.layer.confirm('确认要删除吗？', function(index) {
                 var ids = get_list_ids('all-x-select');
 				// 发异步删除数据
 				ajax_post({{urlfor "admin.FeedbackController.DeleteBatch"}}, {ids: ids}, top.reload_page);
@@ -83,7 +83,7 @@
 	   
 		/*-删除*/
 		function log_del(obj, id) {
-			layer.confirm('确认要删除吗？', function(index) {
+			top.layer.confirm('确认要删除吗？', function(index) {
 				$(obj).parents("tr").remove();
 
 				//发异步删除数据

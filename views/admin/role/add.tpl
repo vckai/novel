@@ -52,12 +52,20 @@
 					<input type="text" id="icon" name="icon" autocomplete="off" class="layui-input" value="{{.role.Icon}}">
 				</div>
 			</div>
-			<div class="layui-form-item layui-form-text">
-				<label for="desc" class="layui-form-label">
-					描述
+			<div class="layui-form-item">
+				<label for="is_menu" class="layui-form-label">
+					是否菜单
 				</label>
 				<div class="layui-input-block">
-					<textarea placeholder="随便写些什么" id="desc" name="desc" autocomplete="off" class="layui-textarea" style="height: 80px;">{{.role.Desc}}</textarea>
+				  <input type="checkbox" {{if .role.IsMenu}}checked="1"{{end}} name="is_menu" lay-skin="switch" lay-filter="switchTest" title="菜单" value="1" lay-text="是|否">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="is_default" class="layui-form-label">
+					默认权限
+				</label>
+				<div class="layui-input-block">
+				  <input type="checkbox" {{if .role.IsDefault}}checked="1"{{end}} name="is_default" lay-skin="switch" lay-filter="switchTest" title="权限" value="1" lay-text="是|否">
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -68,20 +76,12 @@
 					<input type="text" id="sort" name="sort" autocomplete="off" class="layui-input" value="{{.role.Sort}}">
 				</div>
 			</div>
-			<div class="layui-form-item">
-				<label for="is_menu" class="layui-form-label">
-					是否菜单
+			<div class="layui-form-item layui-form-text">
+				<label for="desc" class="layui-form-label">
+					描述
 				</label>
 				<div class="layui-input-block">
-				  <input type="checkbox" {{if .role.IsMenu}}checked="1"{{end}} name="is_menu" lay-skin="switch" lay-filter="switchTest" title="菜单" value="1">
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<label for="is_default" class="layui-form-label">
-					默认权限
-				</label>
-				<div class="layui-input-block">
-				  <input type="checkbox" {{if .role.IsDefault}}checked="1"{{end}} name="is_default" lay-skin="switch" lay-filter="switchTest" title="权限" value="1">
+					<textarea placeholder="随便写些什么" id="desc" name="desc" autocomplete="off" class="layui-textarea" style="height: 80px;">{{.role.Desc}}</textarea>
 				</div>
 			</div>
 	
@@ -104,7 +104,7 @@
 
 				// 监听提交
 				form.on('submit(save)', function(data) {
-					ajax_post("{{.PostUrl}}", data.field, top.reload_page);
+					ajax_post("{{.PostUrl}}", data.field, top.reload_page, true, true, true);
 					return false;
 				});
 			});

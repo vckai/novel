@@ -70,13 +70,13 @@
 					是否热门
 				</label>
 				<div class="layui-input-inline">
-				  <input type="checkbox" {{if .Novel.IsHot}}checked="1"{{end}} name="is_hot" lay-skin="switch" lay-filter="switchTest" title="热门" value="1">
+				  <input type="checkbox" {{if .Novel.IsHot}}checked="1"{{end}} name="is_hot" lay-skin="switch" lay-filter="switchTest" title="热门" value="1" lay-text="是|否">
 				</div>
 				<label for="is_menu" class="layui-form-label">
 					是否推荐
 				</label>
 				<div class="layui-input-inline">
-				  <input type="checkbox" {{if .Novel.IsRec}}checked="1"{{end}} name="is_rec" lay-skin="switch" lay-filter="switchTest" title="推荐" value="1">
+				  <input type="checkbox" {{if .Novel.IsRec}}checked="1"{{end}} name="is_rec" lay-skin="switch" lay-filter="switchTest" title="推荐" value="1" lay-text="是|否">
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -84,13 +84,13 @@
 					是否精品
 				</label>
 				<div class="layui-input-inline">
-				  <input type="checkbox" {{if .Novel.IsVipRec}}checked="1"{{end}} name="is_vip_rec" lay-skin="switch" lay-filter="switchTest" title="精品" value="1">
+				  <input type="checkbox" {{if .Novel.IsVipRec}}checked="1"{{end}} name="is_vip_rec" lay-skin="switch" lay-filter="switchTest" title="精品" value="1" lay-text="是|否">
 				</div>
 				<label for="is_menu" class="layui-form-label">
 					今日推荐
 				</label>
 				<div class="layui-input-inline">
-				  <input type="checkbox" {{if .Novel.IsTodayRec}}checked="1"{{end}} name="is_today_rec" lay-skin="switch" lay-filter="switchTest" title="今日推荐" value="1">
+				  <input type="checkbox" {{if .Novel.IsTodayRec}}checked="1"{{end}} name="is_today_rec" lay-skin="switch" lay-filter="switchTest" title="今日推荐" value="1" lay-text="是|否">
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -98,13 +98,13 @@
 					男生喜欢
 				</label>
 				<div class="layui-input-inline">
-				  <input type="checkbox" {{if .Novel.IsManLike}}checked="1"{{end}} name="is_man_like" lay-skin="switch" lay-filter="switchTest" title="男生喜欢" value="1">
+				  <input type="checkbox" {{if .Novel.IsManLike}}checked="1"{{end}} name="is_man_like" lay-skin="switch" lay-filter="switchTest" title="男生喜欢" value="1" lay-text="是|否">
 				</div>
 				<label for="is_menu" class="layui-form-label">
 					女生喜欢
 				</label>
 				<div class="layui-input-inline">
-				  <input type="checkbox" {{if .Novel.IsGirlLike}}checked="1"{{end}} name="is_girl_like" lay-skin="switch" lay-filter="switchTest" title="女生喜欢" value="1">
+				  <input type="checkbox" {{if .Novel.IsGirlLike}}checked="1"{{end}} name="is_girl_like" lay-skin="switch" lay-filter="switchTest" title="女生喜欢" value="1" lay-text="是|否">
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -112,15 +112,17 @@
 					是否原创 
 				</label>
 				<div class="layui-input-inline">
-				  <input type="checkbox" {{if .Novel.IsOriginal}}checked="1"{{end}} name="is_original" lay-skin="switch" lay-filter="switchTest" title="原创" value="1">
+				  <input type="checkbox" {{if .Novel.IsOriginal}}checked="1"{{end}} name="is_original" lay-skin="switch" lay-filter="switchTest" title="原创" value="1" lay-text="是|否">
 				</div>
 			</div>
 	
 			<div class="layui-form-item">
-				<input type="hidden" id="novel_id" name="novel_id" value="{{.Novel.Id}}">
-				<button  class="layui-btn" lay-filter="save" lay-submit="">
-					保存
-				</button>
+                <div class="layui-input-block">
+                    <input type="hidden" id="novel_id" name="novel_id" value="{{.Novel.Id}}">
+                    <button  class="layui-btn" lay-filter="save" lay-submit="">
+                        保存
+                    </button>
+                </div>
 			</div>
 		</form>
 	</div>
@@ -153,7 +155,7 @@
 				// 监听提交
 				form.on('submit(save)', function(data) {
                     data.field.desc = layui.layedit.getContent(editIndex)
-					ajax_post("{{.PostUrl}}", data.field, top.reload_page);
+					ajax_post("{{.PostUrl}}", data.field, top.reload_page, true, true, true);
 					return false;
 				});
 			});

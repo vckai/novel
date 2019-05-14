@@ -70,7 +70,7 @@
 
 		// 批量删除提交
 		function del_all() {
-			layer.confirm('确认要删除吗？', function(index) {
+			parent.layer.confirm('确认要删除吗？', function(index) {
                 var ids = get_list_ids('all-x-select');
 				// 发异步删除数据
 				ajax_post({{urlfor "admin.BannerController.DeleteBatch"}}, {ids: ids}, top.reload_page);
@@ -79,7 +79,7 @@
 
 		// 删除
 		function del(obj, id, name) {
-			layer.confirm('确认要删除吗？', function(index) {
+			tparentop.layer.confirm('确认要删除吗？', function(index) {
 				$(obj).parents("tr").remove();
 
 				//发异步删除数据

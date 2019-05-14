@@ -12,7 +12,7 @@ layui.use(['element', 'form'], function() {
 	$('.layui-tab-title li').eq(0).find('i').remove();
 
 	height = $('.layui-layout-admin .site-demo').height();
-	$('.layui-layout-admin .site-demo').height(height-100);
+	$('.layui-layout-admin .site-demo').height(height - 50);
 
 	if ($(window).width()<750) {
 		trun = 0;
