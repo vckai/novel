@@ -31,7 +31,7 @@
                             <a href="javascript:;" onclick="x_admin_show('编辑群组', {{urlfor "admin.GroupController.Edit" "id" .Id}})" class="layui-btn layui-btn-xs layui-btn-normal">
                                 <i class="layui-icon">&#xe642;</i>编辑
                             </a>
-                            {{if eq "1" (itoa .Id)}
+                            {{if eq "1" (itoa .Id)}}
                             <a class="layui-btn layui-btn-xs layui-btn-disabled" href="javascript:;">
                                 <i class="layui-icon">&#xe640;</i>删除
                             </a>
