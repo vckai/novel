@@ -125,6 +125,9 @@ func adminRouters() {
 
 		// 搜索日记管理
 		beego.NSAutoRouter(&admin.SearchLogController{}),
+
+		// 采集规则管理
+		beego.NSAutoRouter(&admin.SnatchRuleController{}),
 	)
 
 	beego.AddNamespace(ns)

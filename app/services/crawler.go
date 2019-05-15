@@ -16,7 +16,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"net/url"
 	"strings"
@@ -26,7 +25,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/axgle/mahonia"
 
-	"github.com/vckai/novel/app/librarys/snatchs"
+	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/utils"
 	"github.com/vckai/novel/app/utils/log"
 )
@@ -36,12 +35,18 @@ const (
 	CRAWLER_RUNING
 )
 
+var (
+	ErrInvalidURL     = errors.New("非法URL")
+	ErrNotCurrSiteURL = errors.New("非当前站点URL")
+)
+
 // 定义CrawlerService
 type Crawler struct {
-	initURL  *url.URL
-	provider *snatchs.Provide
+	initURL *url.URL
 
 	linkChans chan string
+
+	provider *models.SnatchRule
 
 	// 采集URL列表
 	URLs map[string]bool
@@ -70,13 +75,13 @@ func (this *Crawler) Init(provideName string) (*Crawler, error) {
 
 	var err error
 
-	this.provider, err = snatchs.NewManager(provideName)
+	this.provider = SnatchRuleService.GetByCode(provideName)
 	if err != nil {
 		return this, err
 	}
 
 	// 解析URL
-	this.initURL, err = url.Parse(this.provider.Client.GetURL())
+	this.initURL, err = url.Parse(this.provider.Url)
 	if err != nil {
 		return this, err
 	}
@@ -97,7 +102,7 @@ func (this *Crawler) Run() {
 		return
 	}
 
-	log.Info("开始运行爬虫，站点：", this.provider.Name)
+	log.Info("开始运行爬虫，站点：", this.provider.Code)
 	go this.run()
 }
 
@@ -129,7 +134,7 @@ func (this *Crawler) run() {
 	// 爬虫执行爬取URL地址
 	go func() {
 		t1 := time.Now()
-		this.runCrawler(this.initURL.String(), "")
+		this.runCrawler(this.initURL, "")
 		log.Info("URL爬虫，采集URL:", len(this.URLs), "，采集小说URL:", len(this.bookURLs), "，耗时:", time.Since(t1))
 
 		close(this.linkChans)
@@ -147,17 +152,18 @@ func (this *Crawler) run() {
 }
 
 // 爬虫真正运行处理
-func (this *Crawler) runCrawler(rawurl string, oldURL string) {
+func (this *Crawler) runCrawler(baseURL *url.URL, referer string) {
+	rawurl := baseURL.String()
+
 	// 已经采集过
 	if _, ok := this.URLs[rawurl]; ok {
 		return
 	}
 
 	// 内容采集
-	proxy := ProxyService.Get()
-	doc, err := this.NewHtml(rawurl, proxy, "utf-8")
+	doc, err := this.NewHtml(rawurl)
 	if err != nil {
-		log.Warn("采集URL失败：", rawurl, proxy, err, oldURL)
+		log.Warn("采集URL失败：", rawurl, referer, err)
 		return
 	}
 
@@ -166,13 +172,15 @@ func (this *Crawler) runCrawler(rawurl string, oldURL string) {
 	// 获取小说URL地址
 	doc.Find("a").Each(func(i int, s *goquery.Selection) {
 		uri, _ := s.Attr("href")
-		link := this.genrateURL(rawurl, uri)
-		if len(link) == 0 {
+		u, err := this.genrateURL(baseURL, uri)
+		if err != nil {
 			return
 		}
 
+		link := u.String()
+
 		// 是否小说简介页面
-		if this.provider.Client.IsBookURL(link) {
+		if SnatchService.IsBookURL(this.provider.Code, link) {
 			// 小说已经采集过
 			if _, ok := this.bookURLs[link]; ok {
 				return
@@ -187,7 +195,7 @@ func (this *Crawler) runCrawler(rawurl string, oldURL string) {
 		}
 
 		// 是否可采集的爬虫URL
-		if !this.provider.Client.IsCrawlerURL(link) {
+		if !SnatchService.IsCrawlerURL(this.provider.Code, link) {
 			return
 		}
 
@@ -200,23 +208,10 @@ func (this *Crawler) runCrawler(rawurl string, oldURL string) {
 		time.Sleep(time.Duration(1) * time.Millisecond)
 
 		// 递归爬虫URL
-		this.runCrawler(link, rawurl)
+		this.runCrawler(u, rawurl)
 	})
 
 	return
-}
-
-// 执行小说采集
-func (this *Crawler) SnatchBookFor() {
-	// 采集小说
-	for i := 1; i <= 69749; i++ {
-		link := fmt.Sprintf("http://www.x23us.com/book/%d", i)
-		err := SnatchService.InitNovel(link)
-
-		if err != nil {
-			log.Warn("小说采集失败：", link, err)
-		}
-	}
 }
 
 // 执行小说采集
@@ -231,50 +226,45 @@ func (this *Crawler) snatchBook(link string) {
 }
 
 // 生成返回完整的URL地址
-func (this *Crawler) genrateURL(currURL, rawurl string) string {
-	// 当前域名下的URL
-	// 防止部分https的情况进行转换
-	rawHost := strings.Replace(rawurl, "https://", "", -1)
-	rawHost = strings.Replace(rawHost, "http://", "", -1)
-	initHost := strings.Replace(this.initURL.String(), "https://", "", -1)
-	initHost = strings.Replace(initHost, "http://", "", -1)
-	if strings.HasPrefix(rawHost, initHost) {
-		return rawurl
-	}
-
-	// 非当前域名下的URL直接返回空
-	if strings.HasPrefix(rawurl, "http://") ||
-		strings.Contains(rawurl, "https://") ||
-		strings.Contains(rawurl, "javascript:") ||
+func (this *Crawler) genrateURL(base *url.URL, rawurl string) (*url.URL, error) {
+	if strings.Contains(rawurl, "javascript:") ||
 		strings.Contains(rawurl, "(") ||
 		strings.Contains(rawurl, "mailto") {
-		return ""
+		return nil, ErrInvalidURL
 	}
 
-	// 拼装URL
-	if strings.HasPrefix(rawurl, "/") {
-		return this.initURL.String() + rawurl
-	}
-
-	return currURL + rawurl
-}
-
-// 网页请求
-// 返回goquery格式内容
-func (this *Crawler) NewHtml(rawurl, proxyURL string, args ...string) (*goquery.Document, error) {
-	var body io.Reader
-	var err error
-
-	body, err = utils.HttpGet(rawurl, nil, proxyURL)
-
+	u, err := url.Parse(rawurl)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(args) == 0 || args[0] != "utf-8" {
+	// 非当前域名下的URL直接返回空
+	if u.Hostname() != base.Hostname() {
+		return nil, ErrNotCurrSiteURL
+	}
+
+	// 拼装URL
+	return base.ResolveReference(u), nil
+}
+
+// 网页请求
+// 返回goquery格式内容
+func (this *Crawler) NewHtml(rawurl string) (*goquery.Document, error) {
+	var body io.Reader
+	var err error
+
+	resp, err := utils.HttpGet(rawurl, nil, ProxyService.Get())
+	if err != nil {
+		return nil, err
+	}
+
+	body = resp.Body
+
+	if this.provider.Charset != "UTF-8" {
 		enc := mahonia.NewDecoder("GB18030")
 		body = enc.NewReader(body)
 	}
+
 	doc, err := goquery.NewDocumentFromReader(body)
 	if err != nil {
 		return nil, err

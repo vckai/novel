@@ -217,7 +217,7 @@ func DownFile(url, upPreDir, upDir string, proxyURL string) (string, error) {
 		return "", err
 	}
 
-	rc, err := HttpGet(url, nil, proxyURL)
+	resp, err := HttpGet(url, nil, proxyURL)
 	if err != nil {
 		return "", err
 	}
@@ -228,6 +228,8 @@ func DownFile(url, upPreDir, upDir string, proxyURL string) (string, error) {
 	}
 
 	defer f.Close()
+	rc := resp.Body
+	resp.Body.Close()
 	_, err = io.Copy(f, rc)
 
 	return uploadDir + newName, err
@@ -237,7 +239,7 @@ var UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, 
 
 // HttpGet gets the specified resource. ErrNotFound is returned if the
 // server responds with status 404.
-func HttpGet(rawurl string, header http.Header, proxyURL string) (io.ReadCloser, error) {
+func HttpGet(rawurl string, header http.Header, proxyURL string) (*http.Response, error) {
 	req, err := http.NewRequest("GET", rawurl, nil)
 	if err != nil {
 		return nil, err
@@ -252,6 +254,9 @@ func HttpGet(rawurl string, header http.Header, proxyURL string) (io.ReadCloser,
 	// 设置请求超时时间
 	client := &http.Client{
 		Timeout: 3 * time.Second,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
 	}
 
 	// 设置代理
@@ -270,15 +275,14 @@ func HttpGet(rawurl string, header http.Header, proxyURL string) (io.ReadCloser,
 	}
 
 	if resp.StatusCode == 200 {
-		return resp.Body, nil
+		return resp, nil
 	}
 
-	resp.Body.Close()
 	if resp.StatusCode == 404 { //
 		err = ErrHttpNotFound
 	} else {
 		err = ErrHttpError
 	}
 
-	return nil, err
+	return resp, err
 }

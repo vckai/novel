@@ -8,8 +8,8 @@
 				<div class="layui-input-inline">
 				  <select name="source" lay-verify="required">
 					<option value="0">请选择站点</option>
-					{{range $k,$v:= .Snatchs}}
-					<option value="{{$k}}">{{$v.Title}}</option>
+					{{range $k, $v:= .Snatchs}}
+					<option value="{{$v.Code}}">{{$v.Name}}</option>
 					{{end}}
 				  </select>
 				</div>

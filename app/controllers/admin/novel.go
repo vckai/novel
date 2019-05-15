@@ -43,15 +43,6 @@ func (this *NovelController) Index() {
 	this.Data["List"] = novels
 	this.Data["Count"] = count
 	this.Data["Limit"] = size
-
-	// 获取采集点
-	snatchs := services.SnatchService.GetSnatchs()
-	snatchsData := make(map[string]string)
-	for k, v := range snatchs {
-		snatchsData[k] = v.Title
-	}
-
-	this.Data["Snatchs"] = snatchsData
 	this.View("novel/index.tpl")
 }
 
@@ -66,7 +57,6 @@ func (this *NovelController) Add() {
 	this.Data["Novel"] = models.NewNovel()
 	this.Data["IsUpdate"] = false
 	this.Data["Cates"] = services.CateService.GetAll()
-	this.Data["Snatchs"] = services.SnatchService.GetSnatchs()
 	this.Data["PostUrl"] = this.URLFor("admin.NovelController.Add")
 	this.View("novel/add.tpl")
 }
@@ -89,7 +79,7 @@ func (this *NovelController) Crawler() {
 		return
 	}
 
-	this.Data["Snatchs"] = services.SnatchService.GetSnatchs()
+	this.Data["Snatchs"] = services.SnatchRuleService.GetSnatchs()
 	this.View("novel/crawler.tpl")
 }
 
@@ -108,7 +98,6 @@ func (this *NovelController) AddSnatch() {
 	}
 
 	this.Data["Cates"] = services.CateService.GetAll()
-	this.Data["Snatchs"] = services.SnatchService.GetSnatchs()
 	this.View("novel/add_snatch.tpl")
 }
 
@@ -181,7 +170,6 @@ func (this *NovelController) Edit() {
 	this.Data["Novel"] = novel
 	this.Data["IsUpdate"] = true
 	this.Data["Cates"] = services.CateService.GetAll()
-	this.Data["Snatchs"] = services.SnatchService.GetSnatchs()
 	this.Data["PostUrl"] = this.URLFor("admin.NovelController.Edit")
 	this.View("novel/add.tpl")
 }

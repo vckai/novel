@@ -23,7 +23,7 @@
             <xblock>
                 <button class="layui-btn layui-btn-danger" onclick="del_all()"><i class="layui-icon">&#xe640;</i>批量删除</button>
                 <button class="layui-btn" onclick="x_admin_show('添加小说', '{{urlfor "admin.NovelController.Add"}}')"><i class="layui-icon">&#xe608;</i>添加</button>
-                <button class="layui-btn" onclick="x_admin_show('运行爬虫', '{{urlfor "admin.NovelController.Crawler"}}', 450, 180)"><i class="layui-icon">&#xe608;</i>运行爬虫</button>
+                <button class="layui-btn" onclick="x_admin_show('运行爬虫', '{{urlfor "admin.NovelController.Crawler"}}', 450, 380)"><i class="layui-icon">&#xe608;</i>运行爬虫</button>
                 <button class="layui-btn" onclick="x_admin_show('添加小说采集', '{{urlfor "admin.NovelController.AddSnatch"}}', 550, 180)"><i class="layui-icon">&#xe608;</i>添加采集</button>
 
                 
@@ -48,7 +48,7 @@
                         <th>推荐</th>
                         <th>精品</th>
                         <th>章节更新时间</th>
-                        <th style="width: 440px;">操作</th>
+                        <th style="width: 450px;">操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,12 +73,21 @@
                             <a href="javascript:;" onclick="x_admin_show('【{{.Name}}】小说章节列表', {{urlfor "admin.ChapterController.Index" "novid" .Id}}, '80%', '80%')" class="layui-btn layui-btn-xs layui-btn-primary">
                                 <i class="layui-icon">&#xe62d;</i>章节
                             </a>
+                            {{if eq "" (itoa .IsOriginal)}}
                             <a href="javascript:;" onclick="x_admin_show('【{{.Name}}】小说采集站点列表', '{{urlfor "admin.NovelController.Links" "novid" .Id}}')" class="layui-btn layui-btn-xs layui-btn-primary">
                                 <i class="layui-icon">&#xe60a;</i>采集点
                             </a>
                             <a href="javascript:;" onclick="snatch_novel('{{.Id}}', '{{.Name}}')" class="layui-btn layui-btn-xs layui-btn-normal">
                                 <i class="layui-icon">&#xe623;</i>执行采集
                             </a>
+                            {{else}}
+                            <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">
+                                <i class="layui-icon">&#xe60a;</i>采集点
+                            </a>
+                            <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">
+                                <i class="layui-icon">&#xe623;</i>执行采集
+                            </a>
+                            {{end}}
                             <a href="javascript:;" onclick="del_chapter(this, '{{.Id}}', '{{.Name}}')" class="layui-btn layui-btn-xs layui-btn-warm">
                                 <i class="layui-icon">&#x1007;</i>清空章节
                             </a>

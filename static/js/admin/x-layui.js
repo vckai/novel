@@ -117,7 +117,7 @@ function ajax_post(url, data, tourl, is_alert, is_parent, is_close) {
 
         if (func) {
             setTimeout(function () { 
-                func();
+                func(res);
                 if (is_close) {
                     x_admin_close();
                 }

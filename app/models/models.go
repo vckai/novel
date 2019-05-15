@@ -34,6 +34,7 @@ var (
 	ConfigModel     *Config
 	SearchModel     *Search
 	SearchLogModel  *SearchLog
+	SnatchRuleModel *SnatchRule
 )
 
 // db初始化操作
@@ -90,4 +91,5 @@ func InitModel() {
 	ConfigModel = NewConfig()
 	SearchModel = NewSearch()
 	SearchLogModel = NewSearchLog()
+	SnatchRuleModel = NewSnatchRule()
 }

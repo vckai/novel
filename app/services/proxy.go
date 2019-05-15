@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/astaxie/beego"
 	"github.com/tidwall/gjson"
 
 	"github.com/vckai/novel/app/utils"
@@ -40,8 +39,7 @@ const (
 
 // 定义CrawlerService
 type Proxy struct {
-	ips  []string
-	mode int
+	ips []string
 }
 
 func NewProxy() *Proxy {
@@ -52,12 +50,11 @@ func NewProxy() *Proxy {
 
 // 运行入口
 func (this *Proxy) Init() {
-
 	go func() {
 		for {
 			// 代理配置模式
-			this.mode = ConfigService.Int("proxy_mode", NO_PROXY)
-			if this.mode == IP_AUTO_PROXY {
+			mode := ConfigService.Int("ProxyMode", NO_PROXY)
+			if mode == IP_AUTO_PROXY {
 				this.run()
 			}
 			// 休眠12分钟更新一次
@@ -68,13 +65,13 @@ func (this *Proxy) Init() {
 
 // 获取代理IP池
 func (this *Proxy) run() {
-	resp, err := utils.HttpGet(ConfigService.String("proxy_url", ""), nil, "")
+	resp, err := utils.HttpGet(ConfigService.String("ProxyURL", ""), nil, "")
 	if err != nil {
 		log.Error("Request Proxy URL Error: ", err)
 		return
 	}
 
-	body, err := ioutil.ReadAll(resp)
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Error("Get Proxy Body Error: ", err)
 		return
@@ -95,11 +92,11 @@ func (this *Proxy) run() {
 func (this *Proxy) Get() string {
 	proxy := ""
 
-	switch this.mode {
+	switch ConfigService.Int("ProxyMode", NO_PROXY) {
 	case NO_PROXY:
 
 	case HTTP_PROXY:
-		proxy = beego.AppConfig.String("proxy_url")
+		proxy = ConfigService.String("ProxyURL")
 	default:
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
 		x := len(this.ips)

@@ -121,6 +121,12 @@
 			"revisionTime": "2017-11-30T14:12:17Z"
 		},
 		{
+			"checksumSHA1": "I7hloldMJZTqUx6hbVDp5nk9fZQ=",
+			"path": "github.com/pkg/errors",
+			"revision": "27936f6d90f9c8e1145f11ed52ffffbfdb9e0af7",
+			"revisionTime": "2019-02-27T00:00:51Z"
+		},
+		{
 			"checksumSHA1": "fZClM/Bc4qNmhSph4pH4oImQ2XM=",
 			"path": "github.com/shirou/gopsutil",
 			"revision": "70693b6a3da51a8a686d31f1b346077bbc066062",
@@ -243,5 +249,5 @@
 			"revisionTime": "2016-05-30T02:44:06Z"
 		}
 	],
-	"rootPath": "novel"
+	"rootPath": "github.com/vckai/novel"
 }
