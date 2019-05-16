@@ -1,0 +1,83 @@
+[
+    {
+        "name": "顶点小说",
+        "code": "x23us",
+        "url": "https://www.x23us.com/",
+        "state": 1,
+        "is_update": 0,
+        "charset": "GB18030",
+        "test": {
+            "book_url": "https://www.x23us.com/book/66656",
+            "book_title": "圣墟",
+            "book_author": "辰东",
+            "book_cate": "玄幻魔法",
+            "book_desc": "中崛起，在寂灭中",
+            "book_cover": "https://www.x23us.com/files/article/image/66/66656/66656s.jpg",
+            "book_chapter_url": "https://www.x23us.com/html/66/66656/",
+            "chapter_url": "https://www.x23us.com/html/66/66656/",
+            "chapter_catalog_url": "https://www.x23us.com/html/66/66656/27429411.html",
+            "chapter_catalog_title": "第一章 沙漠中的彼岸花",
+            "info_url": "https://www.x23us.com/html/66/66656/29798305.html",
+            "info_title": "第二章 后文明时代",
+            "info_desc": "疑似受惊，差点闯出栅栏",
+            "info_pre_page_url": "https://www.x23us.com/html/66/66656/27429411.html",
+            "info_next_page_url": "https://www.x23us.com/html/66/66656/27429412.html",
+            "find_book_kw": "圣墟",
+            "find_book_url": "https://www.x23us.com/book/66656"
+        },
+        "rules": {
+            "is_book_url": "^https://www.x23us.com/book/([\\d]+)([\\/]?)$",
+            "is_crawler_url": "https://www.x23us.com/class/([\\d]+)_([\\d]+).html",
+            "book_title_selector": "#content dd:nth-of-type(1) h1",
+            "book_author_selector": "#content dd:nth-of-type(2) div:nth-of-type(2) table tr:nth-of-type(1) td:nth-of-type(2)",
+            "book_cate_selector": "#content dd:nth-of-type(2) div:nth-of-type(2) table tr:nth-of-type(1) td:nth-of-type(1) a",
+            "book_desc_selector": "#content dd:nth-of-type(4) p:nth-of-type(2)",
+            "book_cover_selector": "#content dd:nth-of-type(2) div:nth-of-type(1) a img",
+            "book_no_cover": "nocover.jpg",
+            "book_chapter_url_selector": "#content dd:nth-of-type(2) div:nth-of-type(1) a",
+            "chapter_catalog_selector": ".bdsub dl dd:nth-of-type(3) a",
+            "chapter_abandon_num": 0,
+            "info_title_selector": ".bdsub dl dd h1",
+            "info_desc_selector": "#contents",
+            "info_desc_filter_rule": "顶 点 小 说 Ｘ ２３ Ｕ Ｓ．Ｃ ＯＭ\n顶点小说 ２３ＵＳ．ＣＯＭ更新最快\n顶点小说(.*)更新最快\n",
+            "info_pre_page_selector": "#footlink a:nth-of-type(1)",
+            "info_next_page_selector": "#footlink a:nth-of-type(3)",
+            "find_url": "https://www.x23us.com/modules/article/search.php?searchtype=keywords\u0026searchkey=",
+            "find_book_url_selector": "#content tr:nth-of-type(2) td:nth-of-type(1) a"
+        },
+        "cate_maps": [
+            {
+                "id": 1,
+                "name": "玄幻魔法"
+            },
+            {
+                "id": 2,
+                "name": "武侠修真"
+            },
+            {
+                "id": 3,
+                "name": "都市言情"
+            },
+            {
+                "id": 4,
+                "name": "历史军事"
+            },
+            {
+                "id": 5,
+                "name": "侦探推理"
+            },
+            {
+                "id": 6,
+                "name": "网游动漫"
+            },
+            {
+                "id": 7,
+                "name": "科幻小说"
+            },
+            {
+                "id": 8,
+                "name": "恐怖灵异"
+            }
+        ]
+    }
+]
