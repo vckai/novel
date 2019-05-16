@@ -288,6 +288,7 @@ VALUES
 	(15,0,'搜索管理','&#xe615;',1,'','','',40,0,1555230351,1555230351,0);
 	(16,15,'搜索记录','',1,'','Search','Index',0,0,1555230351,1555230351,0);
 	(17,15,'搜索日记','',1,'','SearchLog','Index',0,0,1555230351,1555230351,0);
+    (18,7,'采集规则','',1,'','SnatchRule','Index',0,0,1555398698,1555398698,0);
 
 /*!40000 ALTER TABLE `nov_role` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -370,6 +371,34 @@ CREATE TABLE `nov_search_log` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='搜索日记表';
 
+# Dump of table nov_snatch_rule
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `nov_snatch_rule`;
+
+CREATE TABLE `nov_snatch_rule` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL COMMENT '采集站名称',
+  `code` varchar(20) NOT NULL COMMENT '采集站唯一标识码',
+  `url` varchar(50) NOT NULL COMMENT '采集站URL',
+  `state` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否启用，0：禁用，1：启用',
+  `is_update` tinyint(1) NOT NULL COMMENT '是否强制更新用于小说信息',
+  `charset` varchar(10) NOT NULL COMMENT '网站编码格式',
+  `cate_map` varchar(255) NOT NULL COMMENT '分类转换对应',
+  `rule` varchar(2555) NOT NULL COMMENT '采集规则',
+  `test_data` varchar(2555) NOT NULL DEFAULT '' COMMENT '测试对比数据',
+  `created_at` int(11) unsigned NOT NULL,
+  `updated_at` int(11) unsigned NOT NULL,
+  `deleted_at` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+
+LOCK TABLES `nov_snatch_rule` WRITE;
+/*!40000 ALTER TABLE `nov_role` DISABLE KEYS */;
+
+INSERT INTO `nov_snatch_rule`(`id`, `name`, `code`, `url`, `state`, `charset`, `cate_map`, `rule`, `test_data`, `created_at`, `updated_at`, `deleted_at`) VALUES (1, '顶点小说', 'x23us', 'https://www.x23us.com/', 1, 'GB18030', '[{\"id\":1,\"name\":\"玄幻魔法\"},{\"id\":2,\"name\":\"eee\"}]', '{\"book_title_selector\":\"#content dd:nth-of-type(1) h1\",\"book_author_selector\":\"#content dd:nth-of-type(2) div:nth-of-type(2) table tr:nth-of-type(1) td:nth-of-type(2)\",\"book_cate_selector\":\"#content dd:nth-of-type(2) div:nth-of-type(2) table tr:nth-of-type(1) td:nth-of-type(1) a\",\"book_desc_selector\":\"#content dd:nth-of-type(4) p:nth-of-type(2)\",\"book_cover_selector\":\"#content dd:nth-of-type(2) div:nth-of-type(1) a img\",\"book_no_cover\":\"nocover.jpg\",\"book_chapter_url_selector\":\"#content dd:nth-of-type(2) div:nth-of-type(1) a\",\"book_is_url\":\"\",\"is_crawler_url\":\"\",\"chapter_catalog_selector\":\"5\",\"chapter_abandon_num\":1,\"info_title_selector\":\"6\",\"info_desc_selector\":\"7\",\"info_desc_filter_rule\":\"顶 点 小 说 Ｘ ２３ Ｕ Ｓ．Ｃ ＯＭ\\n顶点小说 ２３ＵＳ．ＣＯＭ更新最快\\n顶点小说(.*)更新最快\\n\",\"info_catalog_page_selector\":\"\",\"info_pre_page_selector\":\"1\",\"info_next_page_selector\":\"1\"}', '', 1557731894, 1557818755, 0);
+
+UNLOCK TABLES;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
