@@ -229,7 +229,7 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 
 	// 获取小说标题
 	nov.Name = doc.Find(rule.BookTitleSelector).Text()
-	nov.Name = strings.TrimRight(nov.Name, " 全文阅读")
+	nov.Name = strings.TrimRight(nov.Name, "全文阅读")
 	nov.Name = strings.Replace(nov.Name, "&nbsp;", "", -1)
 	if len(nov.Name) == 0 {
 		return nil, ErrNotNovName
@@ -238,6 +238,9 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	// 获取小说作者
 	nov.Author = doc.Find(rule.BookAuthorSelector).Text()
 	nov.Author = strings.Replace(nov.Author, "&nbsp;", "", -1)
+	nov.Author = strings.Replace(nov.Author, "作者", "", -1)
+	nov.Author = strings.Replace(nov.Author, "：", "", -1)
+	nov.Author = strings.Replace(nov.Author, ":", "", -1)
 	nov.Author = strings.TrimSpace(nov.Author)
 	if len(nov.Author) == 0 {
 		return nil, ErrNotNovAuthor
@@ -297,7 +300,7 @@ func (this *Snatch) GetChapter(provider *models.SnatchRule, rawurl string) (*Sna
 	// 获取章节标题
 	chap.Title = doc.Find(rule.InfoTitleSelector).Text()
 	chap.Title = beego.HTML2str(chap.Title)
-	chap.Title = strings.Replace(chap.Title, "正文 ", "", -1)
+	chap.Title = strings.Replace(chap.Title, "正文", "", -1)
 	chap.Title = strings.TrimSpace(chap.Title)
 	if len(chap.Title) == 0 {
 		return nil, ErrNotChapTitle
