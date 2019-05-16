@@ -112,6 +112,10 @@ type Rule struct {
 	FindBookURLSelector string `json:"find_book_url_selector"`
 }
 
+type ArgsListRule struct {
+	Ids []interface{}
+}
+
 func NewSnatchRule() *SnatchRule {
 	return &SnatchRule{
 		Rules:    &Rule{},
@@ -268,9 +272,16 @@ func (m *SnatchRule) Decode() error {
 }
 
 // 获取配置列表
-func (m *SnatchRule) GetAll() []*SnatchRule {
+func (m *SnatchRule) GetAll(args *ArgsListRule) []*SnatchRule {
 	list := make([]*SnatchRule, 0)
-	m.query().All(&list, "id", "name", "code", "url", "is_update", "state", "charset", "cate_map", "rule", "created_at")
+
+	q := m.query().Filter("deleted_at", 0)
+
+	if len(args.Ids) > 0 {
+		q.Filter("id", args.Ids...)
+	}
+
+	q.All(&list, "id", "name", "code", "url", "is_update", "state", "charset", "cate_map", "rule", "test_data", "created_at")
 
 	return list
 }

@@ -10,7 +10,9 @@
         <div class="layui-card">
             <xblock>
                 <button class="layui-btn layui-btn-danger" onclick="del_all()"><i class="layui-icon">&#xe640;</i>批量删除</button>
+                <button class="layui-btn layui-btn-normal" onclick="export_rules()"><i class="layui-icon">&#xe601;</i>批量导出</button>
                 <button class="layui-btn" onclick="x_admin_show('添加采集规则', '{{urlfor "admin.SnatchRuleController.Add"}}')"><i class="layui-icon">&#xe608;</i>添加</button>
+                <button class="layui-btn" onclick="x_admin_show('导入规则', '{{urlfor "admin.SnatchRuleController.Import"}}')"><i class="layui-icon">&#xe608;</i>导入规则</button>
                 <button class="layui-btn" onclick="x_admin_show('模拟测试获取页面元素', '{{urlfor "admin.SnatchRuleController.Goquery"}}')"><i class="layui-icon">&#xe631;
 </i>模拟测试获取页面元素</button>
                 <span class="x-right" style="line-height:40px">共有数据：{{.Count}} 条</span>
@@ -42,8 +44,11 @@
                             <a href="javascript:;" onclick="x_admin_show('编辑', {{urlfor "admin.SnatchRuleController.Edit" "id" .Id}})" class="layui-btn layui-btn-xs layui-btn-normal">
                                 <i class="layui-icon">&#xe642;</i>编辑
                             </a>
+                            <a class="layui-btn layui-btn-xs layui-btn-normal" href="javascript:;" onclick="export_rule(this, '{{.Id}}')">
+                                <i class="layui-icon">&#xe601;</i>导出
+                            </a>
                             <a class="layui-btn layui-btn-xs layui-btn-warm" href="javascript:;" onclick="test(this, '{{.Id}}')">
-                                <i class="layui-icon">&#xe605;</i>测试
+                                <i class="layui-icon">&#xe623;</i>测试
                             </a>
                             <a class="layui-btn layui-btn-xs layui-btn-danger" href="javascript:;" onclick="del(this, '{{.Id}}')">
                                 <i class="layui-icon">&#xe640;</i>删除
@@ -100,6 +105,22 @@
 				//发异步删除数据
 				ajax_post({{urlfor "admin.SnatchRuleController.Delete"}}, {id: id}, top.reload_page);
 			});
+		}
+
+		// 导出单个规则
+		function export_rule(obj, id) {
+            window.location.href = {{urlfor "admin.SnatchRuleController.Export"}} + "?ids=" + id;
+		}
+
+		// 批量导出规则
+		function export_rules() {
+            var ids = get_list_ids('all-x-select');
+            if (ids.length == 0) {
+                top.layer.msg("请选择需要导出的规则", {icon: 5});
+                return 
+            } else {
+                window.location.href = {{urlfor "admin.SnatchRuleController.Export"}} + "?ids=" + ids.join(",");
+            }
 		}
 
 		// 测试

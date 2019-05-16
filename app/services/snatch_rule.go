@@ -39,7 +39,7 @@ func (this *SnatchRule) Init() {
 }
 
 func (this *SnatchRule) Load() {
-	rs := models.SnatchRuleModel.GetAll()
+	rs := models.SnatchRuleModel.GetAll(&models.ArgsListRule{})
 
 	this.rules = make(map[string]*models.SnatchRule)
 	for _, r := range rs {
@@ -83,8 +83,8 @@ func (this *SnatchRule) GetSnatchs() map[string]*models.SnatchRule {
 }
 
 // 获取采集规则列表
-func (this *SnatchRule) GetAll() []*models.SnatchRule {
-	rs := models.SnatchRuleModel.GetAll()
+func (this *SnatchRule) GetAll(args *models.ArgsListRule) []*models.SnatchRule {
+	rs := models.SnatchRuleModel.GetAll(args)
 
 	return rs
 }

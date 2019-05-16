@@ -15,6 +15,8 @@
 package admin
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"strings"
 
@@ -32,9 +34,22 @@ type SnatchRuleController struct {
 	BaseController
 }
 
+// 导出采集规则配置模型
+type ExportSnatchRule struct {
+	Name     string                 `json:"name"`
+	Code     string                 `json:"code"`
+	Url      string                 `json:"url"`
+	State    uint8                  `json:"state"`
+	IsUpdate uint8                  `json:"is_update"`
+	Charset  string                 `json:"charset"`
+	Test     *models.SnatchTestData `json:"test"`
+	Rules    *models.Rule           `json:"rules"`
+	CateMaps []*models.CateMap      `json:"cate_maps"`
+}
+
 // 采集规则列表
 func (this *SnatchRuleController) Index() {
-	rules := services.SnatchRuleService.GetAll()
+	rules := services.SnatchRuleService.GetAll(&models.ArgsListRule{})
 
 	this.Data["Rules"] = rules
 	this.Data["Count"] = len(rules)
@@ -249,12 +264,111 @@ func (this *SnatchRuleController) Test() {
 	this.OutJson(0, "测试成功")
 }
 
+// 导入规则文件
+func (this *SnatchRuleController) Import() {
+	if this.IsAjax() {
+		ruleContent := this.GetString("rule_content")
+		if len(ruleContent) == 0 {
+			this.OutJson(1001, "请输入需要导入的JSON规则")
+		}
+
+		imports := make([]*ExportSnatchRule, 0)
+		err := json.Unmarshal([]byte(ruleContent), &imports)
+		if err != nil {
+			this.OutJson(1002, "转换JSON失败："+err.Error())
+		}
+
+		for _, i := range imports {
+			r := &models.SnatchRule{
+				Name:     i.Name,
+				Code:     i.Code,
+				Url:      i.Url,
+				State:    i.State,
+				IsUpdate: i.IsUpdate,
+				Charset:  i.Charset,
+				Test:     i.Test,
+				Rules:    i.Rules,
+				CateMaps: i.CateMaps,
+			}
+
+			err = services.SnatchRuleService.Save(r)
+
+			if err != nil {
+				this.OutJson(1003, "导入失败："+err.Error())
+			}
+		}
+
+		this.OutJson(0, "导入成功")
+		return
+	}
+
+	this.View("snatch_rule/import.tpl")
+}
+
+// 导出规则文件
+func (this *SnatchRuleController) Export() {
+	idStr := this.GetString("ids")
+	ids := strings.Split(idStr, ",")
+	if len(ids) == 0 {
+		this.Msg("请选择需要导出的规则")
+	}
+	args := &models.ArgsListRule{
+		Ids: make([]interface{}, 0),
+	}
+
+	for _, id := range ids {
+		args.Ids = append(args.Ids, id)
+	}
+
+	rules := services.SnatchRuleService.GetAll(args)
+
+	if len(rules) == 0 {
+		this.Msg("没有可导出的内容")
+	}
+
+	exports := make([]*ExportSnatchRule, 0)
+	for _, r := range rules {
+		r.Decode()
+		export := &ExportSnatchRule{
+			Name:     r.Name,
+			Code:     r.Code,
+			Url:      r.Url,
+			State:    r.State,
+			IsUpdate: r.IsUpdate,
+			Charset:  r.Charset,
+			Test:     r.Test,
+			Rules:    r.Rules,
+			CateMaps: r.CateMaps,
+		}
+
+		exports = append(exports, export)
+	}
+
+	data, err := json.Marshal(exports)
+
+	if err != nil {
+		this.Msg("转换JSON失败：" + err.Error())
+	}
+
+	var buf bytes.Buffer
+	_ = json.Indent(&buf, data, "", "    ")
+
+	file := bytes.NewReader(buf.Bytes())
+
+	this.Ctx.Output.Header("Content-Type", "application/octet-stream")
+	this.Ctx.Output.Header("content-disposition", "attachment; filename=\"novel_snatch_rules.txt\"")
+	_, err = io.Copy(this.Ctx.ResponseWriter, file)
+	if err != nil {
+		this.Msg("下载失败：" + err.Error())
+	}
+}
+
 // 删除采集规则
 func (this *SnatchRuleController) Delete() {
 	id, _ := this.GetUint32("id")
 	name := this.GetString("name", "")
 	if id < 1 {
-		this.Msg("参数错误，无法访问")
+		this.OutJson(1001, "参数错误，无法访问")
 	}
 
 	err := services.SnatchRuleService.Delete(id)
@@ -362,6 +476,7 @@ func (this *SnatchRuleController) save() {
 		log.Error(mtitle, "采集规则失败：", err.Error())
 		this.OutJson(1003, mtitle+"失败："+err.Error())
 	}
+
 	// 添加操作日记
 	this.AddLog(3201, mtitle, r.Name, r.Id)
 
