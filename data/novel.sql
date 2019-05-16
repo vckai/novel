@@ -283,11 +283,11 @@ VALUES
 	(10,6,'用户反馈','',1,'','Feedback','Index',0,0,1493122753,1493122753,0),
 	(11,7,'分类管理','',1,'','Cate','Index',0,0,1493983980,1493983980,0),
 	(12,6,'轮播管理','',1,'','Banner','Index',0,0,1494999793,1494999824,0),
-	(13,6,'操作日记','',1,'','AdminLog','Index',0,0,1495004798,1495004798,0);
-	(14,6,'网站配置','',1,'','Config','Index',0,0,1555230351,1555230351,0);
-	(15,0,'搜索管理','&#xe615;',1,'','','',40,0,1555230351,1555230351,0);
-	(16,15,'搜索记录','',1,'','Search','Index',0,0,1555230351,1555230351,0);
-	(17,15,'搜索日记','',1,'','SearchLog','Index',0,0,1555230351,1555230351,0);
+	(13,6,'操作日记','',1,'','AdminLog','Index',0,0,1495004798,1495004798,0),
+	(14,6,'网站配置','',1,'','Config','Index',0,0,1555230351,1555230351,0),
+	(15,0,'搜索管理','&#xe615;',1,'','','',40,0,1555230351,1555230351,0),
+	(16,15,'搜索记录','',1,'','Search','Index',0,0,1555230351,1555230351,0),
+	(17,15,'搜索日记','',1,'','SearchLog','Index',0,0,1555230351,1555230351,0),
     (18,7,'采集规则','',1,'','SnatchRule','Index',0,0,1555398698,1555398698,0);
 
 /*!40000 ALTER TABLE `nov_role` ENABLE KEYS */;
@@ -308,8 +308,8 @@ CREATE TABLE `nov_config` (
   UNIQUE KEY `udx_key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网站配置表';
 
-LOCK TABLES `nov_role` WRITE;
-/*!40000 ALTER TABLE `nov_role` DISABLE KEYS */;
+LOCK TABLES `nov_config` WRITE;
+/*!40000 ALTER TABLE `nov_config` DISABLE KEYS */;
 
 INSERT INTO `nov_config` (`id`, `key`, `value`, `created_at`, `updated_at`)
 VALUES
@@ -330,10 +330,10 @@ VALUES
 	(15, 'Uptime', '1', 1554814419, 1554814419),
 	(16, 'NotUpStopDays', '10', 1554814419, 1554814419),
 	(17, 'ProxyMode', '0', 1554814419, 1554814419),
-	(18, 'ProxyURL', '', 1554814419, 1554814419);
+	(18, 'ProxyURL', '', 1554814419, 1554814419),
 	(19, 'WebURL', '', 1554814419, 1554814419);
 
-/*!40000 ALTER TABLE `nov_role` ENABLE KEYS */;
+/*!40000 ALTER TABLE `nov_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
 # Dump of table nov_search
@@ -394,7 +394,7 @@ CREATE TABLE `nov_snatch_rule` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 LOCK TABLES `nov_snatch_rule` WRITE;
-/*!40000 ALTER TABLE `nov_role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `nov_snatch_rule` DISABLE KEYS */;
 
 INSERT INTO `nov_snatch_rule`(`id`, `name`, `code`, `url`, `state`, `charset`, `cate_map`, `rule`, `test_data`, `created_at`, `updated_at`, `deleted_at`) VALUES (1, '顶点小说', 'x23us', 'https://www.x23us.com/', 1, 'GB18030', '[{\"id\":1,\"name\":\"玄幻魔法\"},{\"id\":2,\"name\":\"eee\"}]', '{\"book_title_selector\":\"#content dd:nth-of-type(1) h1\",\"book_author_selector\":\"#content dd:nth-of-type(2) div:nth-of-type(2) table tr:nth-of-type(1) td:nth-of-type(2)\",\"book_cate_selector\":\"#content dd:nth-of-type(2) div:nth-of-type(2) table tr:nth-of-type(1) td:nth-of-type(1) a\",\"book_desc_selector\":\"#content dd:nth-of-type(4) p:nth-of-type(2)\",\"book_cover_selector\":\"#content dd:nth-of-type(2) div:nth-of-type(1) a img\",\"book_no_cover\":\"nocover.jpg\",\"book_chapter_url_selector\":\"#content dd:nth-of-type(2) div:nth-of-type(1) a\",\"book_is_url\":\"\",\"is_crawler_url\":\"\",\"chapter_catalog_selector\":\"5\",\"chapter_abandon_num\":1,\"info_title_selector\":\"6\",\"info_desc_selector\":\"7\",\"info_desc_filter_rule\":\"顶 点 小 说 Ｘ ２３ Ｕ Ｓ．Ｃ ＯＭ\\n顶点小说 ２３ＵＳ．ＣＯＭ更新最快\\n顶点小说(.*)更新最快\\n\",\"info_catalog_page_selector\":\"\",\"info_pre_page_selector\":\"1\",\"info_next_page_selector\":\"1\"}', '', 1557731894, 1557818755, 0);
 
