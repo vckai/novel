@@ -9,6 +9,11 @@ sessionon = true
 # 加密秘钥
 secretkey = 087DC8269428CD3BC4BB689C5EE9A148
 
+# 静态资源配置
+[static]
+uppredir  = ./static/
+updir     = up/
+
 # xsrf
 enablexsrf = false
 xsrfkey    = e16693381ead8926ab48150356b68bf3a60e1657d03ba617d28f048d14425cff
