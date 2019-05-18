@@ -23,7 +23,6 @@ const (
 
 // ClientConfig is http client conf.
 type ClientConfig struct {
-	*App
 	Dial      time.Duration
 	Timeout   time.Duration
 	KeepAlive time.Duration
@@ -85,10 +84,6 @@ func (client *Client) SetTransport(t xhttp.RoundTripper) {
 // SetConfig set client config.
 func (client *Client) SetConfig(c *ClientConfig) {
 	client.mutex.Lock()
-	if c.App != nil {
-		client.conf.App.Key = c.App.Key
-		client.conf.App.Secret = c.App.Secret
-	}
 	if c.Timeout > 0 {
 		client.conf.Timeout = c.Timeout
 	}

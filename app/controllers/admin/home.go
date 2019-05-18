@@ -24,6 +24,8 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/shirou/gopsutil/mem"
+
+	"github.com/vckai/novel/app/services"
 )
 
 type HomeController struct {
@@ -98,7 +100,7 @@ func (this *HomeController) UpImg() {
 	}
 
 	this.OutJson(0, "", map[string]interface{}{
-		"url":   beego.AppConfig.String("static::viewurl") + uploadDir + newName,
+		"url":   services.ConfigService.String("ViewURL", "/public/") + uploadDir + newName,
 		"title": newName,
 	})
 }
