@@ -125,7 +125,13 @@ func (this *SnatchRule) Delete(id uint32) error {
 func (this *SnatchRule) UpState(id uint32, state uint8) error {
 	m := &models.SnatchRule{Id: id, State: state}
 
-	return m.Update("state")
+	err := m.Update("state")
+
+	if err == nil {
+		this.Load()
+	}
+
+	return err
 }
 
 // 添加/修改

@@ -301,6 +301,7 @@ func (this *Snatch) GetChapter(provider *models.SnatchRule, rawurl string) (*Sna
 	chap.Title = doc.Find(rule.InfoTitleSelector).Text()
 	chap.Title = beego.HTML2str(chap.Title)
 	chap.Title = strings.Replace(chap.Title, "正文", "", -1)
+	chap.Title = strings.Replace(chap.Title, "章 节目录", "", -1)
 	chap.Title = strings.TrimSpace(chap.Title)
 	if len(chap.Title) == 0 {
 		return nil, ErrNotChapTitle
