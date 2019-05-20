@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon-precomposed" href="">
     <!-- iOS 设备 begin -->
     <meta name="apple-mobile-web-app-title" content="{{.aOut.Title}}">
-    <title>{{.aOut.Title}} - {{.aOut.SubTitle}}</title>
+    <title>{{if ne "" (or .Title "")}}{{.Title}} - {{end}}{{.aOut.Title}} - {{.aOut.SubTitle}}</title>
     <meta name="keywords" content="{{.aOut.Keyword}}">
     <meta name="description" content="{{.aOut.Description}}">
     <script type="text/javascript" src="{{.mOut.ViewUrl}}js/zepto.min.v1.0rc1.js" charset="utf-8"></script>

@@ -37,6 +37,4 @@ func (this *BaseController) Prepare() {
 	mOut := make(map[string]interface{})
 	mOut["ViewUrl"] = services.ConfigService.String("ViewURL") + this.Module + "/"
 	this.Data["mOut"] = mOut
-
-	this.Data["Title"] = services.ConfigService.String("Title")
 }
