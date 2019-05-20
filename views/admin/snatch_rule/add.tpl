@@ -79,10 +79,10 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">
-                        <span class='x-red'>*</span>允许爬虫页面URL规则
+                        允许爬虫页面URL规则
                     </label>
                     <div class="layui-input-block">
-                        <input placeholder="支持正则表达式" lay-verify="required" type="text" name="rule.IsCrawlerURL" autocomplete="off" class="layui-input" value="{{.Rule.Rules.IsCrawlerURL}}">
+                        <input placeholder="支持正则表达式" type="text" name="rule.IsCrawlerURL" autocomplete="off" class="layui-input" value="{{.Rule.Rules.IsCrawlerURL}}">
                     </div>
                 </div>
                 <div class="layui-form-item">

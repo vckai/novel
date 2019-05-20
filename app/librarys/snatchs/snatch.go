@@ -108,6 +108,10 @@ func (this *Snatch) IsCrawlerURL(provider *models.SnatchRule, rawurl string) boo
 		return false
 	}
 
+	if len(rule.IsCrawlerURL) == 0 {
+		return true
+	}
+
 	re, _ := regexp.Compile("(?U)" + rule.IsCrawlerURL)
 	s := re.FindString(rawurl)
 
