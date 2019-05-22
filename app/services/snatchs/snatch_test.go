@@ -200,6 +200,7 @@ func TestFindNove2(t *testing.T) {
 	}
 
 	nov := info.Nov
+	return
 
 	if nov == nil {
 		t.Fatal("获取小说失败")

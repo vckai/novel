@@ -3,15 +3,13 @@ package http
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net"
 	xhttp "net/http"
 	"net/url"
-	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	pkgerr "github.com/pkg/errors"
@@ -23,67 +21,39 @@ const (
 
 // ClientConfig is http client conf.
 type ClientConfig struct {
-	Dial      time.Duration
-	Timeout   time.Duration
-	KeepAlive time.Duration
-	URL       map[string]*ClientConfig
-	Host      map[string]*ClientConfig
+	Dial          time.Duration
+	Timeout       time.Duration
+	KeepAlive     time.Duration
+	ProxyURL      string
+	CheckRedirect func(req *xhttp.Request, via []*xhttp.Request) error
 }
 
 // Client is http client.
 type Client struct {
-	conf      *ClientConfig
-	client    *xhttp.Client
-	dialer    *net.Dialer
-	transport xhttp.RoundTripper
-
-	urlConf  map[string]*ClientConfig
-	hostConf map[string]*ClientConfig
-	mutex    sync.RWMutex
+	conf   *ClientConfig
+	client *xhttp.Client
+	dialer *net.Dialer
 }
 
 // NewClient new a http client.
 func NewClient(c *ClientConfig) *Client {
 	client := new(Client)
 	client.conf = c
-	client.dialer = &net.Dialer{
-		Timeout:   time.Duration(c.Dial),
-		KeepAlive: time.Duration(c.KeepAlive),
-	}
 
-	originTransport := &xhttp.Transport{
-		DialContext:     client.dialer.DialContext,
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-
-	// wraps RoundTripper for tracer
-	client.transport = &TraceTransport{RoundTripper: originTransport}
-	client.client = &xhttp.Client{
-		Transport: client.transport,
-	}
-	client.urlConf = make(map[string]*ClientConfig)
-	client.hostConf = make(map[string]*ClientConfig)
 	if c.Timeout <= 0 {
 		panic("must config http timeout!!!")
 	}
-	for uri, cfg := range c.URL {
-		client.urlConf[uri] = cfg
-	}
-	for host, cfg := range c.Host {
-		client.hostConf[host] = cfg
-	}
+
 	return client
 }
 
-// SetTransport set client transport
-func (client *Client) SetTransport(t xhttp.RoundTripper) {
-	client.transport = t
-	client.client.Transport = t
+// SetProxy set client proxy.
+func (client *Client) SetProxy(proxyURL string) {
+	client.conf.ProxyURL = proxyURL
 }
 
 // SetConfig set client config.
 func (client *Client) SetConfig(c *ClientConfig) {
-	client.mutex.Lock()
 	if c.Timeout > 0 {
 		client.conf.Timeout = c.Timeout
 	}
@@ -95,25 +65,24 @@ func (client *Client) SetConfig(c *ClientConfig) {
 		client.dialer.Timeout = time.Duration(c.Dial)
 		client.conf.Timeout = c.Dial
 	}
-	for uri, cfg := range c.URL {
-		client.urlConf[uri] = cfg
+	if len(c.ProxyURL) > 0 {
+		client.conf.ProxyURL = c.ProxyURL
 	}
-	for host, cfg := range c.Host {
-		client.hostConf[host] = cfg
+	if c.CheckRedirect != nil {
+		client.conf.CheckRedirect = c.CheckRedirect
 	}
-	client.mutex.Unlock()
 }
 
 // NewRequest new http request with method, uri, ip, values and headers.
-func (client *Client) NewRequest(method, uri string, params url.Values, headers xhttp.Header) (req *xhttp.Request, err error) {
+func (client *Client) NewRequest(method, uri string, values url.Values, headers xhttp.Header) (req *xhttp.Request, err error) {
 	if method == xhttp.MethodGet {
-		req, err = xhttp.NewRequest(xhttp.MethodGet, ru, nil)
+		req, err = xhttp.NewRequest(xhttp.MethodGet, uri, nil)
 	} else {
 		bodyStr := strings.TrimSpace(values.Encode())
 		req, err = xhttp.NewRequest(xhttp.MethodPost, uri, strings.NewReader(bodyStr))
 	}
 	if err != nil {
-		err = pkgerr.Wrapf(err, "method:%s,uri:%s", method, ru)
+		err = pkgerr.Wrapf(err, "method:%s,uri:%s", method, uri)
 		return
 	}
 	const (
@@ -127,66 +96,63 @@ func (client *Client) NewRequest(method, uri string, params url.Values, headers 
 	}
 	req.Header.Set(_userAgent, _userAgentMozilla)
 
-	for k, vs := range header {
-		req.Header.Set(k, vs)
+	for k, vs := range headers {
+		req.Header[k] = vs
 	}
 
 	return
 }
 
 // Get issues a GET to the specified URL.
-func (client *Client) Get(c context.Context, uri string, headers xhttp.Header, res interface{}) (err error) {
+func (client *Client) Get(c context.Context, uri string, headers xhttp.Header) ([]byte, *xhttp.Response, error) {
 	req, err := client.NewRequest(xhttp.MethodGet, uri, nil, headers)
 	if err != nil {
-		return
+		return nil, nil, err
 	}
-	return client.Do(c, req, res)
+	return client.Do(c, req)
 }
 
-// Post issues a Post to the specified URL.
-func (client *Client) Post(c context.Context, uri string, params url.Values, headers xhttp.Header, res interface{}) (err error) {
-	req, err := client.NewRequest(xhttp.MethodPost, uri, params, headers)
+// Post issues a POST to the specified URL.
+func (client *Client) Post(c context.Context, uri string, values url.Values, headers xhttp.Header) ([]byte, *xhttp.Response, error) {
+	req, err := client.NewRequest(xhttp.MethodPost, uri, values, headers)
 	if err != nil {
-		return
+		return nil, nil, err
 	}
-	return client.Do(c, req, res)
+	return client.Do(c, req)
 }
 
 // Raw sends an HTTP request and returns bytes response
-func (client *Client) Raw(c context.Context, req *xhttp.Request, v ...string) (bs []byte, err error) {
+func (client *Client) Raw(c context.Context, req *xhttp.Request) (bs []byte, resp *xhttp.Response, err error) {
 	var (
-		ok      bool
-		code    string
 		cancel  func()
-		resp    *xhttp.Response
-		config  *ClientConfig
 		timeout time.Duration
-		uri     = fmt.Sprintf("%s://%s%s", req.URL.Scheme, req.Host, req.URL.Path)
 	)
-	// NOTE fix prom & config uri key.
-	if len(v) == 1 {
-		uri = v[0]
+
+	client.dialer = &net.Dialer{
+		Timeout:   time.Duration(client.conf.Dial),
+		KeepAlive: time.Duration(client.conf.KeepAlive),
 	}
-	// stat
-	now := time.Now()
-	defer func() {
-		clientStats.Timing(uri, int64(time.Since(now)/time.Millisecond))
-		if code != "" {
-			clientStats.Incr(uri, code)
-		}
-	}()
-	// get config
-	// 1.url config 2.host config 3.default
-	client.mutex.RLock()
-	if config, ok = client.urlConf[uri]; !ok {
-		if config, ok = client.hostConf[req.Host]; !ok {
-			config = client.conf
+
+	transport := &xhttp.Transport{
+		DialContext:     client.dialer.DialContext,
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
+	if len(client.conf.ProxyURL) > 0 {
+		proxyURL, err := url.Parse(client.conf.ProxyURL)
+		if err == nil {
+			transport.Proxy = xhttp.ProxyURL(proxyURL)
 		}
 	}
-	client.mutex.RUnlock()
+
+	client.client = &xhttp.Client{
+		Transport:     transport,
+		CheckRedirect: client.conf.CheckRedirect,
+	}
+
 	// timeout
 	deliver := true
-	timeout = time.Duration(config.Timeout)
+	timeout = time.Duration(client.conf.Timeout)
 	if deadline, ok := c.Deadline(); ok {
 		if ctimeout := time.Until(deadline); ctimeout < timeout {
 			// deliver small timeout
@@ -198,53 +164,41 @@ func (client *Client) Raw(c context.Context, req *xhttp.Request, v ...string) (b
 		c, cancel = context.WithTimeout(c, timeout)
 		defer cancel()
 	}
-	setTimeout(req, timeout)
 	req = req.WithContext(c)
-	setCaller(req)
-	if color := metadata.String(c, metadata.Color); color != "" {
-		setColor(req, color)
-	}
 	if resp, err = client.client.Do(req); err != nil {
-		err = pkgerr.Wrapf(err, "host:%s, url:%s", req.URL.Host, realURL(req))
-		code = "failed"
+		err = pkgerr.Wrapf(err, "url:%s", realURL(req))
 		return
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode >= xhttp.StatusBadRequest {
-		err = pkgerr.Errorf("incorrect http status:%d host:%s, url:%s", resp.StatusCode, req.URL.Host, realURL(req))
-		code = strconv.Itoa(resp.StatusCode)
+		err = pkgerr.Errorf("incorrect http status:%d url:%s", resp.StatusCode, realURL(req))
 		return
 	}
 	if bs, err = readAll(resp.Body, _minRead); err != nil {
-		err = pkgerr.Wrapf(err, "host:%s, url:%s", req.URL.Host, realURL(req))
+		err = pkgerr.Wrapf(err, "url:%s", realURL(req))
 		return
 	}
+
 	return
 }
 
-// Do sends an HTTP request and returns an HTTP json response.
-func (client *Client) Do(c context.Context, req *xhttp.Request, res interface{}, v ...string) (err error) {
-	var bs []byte
-	if bs, err = client.Raw(c, req, v...); err != nil {
+// Do sends an HTTP request and returns
+func (client *Client) Do(c context.Context, req *xhttp.Request) (res []byte, resp *xhttp.Response, err error) {
+	if res, resp, err = client.Raw(c, req); err != nil {
 		return
-	}
-	if res != nil {
-		if err = json.Unmarshal(bs, res); err != nil {
-			err = pkgerr.Wrapf(err, "host:%s, url:%s", req.URL.Host, realURL(req))
-		}
 	}
 	return
 }
 
 // JSON sends an HTTP request and returns an HTTP json response.
-func (client *Client) JSON(c context.Context, req *xhttp.Request, res interface{}, v ...string) (err error) {
+func (client *Client) JSON(c context.Context, req *xhttp.Request, res interface{}) (resp *xhttp.Response, err error) {
 	var bs []byte
-	if bs, err = client.Raw(c, req, v...); err != nil {
+	if bs, resp, err = client.Raw(c, req); err != nil {
 		return
 	}
 	if res != nil {
 		if err = json.Unmarshal(bs, res); err != nil {
-			err = pkgerr.Wrapf(err, "host:%s, url:%s", req.URL.Host, realURL(req))
+			err = pkgerr.Wrapf(err, "url:%s", realURL(req))
 		}
 	}
 	return

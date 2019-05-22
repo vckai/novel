@@ -72,6 +72,13 @@ func (m *NovelLinks) Delete(forceDelete ...bool) error {
 	return nil
 }
 
+// 删除指定小说所有采集点
+func (m *NovelLinks) DelByNovId(novId uint32) error {
+	_, err := orm.NewOrm().Raw("DELETE FROM nov_novel_links WHERE nov_id=?", novId).Exec()
+
+	return err
+}
+
 // 判断小说是否存在
 func (m *NovelLinks) GetByLink(link, source string) *NovelLinks {
 	var n NovelLinks

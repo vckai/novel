@@ -192,7 +192,7 @@ func (m *Chapter) Delete() error {
 
 // 删除指定小说所有章节
 func (m *Chapter) DelByNovId() error {
-	err := m.newOrm().Raw(fmt.Sprintf("DELETE FROM %s WHERE nov_id=?", m.getTable()), m.NovId).QueryRow(m)
+	_, err := m.newOrm().Raw(fmt.Sprintf("DELETE FROM %s WHERE nov_id=?", m.getTable()), m.NovId).Exec()
 
 	return err
 }

@@ -15,6 +15,8 @@
 package snatchs
 
 import (
+	"bytes"
+	"context"
 	"errors"
 	"io"
 	"net/http"
@@ -27,8 +29,8 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/axgle/mahonia"
 
+	xhttp "github.com/vckai/novel/app/librarys/net/http"
 	"github.com/vckai/novel/app/models"
-	"github.com/vckai/novel/app/utils"
 )
 
 const (
@@ -41,6 +43,7 @@ const (
 
 var (
 	ErrNotProvider  = errors.New("没有获取到采集点")
+	ErrNotResp      = errors.New("没有返回")
 	ErrNotRule      = errors.New("没有采集规则")
 	ErrNotNov       = errors.New("获取小说失败")
 	ErrNotUrl       = errors.New("没有传入URL地址")
@@ -154,8 +157,12 @@ func (this *Snatch) FindNovel(provider *models.SnatchRule, kw string) (*SnatchIn
 
 	// 请求搜索页面
 	doc, resp, err := this.newHtml(u.String(), provider.Charset)
-	if err != nil && resp == nil && len(resp.Header.Get("Location")) == 0 {
+	if err != nil {
 		return nil, err
+	}
+
+	if resp == nil {
+		return nil, ErrNotResp
 	}
 
 	// 查找直接定向到小说简介页面
@@ -235,6 +242,7 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	nov.Name = doc.Find(rule.BookTitleSelector).Text()
 	nov.Name = strings.TrimRight(nov.Name, "全文阅读")
 	nov.Name = strings.Replace(nov.Name, "&nbsp;", "", -1)
+	nov.Name = strings.TrimSpace(nov.Name)
 	if len(nov.Name) == 0 {
 		return nil, ErrNotNovName
 	}
@@ -420,13 +428,25 @@ func (this *Snatch) Proxy(proxyFunc func() string) {
 // 网页请求，失败重试
 // 返回goquery
 func (this *Snatch) newHtml(rawurl, charset string) (*goquery.Document, *http.Response, error) {
-	var body io.Reader
+	var res []byte
 	var resp *http.Response
+	var body io.Reader
 	var err error
+
+	conf := &xhttp.ClientConfig{
+		Timeout:   10 * time.Second,
+		Dial:      10 * time.Second,
+		KeepAlive: 60 * time.Second,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
+	c := xhttp.NewClient(conf)
 
 	// 失败重试
 	for i := 0; i < RETRY; i++ {
-		resp, err = utils.HttpGet(rawurl, nil, this.proxyFunc())
+		c.SetProxy(this.proxyFunc())
+		res, resp, err = c.Get(context.TODO(), rawurl, nil)
 		if err == nil {
 			break
 		}
@@ -443,7 +463,7 @@ func (this *Snatch) newHtml(rawurl, charset string) (*goquery.Document, *http.Re
 		return nil, resp, err
 	}
 
-	body = resp.Body
+	body = bytes.NewReader(res)
 
 	// 编码转换
 	if charset != "UTF-8" {

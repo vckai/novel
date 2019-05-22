@@ -15,13 +15,20 @@
 package services
 
 import (
+	"bytes"
+	"context"
 	"errors"
+	"io"
+	"os"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/astaxie/beego"
 
-	"github.com/vckai/novel/app/librarys/snatchs"
+	xhttp "github.com/vckai/novel/app/librarys/net/http"
 	"github.com/vckai/novel/app/models"
-	"github.com/vckai/novel/app/utils"
+	"github.com/vckai/novel/app/services/snatchs"
 	"github.com/vckai/novel/app/utils/log"
 )
 
@@ -131,7 +138,7 @@ func (this *Snatch) InitNovel(url string) error {
 	// 下载封面图片
 	isUp := false
 	if len(nov.Cover) != 0 && (len(nv.Cover) == 0 || provider.IsUpdate == 1) {
-		imgFile, err := utils.DownFile(nov.Cover, beego.AppConfig.String("static::uppredir"), beego.AppConfig.String("static::updir"), ProxyService.Get())
+		imgFile, err := DownImg(nov.Cover)
 		if err != nil {
 			log.Warn("下载图片失败：", nov.Cover, err)
 			nov.Cover = ""
@@ -177,11 +184,59 @@ func (this *Snatch) InitNovel(url string) error {
 
 	// 添加采集URL
 	if info.Url != "" {
-		NovelService.AddLink(nov.Id, info.Url, provider.Name, info.ChapterUrl)
+		NovelService.AddLink(nov.Id, info.Url, provider.Code, info.ChapterUrl)
 	}
 
 	// 添加到采集队列中
 	manager.AddTask(nov.Id)
 
 	return nil
+}
+
+// 下载缩略图
+func DownImg(rawurl string) (string, error) {
+	fileType := rawurl[strings.LastIndex(rawurl, "."):]
+	if fileType != ".jpeg" && fileType != ".png" && fileType != ".jpg" {
+		fileType = ".jpeg"
+	}
+	upPreDir := beego.AppConfig.String("static::uppredir")
+	upDir := beego.AppConfig.String("static::updir")
+
+	// 重命名文件
+	newName := strconv.FormatInt(time.Now().UnixNano(), 10) + fileType
+
+	// 创建上传目录
+	uploadDir := upDir + time.Now().Format("2006/01/02") + "/"
+
+	err := os.MkdirAll(upPreDir+uploadDir, os.ModePerm) //创建目录
+	if err != nil {
+		return "", err
+	}
+
+	c := xhttp.NewClient(
+		&xhttp.ClientConfig{
+			Timeout:   10 * time.Second,
+			Dial:      500 * time.Millisecond,
+			KeepAlive: 60 * time.Second,
+			ProxyURL:  ProxyService.Get(),
+		})
+
+	body, _, err := c.Get(context.TODO(), rawurl, nil)
+	if err != nil {
+		return "", err
+	}
+
+	// 创建空文件
+	f, err := os.Create(upPreDir + uploadDir + newName)
+	if err != nil {
+		return "", err
+	}
+
+	defer f.Close()
+
+	rc := bytes.NewReader(body)
+
+	_, err = io.Copy(f, rc)
+
+	return uploadDir + newName, err
 }

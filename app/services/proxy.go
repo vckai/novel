@@ -15,19 +15,16 @@
 package services
 
 import (
-	"io/ioutil"
+	"context"
+	"fmt"
 	"math/rand"
 	"time"
 
+	"github.com/parnurzeal/gorequest"
 	"github.com/tidwall/gjson"
 
-	"github.com/vckai/novel/app/utils"
+	xhttp "github.com/vckai/novel/app/librarys/net/http"
 	"github.com/vckai/novel/app/utils/log"
-)
-
-const (
-	// 代理IP获取间隔时间，单位：分钟
-	PROXY_IP_UP_TIME = 12
 )
 
 // 代理模式
@@ -35,15 +32,24 @@ const (
 	NO_PROXY int = iota
 	HTTP_PROXY
 	IP_AUTO_PROXY
+
+	STATE_WAIT int = iota
+	STATE_RUNING
 )
 
 // 定义CrawlerService
 type Proxy struct {
-	ips []string
+	ips         []string
+	state       int
+	lastGetTime time.Time
 }
 
 func NewProxy() *Proxy {
-	p := &Proxy{}
+	p := &Proxy{
+		ips:         []string{},
+		state:       STATE_WAIT,
+		lastGetTime: time.Now(),
+	}
 	p.Init()
 	return p
 }
@@ -52,59 +58,170 @@ func NewProxy() *Proxy {
 func (this *Proxy) Init() {
 	go func() {
 		for {
-			// 代理配置模式
-			mode := ConfigService.Int("ProxyMode", NO_PROXY)
-			if mode == IP_AUTO_PROXY {
-				this.run()
-			}
-			// 休眠12分钟更新一次
-			time.Sleep(PROXY_IP_UP_TIME * time.Minute)
+			// 休眠指定时间更新
+			upTime := ConfigService.Int("ProxyUpTime", 10)
+			time.Sleep(time.Duration(upTime) * time.Minute)
+
+			this.run()
+		}
+	}()
+
+	// 定时IP可用性检测
+	go func() {
+		for {
+			// 休眠
+			checkTime := ConfigService.Int("ProxyCheckTime", 10000)
+			time.Sleep(time.Duration(checkTime) * time.Millisecond)
+
+			this.check()
 		}
 	}()
 }
 
 // 获取代理IP池
 func (this *Proxy) run() {
-	resp, err := utils.HttpGet(ConfigService.String("ProxyURL", ""), nil, "")
-	if err != nil {
-		log.Error("Request Proxy URL Error: ", err)
+	mode := ConfigService.Int("ProxyMode", NO_PROXY)
+	if mode != IP_AUTO_PROXY {
 		return
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	if this.state == STATE_RUNING {
+		return
+	}
+
+	// 最后获取时间超过一分钟则不自动更新
+	if time.Since(this.lastGetTime) > time.Duration(1)*time.Minute {
+		return
+	}
+
+	this.state = STATE_RUNING
+
+	c := xhttp.NewClient(
+		&xhttp.ClientConfig{
+			Timeout:   10 * time.Second,
+			Dial:      500 * time.Millisecond,
+			KeepAlive: 60 * time.Second,
+			ProxyURL:  ProxyService.Get(),
+		})
+
+	body, _, err := c.Get(context.TODO(), ConfigService.String("ProxyURL"), nil)
 	if err != nil {
+		this.state = STATE_WAIT
 		log.Error("Get Proxy Body Error: ", err)
 		return
 	}
 
-	this.ips = []string{}
-
 	data := gjson.ParseBytes(body)
-	data.ForEach(func(key, value gjson.Result) bool {
-		this.ips = append(this.ips, value.Get("ip").String())
+	data.Get("data").ForEach(func(key, value gjson.Result) bool {
+		ip := value.Get("ip").String()
+		port := value.Get("port").String()
+		if len(ip) == 0 || len(port) == 0 {
+			return true
+		}
+
+		host := fmt.Sprintf("%s:%s", ip, port)
+		this.ips = append(this.ips, host)
 		return true
 	})
 
 	log.Info("获取到代理IP:", len(this.ips))
+	this.state = STATE_WAIT
+}
+
+// 获取可用IP数量
+func (this *Proxy) Count() int {
+	return len(this.ips)
+}
+
+// 获取所有IP
+func (this *Proxy) GetAll() []string {
+	if this.Count() == 0 {
+		this.run()
+	}
+
+	return this.ips
+}
+
+// 删除IP
+func (this *Proxy) Del(ip string) error {
+	ips := this.ips
+	for k, v := range ips {
+		if v == ip {
+			this.ips = append(this.ips[:k], this.ips[k+1:]...)
+		}
+	}
+
+	return nil
 }
 
 // 随机获取一个代理IP
 func (this *Proxy) Get() string {
+	this.lastGetTime = time.Now()
 	proxy := ""
 
-	switch ConfigService.Int("ProxyMode", NO_PROXY) {
+	mode := ConfigService.Int("ProxyMode", NO_PROXY)
+	switch mode {
 	case NO_PROXY:
 
 	case HTTP_PROXY:
 		proxy = ConfigService.String("ProxyURL")
 	default:
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
-		x := len(this.ips)
+		ips := this.GetAll()
+		x := len(ips)
 
 		if x > 0 {
-			proxy = "http://" + this.ips[r.Intn(x)]
+			proxy = "http://" + ips[r.Intn(x)]
 		}
 	}
 
 	return proxy
+}
+
+// IP可用性管理
+func (this *Proxy) check() {
+	mode := ConfigService.Int("ProxyMode", NO_PROXY)
+	if mode != IP_AUTO_PROXY {
+		return
+	}
+
+	ox := this.Count()
+	if ox == 0 {
+		return
+	}
+
+	ips := make([]string, this.Count())
+	copy(ips, this.GetAll())
+
+	for _, v := range ips {
+		if !this.checkIP(v) {
+			this.Del(v)
+		}
+	}
+
+	x := this.Count()
+	log.Debug(fmt.Sprintf("Before check, has: %d records, After check, has: %d records.", ox, x))
+
+	if x == 0 {
+		this.run()
+	}
+}
+
+// IP可用性校验
+func (this *Proxy) checkIP(ip string) bool {
+	testIP := "http://" + ip
+	pollURL := "http://httpbin.org/get"
+
+	resp, _, err := gorequest.New().Timeout(time.Duration(10) * time.Second).Proxy(testIP).Get(pollURL).End()
+	if err != nil {
+		log.Debug(fmt.Sprintf("[CheckIP] testIP = %s, pollURL = %s: Error = %v", testIP, pollURL, err))
+		return false
+	}
+
+	defer resp.Body.Close()
+	if resp.StatusCode == 200 {
+		return true
+	}
+
+	return false
 }

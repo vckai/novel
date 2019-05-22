@@ -16,18 +16,20 @@ package admin
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"strings"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/axgle/mahonia"
 
 	"github.com/vckai/novel/app/controllers"
+	xhttp "github.com/vckai/novel/app/librarys/net/http"
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
 	"github.com/vckai/novel/app/services/snatchs"
-	"github.com/vckai/novel/app/utils"
 	"github.com/vckai/novel/app/utils/log"
 )
 
@@ -129,13 +131,22 @@ func (this *SnatchRuleController) Goquery() {
 			this.OutJson(1001, "参数错误，无法访问")
 		}
 
-		resp, err := utils.HttpGet(rawurl, nil, services.ProxyService.Get())
+		c := xhttp.NewClient(
+			&xhttp.ClientConfig{
+				Timeout:   10 * time.Second,
+				Dial:      500 * time.Millisecond,
+				KeepAlive: 60 * time.Second,
+				ProxyURL:  services.ProxyService.Get(),
+			})
+
+		res, _, err := c.Get(context.TODO(), rawurl, nil)
 		if err != nil {
 			this.OutJson(1002, "请求失败："+err.Error())
 		}
 
 		var body io.Reader
-		body = resp.Body
+
+		body = bytes.NewReader(res)
 
 		// 编码转换
 		enc := mahonia.NewDecoder(charset)

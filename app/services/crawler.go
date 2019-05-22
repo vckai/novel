@@ -15,6 +15,8 @@
 package services
 
 import (
+	"bytes"
+	"context"
 	"errors"
 	"io"
 	"net/url"
@@ -24,15 +26,19 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/axgle/mahonia"
+	"github.com/willf/bloom"
 
+	xhttp "github.com/vckai/novel/app/librarys/net/http"
 	"github.com/vckai/novel/app/models"
-	"github.com/vckai/novel/app/utils"
 	"github.com/vckai/novel/app/utils/log"
 )
 
 const (
 	CRAWLER_WAIT uint8 = iota
 	CRAWLER_RUNING
+
+	MAX_BLOOM_SIZE = 10000000
+	BLOOM_RATE     = 0.00001
 )
 
 var (
@@ -49,10 +55,13 @@ type Crawler struct {
 	provider *models.SnatchRule
 
 	// 采集URL列表
-	URLs map[string]bool
+	URLs *bloom.BloomFilter
 
 	// 小说简介URL列表
-	bookURLs map[string]bool
+	bookURLs *bloom.BloomFilter
+
+	countBookURL int
+	countURL     int
 
 	// 运行状态
 	runStatus uint8
@@ -61,8 +70,6 @@ type Crawler struct {
 func NewCrawler() *Crawler {
 	return &Crawler{
 		runStatus: CRAWLER_WAIT,
-		URLs:      map[string]bool{},
-		bookURLs:  map[string]bool{},
 	}
 }
 
@@ -89,8 +96,8 @@ func (this *Crawler) Init(provideName string) (*Crawler, error) {
 	// 小说URL channels
 	this.linkChans = make(chan string, 5000)
 
-	this.bookURLs = map[string]bool{}
-	this.URLs = map[string]bool{}
+	this.URLs = bloom.NewWithEstimates(MAX_BLOOM_SIZE, BLOOM_RATE)
+	this.bookURLs = bloom.NewWithEstimates(MAX_BLOOM_SIZE, BLOOM_RATE)
 
 	return this, nil
 }
@@ -135,7 +142,7 @@ func (this *Crawler) run() {
 	go func() {
 		t1 := time.Now()
 		this.runCrawler(this.initURL, "")
-		log.Info("URL爬虫，采集URL:", len(this.URLs), "，采集小说URL:", len(this.bookURLs), "，耗时:", time.Since(t1))
+		log.Info("URL爬虫，采集URL:", this.countURL, "，采集小说URL:", this.countBookURL, "，耗时:", time.Since(t1))
 
 		close(this.linkChans)
 	}()
@@ -143,11 +150,11 @@ func (this *Crawler) run() {
 	t1 := time.Now()
 	wg.Wait()
 
-	log.Info("采集done，采集URL:", len(this.URLs), "，采集小说URL:", len(this.bookURLs), "，耗时:", time.Since(t1))
+	log.Info("采集done，采集URL:", this.countURL, "，采集小说URL:", this.countBookURL, "，耗时:", time.Since(t1))
 
 	// 清理运行内容
-	this.bookURLs = map[string]bool{}
-	this.URLs = map[string]bool{}
+	this.bookURLs = nil
+	this.URLs = nil
 	this.runStatus = CRAWLER_WAIT
 }
 
@@ -156,7 +163,7 @@ func (this *Crawler) runCrawler(baseURL *url.URL, referer string) {
 	rawurl := baseURL.String()
 
 	// 已经采集过
-	if _, ok := this.URLs[rawurl]; ok {
+	if this.URLs.TestString(rawurl) {
 		return
 	}
 
@@ -167,7 +174,8 @@ func (this *Crawler) runCrawler(baseURL *url.URL, referer string) {
 		return
 	}
 
-	this.URLs[rawurl] = true
+	this.countURL++
+	this.URLs.AddString(rawurl)
 
 	// 获取小说URL地址
 	doc.Find("a").Each(func(i int, s *goquery.Selection) {
@@ -182,11 +190,12 @@ func (this *Crawler) runCrawler(baseURL *url.URL, referer string) {
 		// 是否小说简介页面
 		if SnatchService.IsBookURL(this.provider.Code, link) {
 			// 小说已经采集过
-			if _, ok := this.bookURLs[link]; ok {
+			if this.bookURLs.TestString(link) {
 				return
 			}
 
-			this.bookURLs[link] = true
+			this.countBookURL++
+			this.bookURLs.AddString(link)
 
 			// 写入channel
 			this.linkChans <- link
@@ -200,7 +209,7 @@ func (this *Crawler) runCrawler(baseURL *url.URL, referer string) {
 		}
 
 		// URL已经爬过
-		if _, ok := this.URLs[link]; ok {
+		if this.URLs.TestString(rawurl) {
 			return
 		}
 
@@ -250,15 +259,24 @@ func (this *Crawler) genrateURL(base *url.URL, rawurl string) (*url.URL, error) 
 // 网页请求
 // 返回goquery格式内容
 func (this *Crawler) NewHtml(rawurl string) (*goquery.Document, error) {
+	var res []byte
 	var body io.Reader
 	var err error
 
-	resp, err := utils.HttpGet(rawurl, nil, ProxyService.Get())
+	c := xhttp.NewClient(
+		&xhttp.ClientConfig{
+			Timeout:   10 * time.Second,
+			Dial:      500 * time.Millisecond,
+			KeepAlive: 60 * time.Second,
+			ProxyURL:  ProxyService.Get(),
+		})
+
+	res, _, err = c.Get(context.TODO(), rawurl, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	body = resp.Body
+	body = bytes.NewReader(res)
 
 	if this.provider.Charset != "UTF-8" {
 		enc := mahonia.NewDecoder("GB18030")

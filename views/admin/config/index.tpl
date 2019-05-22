@@ -209,6 +209,22 @@ html{color: #666}
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            IP更新时间
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="ProxyUpTime" autocomplete="off" class="layui-input" placeholder="API切换时间，单位：分钟" value="{{.Config.ProxyUpTime}}" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            IP检测时间
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="ProxyCheckTime" autocomplete="off" class="layui-input" placeholder="IP可用性检测时间，单位：毫秒" value="{{.Config.ProxyCheckTime}}" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label" >
                             代理URL
                         </label>

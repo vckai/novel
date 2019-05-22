@@ -309,6 +309,9 @@ func (this *Novel) DeleteBatch(ids []string) error {
 		if err == nil {
 			novId := uint32(u64)
 			ChapterService.DelByNovId(novId)
+
+			// 删除小说章节采集点
+			models.NovelLinksModel.DelByNovId(novId)
 		}
 	}
 
@@ -329,6 +332,9 @@ func (this *Novel) Delete(id uint32) error {
 
 	// 删除小说章节列表
 	ChapterService.DelByNovId(id)
+
+	// 删除小说章节采集点
+	models.NovelLinksModel.DelByNovId(id)
 
 	return nil
 }
