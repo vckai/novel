@@ -248,7 +248,7 @@ func (this *SnatchRuleController) Test() {
 	}
 
 	if info.Chap.Title != rule.Test.InfoTitle {
-		this.OutJson(1015, "章节内容页标题比对失败："+s.Chap.Title)
+		this.OutJson(1015, "章节内容页标题比对失败："+info.Chap.Title)
 	}
 
 	if !strings.Contains(info.Chap.Desc, rule.Test.InfoDesc) {

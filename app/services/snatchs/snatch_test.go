@@ -39,9 +39,13 @@ var providerTest *models.SnatchRule = &models.SnatchRule{
 
 		// 小说简介页面采集规则
 		BookTitleSelector:      "#content dd:nth-of-type(1) h1",
+		BookTitleFilter:        "全文阅读 | 哈哈",
 		BookAuthorSelector:     "#content dd:nth-of-type(2) div:nth-of-type(2) table tr:nth-of-type(1) td:nth-of-type(2)",
+		BookAuthorFilter:       "作者\n[:|：]",
 		BookCateSelector:       "#content dd:nth-of-type(2) div:nth-of-type(2) table tr:nth-of-type(1) td:nth-of-type(1) a",
+		BookCateFilter:         "",
 		BookDescSelector:       "#content dd:nth-of-type(4) p:nth-of-type(2)",
+		BookDescFilter:         "",
 		BookCoverSelector:      "#content dd:nth-of-type(2) div:nth-of-type(1) a img",
 		BookNoCover:            "nocover.jpg",
 		BookChapterURLSelector: "#content dd:nth-of-type(2) div:nth-of-type(1) a",
@@ -52,8 +56,9 @@ var providerTest *models.SnatchRule = &models.SnatchRule{
 
 		// 详情页面采集规则
 		InfoTitleSelector:    ".bdsub dl dd h1",
+		InfoTitleFilter:      "",
 		InfoDescSelector:     "#contents",
-		InfoDescFilterRule:   "顶 点 小 说 Ｘ ２３ Ｕ Ｓ．Ｃ ＯＭ\n顶点小说 ２３ＵＳ．ＣＯＭ更新最快\n顶点小说(.*)更新最快\n",
+		InfoDescFilter:       "顶 点 小 说 Ｘ ２３ Ｕ Ｓ．Ｃ ＯＭ\n顶点小说 ２３ＵＳ．ＣＯＭ更新最快\n顶点小说(.*)更新最快\n",
 		InfoPrePageSelector:  "#footlink a:nth-of-type(1)",
 		InfoNextPageSelector: "#footlink a:nth-of-type(3)",
 

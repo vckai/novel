@@ -227,7 +227,9 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	}
 
 	// 获取小说类别
-	nov.CateName = strings.TrimSpace(doc.Find(rule.BookCateSelector).Text())
+	nov.CateName = doc.Find(rule.BookCateSelector).Text()
+	nov.CateName = this.filter(rule.BookCateFilter, nov.CateName)
+	nov.CateName = strings.TrimSpace(nov.CateName)
 
 	// 获取小说类别ID
 	nov.CateId = DEF_CATE_ID
@@ -240,8 +242,7 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 
 	// 获取小说标题
 	nov.Name = doc.Find(rule.BookTitleSelector).Text()
-	nov.Name = strings.TrimRight(nov.Name, "全文阅读")
-	nov.Name = strings.Replace(nov.Name, "&nbsp;", "", -1)
+	nov.Name = this.filter(rule.BookTitleFilter, nov.Name)
 	nov.Name = strings.TrimSpace(nov.Name)
 	if len(nov.Name) == 0 {
 		return nil, ErrNotNovName
@@ -249,10 +250,7 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 
 	// 获取小说作者
 	nov.Author = doc.Find(rule.BookAuthorSelector).Text()
-	nov.Author = strings.Replace(nov.Author, "&nbsp;", "", -1)
-	nov.Author = strings.Replace(nov.Author, "作者", "", -1)
-	nov.Author = strings.Replace(nov.Author, "：", "", -1)
-	nov.Author = strings.Replace(nov.Author, ":", "", -1)
+	nov.Author = this.filter(rule.BookAuthorFilter, nov.Author)
 	nov.Author = strings.TrimSpace(nov.Author)
 	if len(nov.Author) == 0 {
 		return nil, ErrNotNovAuthor
@@ -260,6 +258,7 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 
 	// 获取小说简介
 	nov.Desc, _ = doc.Find(rule.BookDescSelector).Html()
+	nov.Desc = this.filter(rule.BookDescFilter, nov.Desc)
 
 	// 获取章节链接地址
 	chapterLink, _ := doc.Find(rule.BookChapterURLSelector).Attr("href")
@@ -312,8 +311,7 @@ func (this *Snatch) GetChapter(provider *models.SnatchRule, rawurl string) (*Sna
 	// 获取章节标题
 	chap.Title = doc.Find(rule.InfoTitleSelector).Text()
 	chap.Title = beego.HTML2str(chap.Title)
-	chap.Title = strings.Replace(chap.Title, "正文", "", -1)
-	chap.Title = strings.Replace(chap.Title, "章 节目录", "", -1)
+	chap.Title = this.filter(rule.InfoTitleFilter, chap.Title)
 	chap.Title = strings.TrimSpace(chap.Title)
 	if len(chap.Title) == 0 {
 		return nil, ErrNotChapTitle
@@ -321,15 +319,7 @@ func (this *Snatch) GetChapter(provider *models.SnatchRule, rawurl string) (*Sna
 
 	// 获取章节内容
 	chap.Desc, _ = doc.Find(rule.InfoDescSelector).Html()
-
-	// 正则过滤关键词
-	keyexs := strings.Split(rule.InfoDescFilterRule, "\n")
-	for _, v := range keyexs {
-		if len(v) > 0 {
-			re, _ := regexp.Compile("(?U)" + v)
-			chap.Desc = re.ReplaceAllString(chap.Desc, "")
-		}
-	}
+	chap.Desc = this.filter(rule.InfoDescFilter, chap.Desc)
 
 	// 获取上一页
 	preURL := doc.Find(rule.InfoPrePageSelector).AttrOr("href", "")
@@ -477,6 +467,30 @@ func (this *Snatch) newHtml(rawurl, charset string) (*goquery.Document, *http.Re
 	}
 
 	return doc, resp, nil
+}
+
+func (this *Snatch) filter(filter, kw string) string {
+	if len(kw) == 0 {
+		return kw
+	}
+
+	// 正则过滤关键词
+	keyexs := strings.Split(filter, "\n")
+	for _, v := range keyexs {
+		if len(v) == 0 {
+			continue
+		}
+		replaced := ""
+		if strings.Contains(v, " | ") {
+			aR := strings.Split(v, " | ")
+			v = aR[0]
+			replaced = aR[1]
+		}
+		re, _ := regexp.Compile("(?U)" + v)
+		kw = re.ReplaceAllString(kw, replaced)
+	}
+
+	return kw
 }
 
 // 拼装当前页面获取到的连接，生成完整的URL

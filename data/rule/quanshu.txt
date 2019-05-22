@@ -1,0 +1,96 @@
+[
+    {
+        "name": "全书网",
+        "code": "quanshuwang",
+        "url": "http://www.quanshuwang.com/",
+        "state": 1,
+        "is_update": 0,
+        "charset": "GB18030",
+        "test": {
+            "book_url": "http://www.quanshuwang.com/book_115724.html",
+            "book_title": "圣墟",
+            "book_author": "辰东",
+            "book_cate": "玄幻魔法",
+            "book_desc": "在破败中崛起，在寂灭中复苏",
+            "book_cover": "http://img.quanshuwang.com/image/115/115724/115724s.jpg",
+            "book_chapter_url": "http://www.quanshuwang.com/book/115/115724",
+            "chapter_url": "http://www.quanshuwang.com/book/115/115724",
+            "chapter_catalog_url": "http://www.quanshuwang.com/book/115/115724/30888319.html",
+            "chapter_catalog_title": "第一章 沙漠中的彼岸花",
+            "info_url": "http://www.quanshuwang.com/book/115/115724/30888321.html",
+            "info_title": "第二章 后文明时代",
+            "info_desc": "似受惊，差点闯出栅栏，牧民阻拦，大声喝",
+            "info_pre_page_url": "http://www.quanshuwang.com/book/115/115724/30888319.html",
+            "info_next_page_url": "http://www.quanshuwang.com/book/115/115724/30888322.html",
+            "find_book_kw": "圣墟",
+            "find_book_url": "http://www.quanshuwang.com/book_115724.html"
+        },
+        "rules": {
+            "is_book_url": "http://www.quanshuwang.com/book_([\\d]+).html",
+            "is_crawler_url": "http://www.quanshuwang.com/list/([\\d]+)_([\\d]+).html",
+            "book_title_selector": ".detail .b-info h1",
+            "book_title_filter": "",
+            "book_author_selector": ".author .bookDetail dl:nth-of-type(2) dd:nth-of-type(1)",
+            "book_author_filter": "",
+            "book_cate_selector": "#container .mainnav .main-index a:nth-of-type(2)",
+            "book_cate_filter": "",
+            "book_desc_selector": ".detail .infoDetail #waa",
+            "book_desc_filter": "介绍: ",
+            "book_cover_selector": ".b-detail .detail a img",
+            "book_no_cover": "nocover.jpg",
+            "book_chapter_url_selector": ".b-info .b-oper a:nth-of-type(1)",
+            "chapter_catalog_selector": ".chapterNum ul li a",
+            "chapter_abandon_num": 0,
+            "info_title_selector": ".bookInfo h1 strong",
+            "info_title_filter": "章 节目录\n正文",
+            "info_desc_selector": "#content",
+            "info_desc_filter": "",
+            "info_pre_page_selector": ".pre",
+            "info_next_page_selector": ".next",
+            "find_url": "http://www.quanshuwang.com/modules/article/search.php?\u0026searchtype=articlename\u0026searchbuttom.x=43\u0026searchbuttom.y=22\u0026searchkey=",
+            "find_book_url_selector": "#navList ul li a:nth-of-type(1)"
+        },
+        "cate_maps": [
+            {
+                "id": 1,
+                "name": "玄幻魔法"
+            },
+            {
+                "id": 2,
+                "name": "武侠修真"
+            },
+            {
+                "id": 3,
+                "name": "都市言情"
+            },
+            {
+                "id": 4,
+                "name": "历史军事"
+            },
+            {
+                "id": 5,
+                "name": "职场校园"
+            },
+            {
+                "id": 6,
+                "name": "网游动漫"
+            },
+            {
+                "id": 7,
+                "name": "科幻小说"
+            },
+            {
+                "id": 8,
+                "name": "恐怖灵异"
+            },
+            {
+                "id": 10,
+                "name": "穿越重生"
+            },
+            {
+                "id": 12,
+                "name": "纯爱耽美"
+            }
+        ]
+    }
+]

@@ -95,10 +95,26 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">
+                        名称过滤规则
+                    </label>
+                    <div class="layui-input-block">
+                        <textarea name="rule.BookTitleFilter" placeholder="多个规则回车分行，支持正则表达式" class="layui-textarea">{{.Rule.Rules.BookTitleFilter}}</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
                         <span class='x-red'>*</span>作者CSS选择器
                     </label>
                     <div class="layui-input-block">
                         <input lay-verify="required" type="text" name="rule.BookAuthorSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookAuthorSelector}}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        作者过滤规则
+                    </label>
+                    <div class="layui-input-block">
+                        <textarea name="rule.BookAuthorFilter" placeholder="多个规则回车分行，支持正则表达式" class="layui-textarea">{{.Rule.Rules.BookAuthorFilter}}</textarea>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -111,10 +127,26 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">
+                        分类过滤规则
+                    </label>
+                    <div class="layui-input-block">
+                        <textarea name="rule.BookCateFilter" placeholder="多个规则回车分行，支持正则表达式" class="layui-textarea">{{.Rule.Rules.BookCateFilter}}</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
                         简介CSS选择器
                     </label>
                     <div class="layui-input-block">
                         <input type="text" name="rule.BookDescSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookDescSelector}}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        简介过滤规则
+                    </label>
+                    <div class="layui-input-block">
+                        <textarea name="rule.BookDescFilter" placeholder="多个规则回车分行，支持正则表达式" class="layui-textarea">{{.Rule.Rules.BookDescFilter}}</textarea>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -169,6 +201,14 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">
+                        章节标题过滤规则
+                    </label>
+                    <div class="layui-input-block">
+                        <textarea name="rule.InfoTitleFilter" placeholder="多个规则回车分行，支持正则表达式" class="layui-textarea">{{.Rule.Rules.InfoTitleFilter}}</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
                         <span class='x-red'>*</span>章节内容CSS选择器
                     </label>
                     <div class="layui-input-block">
@@ -180,7 +220,7 @@
                         章节内容过滤规则
                     </label>
                     <div class="layui-input-block">
-                        <textarea name="rule.InfoDescFilterRule" placeholder="多个规则回车分行，支持正则表达式" class="layui-textarea">{{.Rule.Rules.InfoDescFilterRule}}</textarea>
+                        <textarea name="rule.InfoDescFilter" placeholder="多个规则回车分行，支持正则表达式" class="layui-textarea">{{.Rule.Rules.InfoDescFilter}}</textarea>
                     </div>
                 </div>
                 <div class="layui-form-item">
