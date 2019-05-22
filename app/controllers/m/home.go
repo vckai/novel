@@ -45,7 +45,6 @@ func (this *HomeController) Index() {
 
 	// 获取精品推荐
 	this.Data["NovVipRecs"] = services.NovelService.GetVipRecs(3, 0)
-	this.Data["Title"] = "海量小说、图书、免费小说、漫画，免费畅读"
 
 	// banner 轮播图
 	args := map[string]interface{}{

@@ -23,9 +23,10 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/axgle/mahonia"
 
-	"github.com/vckai/novel/app/librarys/snatchs"
+	"github.com/vckai/novel/app/controllers"
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
+	"github.com/vckai/novel/app/services/snatchs"
 	"github.com/vckai/novel/app/utils"
 	"github.com/vckai/novel/app/utils/log"
 )
@@ -79,7 +80,7 @@ func (this *SnatchRuleController) Add() {
 	this.Data["Cates"] = cates
 	this.Data["Rule"] = sr
 	this.Data["IsAdd"] = true
-	this.Data["PostUrl"] = this.URLFor("admin.SnatchRuleController.Add")
+	this.Data["PostUrl"] = controllers.URLFor("admin.SnatchRuleController.Add")
 	this.View("snatch_rule/add.tpl")
 }
 
@@ -113,7 +114,7 @@ func (this *SnatchRuleController) Edit() {
 	this.Data["Rule"] = rule
 	this.Data["IsAdd"] = false
 	this.Data["Cates"] = cates
-	this.Data["PostUrl"] = this.URLFor("admin.SnatchRuleController.Edit")
+	this.Data["PostUrl"] = controllers.URLFor("admin.SnatchRuleController.Edit")
 	this.View("snatch_rule/add.tpl")
 }
 

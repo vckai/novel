@@ -17,6 +17,7 @@ package admin
 import (
 	"strings"
 
+	"github.com/vckai/novel/app/controllers"
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
 	"github.com/vckai/novel/app/utils/log"
@@ -57,7 +58,7 @@ func (this *NovelController) Add() {
 	this.Data["Novel"] = models.NewNovel()
 	this.Data["IsUpdate"] = false
 	this.Data["Cates"] = services.CateService.GetAll()
-	this.Data["PostUrl"] = this.URLFor("admin.NovelController.Add")
+	this.Data["PostUrl"] = controllers.URLFor("admin.NovelController.Add")
 	this.View("novel/add.tpl")
 }
 
@@ -170,7 +171,7 @@ func (this *NovelController) Edit() {
 	this.Data["Novel"] = novel
 	this.Data["IsUpdate"] = true
 	this.Data["Cates"] = services.CateService.GetAll()
-	this.Data["PostUrl"] = this.URLFor("admin.NovelController.Edit")
+	this.Data["PostUrl"] = controllers.URLFor("admin.NovelController.Edit")
 	this.View("novel/add.tpl")
 }
 

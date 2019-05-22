@@ -17,6 +17,7 @@ package admin
 import (
 	"strings"
 
+	"github.com/vckai/novel/app/controllers"
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
 	"github.com/vckai/novel/app/utils/log"
@@ -45,7 +46,7 @@ func (this *CateController) Add() {
 
 	this.Data["Cate"] = models.NewCate()
 	this.Data["IsAdd"] = true
-	this.Data["PostUrl"] = this.URLFor("admin.CateController.Add")
+	this.Data["PostUrl"] = controllers.URLFor("admin.CateController.Add")
 	this.View("cate/add.tpl")
 }
 
@@ -69,7 +70,7 @@ func (this *CateController) Edit() {
 
 	this.Data["Cate"] = cate
 	this.Data["IsAdd"] = false
-	this.Data["PostUrl"] = this.URLFor("admin.CateController.Edit")
+	this.Data["PostUrl"] = controllers.URLFor("admin.CateController.Edit")
 	this.View("cate/add.tpl")
 }
 

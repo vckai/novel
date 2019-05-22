@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/vckai/novel/app/controllers"
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
 	"github.com/vckai/novel/app/utils"
@@ -51,7 +52,7 @@ func (this *GroupController) Add() {
 	this.Data["Group"] = models.NewGroup()
 	this.Data["IsUpdate"] = false
 	this.Data["RoleHtml"] = roleHtml
-	this.Data["PostUrl"] = this.URLFor("admin.GroupController.Add")
+	this.Data["PostUrl"] = controllers.URLFor("admin.GroupController.Add")
 	this.View("group/add.tpl")
 }
 
@@ -80,7 +81,7 @@ func (this *GroupController) Edit() {
 	this.Data["Group"] = group
 	this.Data["IsUpdate"] = true
 	this.Data["RoleHtml"] = roleHtml
-	this.Data["PostUrl"] = this.URLFor("admin.GroupController.Edit")
+	this.Data["PostUrl"] = controllers.URLFor("admin.GroupController.Edit")
 	this.View("group/add.tpl")
 }
 

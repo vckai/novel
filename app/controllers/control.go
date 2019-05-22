@@ -140,14 +140,14 @@ func (this *BaseController) Msg(msg string, args ...interface{}) {
 }
 
 // 去除URLFor生成的URL前缀
-func (this *BaseController) URLFor(endpoint string, values ...interface{}) string {
+func URLFor(endpoint string, values ...interface{}) string {
 	url := beego.URLFor(endpoint, values...)
 
-	if url := services.ConfigService.String("MobileURL"); url != "" {
+	if mURL := services.ConfigService.String("MobileURL"); mURL != "" {
 		url = strings.Replace(url, "/m/", "/", 1)
 	}
 
-	if url := services.ConfigService.String("AdminURL"); url != "" {
+	if adminURL := services.ConfigService.String("AdminURL"); adminURL != "" {
 		url = strings.Replace(url, "/admin/", "/", 1)
 	}
 

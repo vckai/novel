@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/vckai/novel/app/controllers"
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
 	"github.com/vckai/novel/app/utils/log"
@@ -51,7 +52,7 @@ func (this *RoleController) Add() {
 	this.Data["role"] = models.NewRole()
 	this.Data["IsUpdate"] = false
 	this.Data["options"] = html
-	this.Data["PostUrl"] = this.URLFor("admin.RoleController.Add")
+	this.Data["PostUrl"] = controllers.URLFor("admin.RoleController.Add")
 	this.View("role/add.tpl")
 }
 
@@ -81,7 +82,7 @@ func (this *RoleController) Edit() {
 	this.Data["IsUpdate"] = true
 	this.Data["role"] = role
 	this.Data["options"] = html
-	this.Data["PostUrl"] = this.URLFor("admin.RoleController.Edit")
+	this.Data["PostUrl"] = controllers.URLFor("admin.RoleController.Edit")
 	this.View("role/add.tpl")
 }
 
