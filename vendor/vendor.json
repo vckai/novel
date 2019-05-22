@@ -115,10 +115,22 @@
 			"revisionTime": "2016-12-28T00:43:38Z"
 		},
 		{
+			"checksumSHA1": "M0j/wtIbmNQtHjBswvdUKcrBQzc=",
+			"path": "github.com/moul/http2curl",
+			"revision": "faeffb3553568c6ecaa9c103c09dea941ca9c570",
+			"revisionTime": "2018-12-27T15:39:05Z"
+		},
+		{
 			"checksumSHA1": "RJJC3gY0eOHNhvM++7HHW78djXs=",
 			"path": "github.com/mssola/user_agent",
 			"revision": "6fe362d7cd643d45bbded5917581bab754d0d012",
 			"revisionTime": "2017-11-30T14:12:17Z"
+		},
+		{
+			"checksumSHA1": "J1xE8xiE9grdDMUL3bj0aLEn+mI=",
+			"path": "github.com/parnurzeal/gorequest",
+			"revision": "b0604454e3c35c21d4c86e4771dc1e24c896cdd3",
+			"revisionTime": "2019-01-14T09:06:33Z"
 		},
 		{
 			"checksumSHA1": "I7hloldMJZTqUx6hbVDp5nk9fZQ=",
@@ -205,6 +217,12 @@
 			"revisionTime": "2017-01-10T12:00:22Z"
 		},
 		{
+			"checksumSHA1": "Y4AYnHgYmDrvajlG74uoNr11P7U=",
+			"path": "github.com/spaolacci/murmur3",
+			"revision": "539464a789e9b9f01bc857458ffe2c5c1a2ed382",
+			"revisionTime": "2019-03-17T07:47:36Z"
+		},
+		{
 			"checksumSHA1": "2W0lUfuVev5vCKFpPeD2IuwcDmo=",
 			"path": "github.com/tidwall/gjson",
 			"revision": "182ad7605048a24cd37115b7157b8a4436d9ea17",
@@ -215,6 +233,18 @@
 			"path": "github.com/tidwall/match",
 			"revision": "1731857f09b1f38450e2c12409748407822dc6be",
 			"revisionTime": "2017-10-02T07:59:45Z"
+		},
+		{
+			"checksumSHA1": "AMnz/fApcAxk0FdpYGe8z+TGNlg=",
+			"path": "github.com/willf/bitset",
+			"revision": "77892cd8d53fa6524772426bc444dd2e3b4fb18f",
+			"revisionTime": "2019-04-04T14:53:24Z"
+		},
+		{
+			"checksumSHA1": "yyysY3Ior4jy2HtchTxlP1ayIvQ=",
+			"path": "github.com/willf/bloom",
+			"revision": "25ba46ef8744ddeba999dcd048dbb8b0fa87edb3",
+			"revisionTime": "2019-02-28T21:23:55Z"
 		},
 		{
 			"checksumSHA1": "1MGpGDQqnUoRpv7VEcQrXOBydXE=",
@@ -237,6 +267,12 @@
 			"path": "golang.org/x/net/html/atom",
 			"revision": "ffcf1bedda3b04ebb15a168a59800a73d6dc0f4d",
 			"revisionTime": "2017-03-29T01:43:45Z"
+		},
+		{
+			"checksumSHA1": "aXHaHPWVRDLZ1X2JQZ4yVJYWGec=",
+			"path": "golang.org/x/net/publicsuffix",
+			"revision": "a4d6f7feada510cc50e69a37b484cb0fdc6b7876",
+			"revisionTime": "2019-05-09T22:13:41Z"
 		},
 		{
 			"path": "google.golang.org/appengine/cloudsql",
