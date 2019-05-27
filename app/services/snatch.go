@@ -43,7 +43,9 @@ type Snatch struct {
 
 func NewSnatch() *Snatch {
 	return &Snatch{
-		c: snatchs.NewSnatch(ProxyService.Get),
+		c: snatchs.NewSnatch(func() string {
+			return ProxyService.Get()
+		}),
 	}
 }
 
