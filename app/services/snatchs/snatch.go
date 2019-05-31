@@ -261,13 +261,15 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	nov.Desc = this.filter(rule.BookDescFilter, nov.Desc)
 
 	// 获取章节链接地址
-	chapterLink, _ := doc.Find(rule.BookChapterURLSelector).Attr("href")
-	if len(chapterLink) == 0 {
-		return nil, ErrNotNovLink
+	chapterLink := rawurl
+	if len(rule.BookChapterURLSelector) > 0 {
+		chapterLink, _ = doc.Find(rule.BookChapterURLSelector).Attr("href")
+		if len(chapterLink) == 0 {
+			return nil, ErrNotNovLink
+		}
+		// 生成完整链接地址
+		chapterLink, _ = this.genrateURL(u, chapterLink)
 	}
-
-	// 生成完整链接地址
-	chapterLink, _ = this.genrateURL(u, chapterLink)
 
 	return &SnatchInfo{
 		ChapterUrl: chapterLink,

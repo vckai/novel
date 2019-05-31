@@ -56,7 +56,7 @@
                     $(".result pre").html("");
 					ajax_post({{urlfor "admin.SnatchRuleController.Goquery"}}, data.field, function (res) {
                         $(".result").show();
-                        $(".result pre").html(res.data);
+                        $(".result pre").text(res.data);
                     }, true, true, false);
 					return false;
 				});

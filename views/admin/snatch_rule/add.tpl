@@ -167,10 +167,10 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">
-                        <span class='x-red'>*</span>章节链接CSS选择器
+                        章节链接CSS选择器
                     </label>
                     <div class="layui-input-block">
-                        <input lay-verify="required" type="text" name="rule.BookChapterURLSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookChapterURLSelector}}">
+                        <input type="text" name="rule.BookChapterURLSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookChapterURLSelector}}">
                     </div>
                 </div>
                 <hr />

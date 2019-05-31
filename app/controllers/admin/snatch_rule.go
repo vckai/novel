@@ -134,7 +134,7 @@ func (this *SnatchRuleController) Goquery() {
 		c := xhttp.NewClient(
 			&xhttp.ClientConfig{
 				Timeout:   10 * time.Second,
-				Dial:      500 * time.Millisecond,
+				Dial:      10 * time.Second,
 				KeepAlive: 60 * time.Second,
 				ProxyURL:  services.ProxyService.Get(),
 			})
