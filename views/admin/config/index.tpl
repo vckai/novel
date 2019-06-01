@@ -155,6 +155,15 @@ html{color: #666}
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            统计JS代码
+                        </label>
+                        <div class="layui-input-block">
+                            <textarea name="StatisticsCode" autocomplete="off" placeholder="统计JS代码"
+                            class="layui-textarea" rows="5">{{.Config.StatisticsCode}}</textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <div class="layui-input-block">
                             <input type="submit" class="layui-btn" lay-submit="" lay-filter="base" value="保存" />
                         </div>
@@ -163,9 +172,25 @@ html{color: #666}
             </div>
             <div class="layui-tab-item {{if eq .Tab "snatch"}}layui-show{{end}}">
                 <form class="layui-form" action="">
-                      <div class="layui-form-item">
-                        <label for="AppId" class="layui-form-label">
-                            <span class="x-red">*</span>开启自动更新
+                    <div class="layui-form-item">
+                        <label for="AutoNewSnatchDay" class="layui-form-label">
+                            <span class="x-red">*</span>每天自动采集新小说
+                        </label>
+                        <div class="layui-input-block">
+                          <input type="checkbox" {{if eq (or .Config.AutoNewSnatchDay "") "1"}}checked{{end}} name="AutoNewSnatchDay" lay-skin="switch" lay-filter="switchTest" lay-text="开启|关闭" vlaue="1" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="AutoSnatchRank" class="layui-form-label">
+                            <span class="x-red">*</span>是否采集排行榜
+                        </label>
+                        <div class="layui-input-block">
+                          <input type="checkbox" {{if eq (or .Config.AutoSnatchRank "") "1"}}checked{{end}} name="AutoSnatchRank" lay-skin="switch" lay-filter="switchTest" lay-text="开启|关闭" vlaue="1" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="IsSnatch" class="layui-form-label">
+                            <span class="x-red">*</span>开启自动更新章节
                         </label>
                         <div class="layui-input-block">
                           <input type="checkbox" {{if eq (or .Config.IsSnatch "") "1"}}checked{{end}} name="IsSnatch" lay-skin="switch" lay-filter="switchTest" lay-text="开启|关闭" vlaue="1" />

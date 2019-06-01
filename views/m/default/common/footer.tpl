@@ -14,7 +14,7 @@
         </nav>
  
         <div class="foot-copyright">{{.aOut.Copyright}} {{.aOut.Icp}}</div>
-		<div class="foot-copyright" style="font-size: 12px;">{{.aOut.Title}}所有内容均来自互联网和用户上传，如果侵权请联系我们删除！</div>
+		<div class="foot-copyright" style="font-size: 12px;">{{.aOut.Title}}所有内容均来自互联网和用户上传，如果侵权请联系我们删除！{{str2html .aOut.StatisticsCode}}</div>
     </footer>
 
     <script type="text/javascript" src="{{.mOut.ViewUrl}}js/util.js" charset="utf-8"></script>

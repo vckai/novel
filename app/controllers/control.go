@@ -53,6 +53,7 @@ func (this *BaseController) View(tpl string) {
 	aOut["Description"] = services.ConfigService.String("Description")
 	aOut["Icp"] = services.ConfigService.String("Icp")
 	aOut["Copyright"] = services.ConfigService.String("Copyright")
+	aOut["StatisticsCode"] = services.ConfigService.String("StatisticsCode", "")
 	aOut["Logo"] = services.ConfigService.String("Logo")
 	aOut["Favicon"] = services.ConfigService.String("Favicon")
 	aOut["Version"] = beego.AppConfig.String("version")
