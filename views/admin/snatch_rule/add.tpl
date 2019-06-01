@@ -173,6 +173,14 @@
                         <input type="text" name="rule.BookChapterURLSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookChapterURLSelector}}">
                     </div>
                 </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        最新章节标题CSS选择器
+                    </label>
+                    <div class="layui-input-block">
+                        <input type="text" name="rule.BookLastChapterTitleSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookLastChapterTitleSelector}}">
+                    </div>
+                </div>
                 <hr />
                 <div class="layui-form-item">
                     <label class="layui-form-label">

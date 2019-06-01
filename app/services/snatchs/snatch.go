@@ -248,6 +248,12 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 		return nil, ErrNotNovName
 	}
 
+	// 获取小说最新章节
+	if len(rule.BookLastChapterTitleSelector) > 0 {
+		nov.ChapterTitle = doc.Find(rule.BookLastChapterTitleSelector).Text()
+		nov.ChapterTitle = strings.TrimSpace(nov.ChapterTitle)
+	}
+
 	// 获取小说作者
 	nov.Author = doc.Find(rule.BookAuthorSelector).Text()
 	nov.Author = this.filter(rule.BookAuthorFilter, nov.Author)

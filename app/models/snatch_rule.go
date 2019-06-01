@@ -88,17 +88,18 @@ type Rule struct {
 	IsCrawlerURL string `json:"is_crawler_url"`
 
 	// 小说简介页面采集规则
-	BookTitleSelector      string `json:"book_title_selector"`
-	BookTitleFilter        string `json:"book_title_filter"`
-	BookAuthorSelector     string `json:"book_author_selector"`
-	BookAuthorFilter       string `json:"book_author_filter"`
-	BookCateSelector       string `json:"book_cate_selector"`
-	BookCateFilter         string `json:"book_cate_filter"`
-	BookDescSelector       string `json:"book_desc_selector"`
-	BookDescFilter         string `json:"book_desc_filter"`
-	BookCoverSelector      string `json:"book_cover_selector"`
-	BookNoCover            string `json:"book_no_cover"`
-	BookChapterURLSelector string `json:"book_chapter_url_selector"`
+	BookTitleSelector            string `json:"book_title_selector"`
+	BookTitleFilter              string `json:"book_title_filter"`
+	BookAuthorSelector           string `json:"book_author_selector"`
+	BookAuthorFilter             string `json:"book_author_filter"`
+	BookCateSelector             string `json:"book_cate_selector"`
+	BookCateFilter               string `json:"book_cate_filter"`
+	BookDescSelector             string `json:"book_desc_selector"`
+	BookDescFilter               string `json:"book_desc_filter"`
+	BookCoverSelector            string `json:"book_cover_selector"`
+	BookNoCover                  string `json:"book_no_cover"`
+	BookChapterURLSelector       string `json:"book_chapter_url_selector"`
+	BookLastChapterTitleSelector string `json:"book_last_chapter_title_selector"`
 
 	// 章节目录采集规则
 	ChapterCatalogSelector string `json:"chapter_catalog_selector"`
