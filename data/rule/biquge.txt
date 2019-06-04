@@ -1,6 +1,6 @@
 [
     {
-        "name": "笔趣网",
+        "name": "笔趣阁",
         "code": "biquwang",
         "url": "https://www.bbiquge.com/",
         "state": 1,
