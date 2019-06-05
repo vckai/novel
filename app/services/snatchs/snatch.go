@@ -137,9 +137,14 @@ func (this *Snatch) FindNovel(provider *models.SnatchRule, kw string) (*SnatchIn
 		return nil, ErrNotRule
 	}
 
+	charset := provider.Charset
+	if len(rule.FindCharset) > 0 {
+		charset = rule.FindCharset
+	}
+
 	// 转换为gbk编码
-	if provider.Charset == "GB18030" {
-		enc := mahonia.NewEncoder(provider.Charset)
+	if charset == "GB18030" {
+		enc := mahonia.NewEncoder(charset)
 		kw = enc.ConvertString(kw)
 	}
 
@@ -157,7 +162,7 @@ func (this *Snatch) FindNovel(provider *models.SnatchRule, kw string) (*SnatchIn
 	}
 
 	// 请求搜索页面
-	doc, resp, err := this.newHtml(u.String(), provider.Charset)
+	doc, resp, err := this.newHtml(u.String(), charset)
 	if err != nil {
 		return nil, err
 	}
@@ -175,11 +180,6 @@ func (this *Snatch) FindNovel(provider *models.SnatchRule, kw string) (*SnatchIn
 
 	if len(novURL) == 0 || !this.IsBookURL(provider, novURL) {
 		return nil, ErrNotNovLink
-	}
-
-	novURL, err = this.genrateURL(u, novURL)
-	if err != nil {
-		return nil, err
 	}
 
 	return this.GetNovel(provider, novURL)
@@ -215,7 +215,12 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	nov := models.NewNovel()
 
 	// 获取封面图片
-	if img, ok := doc.Find(rule.BookCoverSelector).Attr("src"); ok {
+	imgAttr := "src"
+	if len(rule.BookCoverAttr) > 0 {
+		imgAttr = rule.BookCoverAttr
+	}
+
+	if img, ok := doc.Find(rule.BookCoverSelector).Attr(imgAttr); ok {
 		nov.Cover = img
 
 		if !strings.Contains(nov.Cover, "http://") && len(nov.Cover) > 0 {
@@ -229,7 +234,11 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	}
 
 	// 获取小说类别
-	nov.CateName = doc.Find(rule.BookCateSelector).Text()
+	if len(rule.BookCateAttr) > 0 {
+		nov.CateName = doc.Find(rule.BookCateSelector).AttrOr(rule.BookCateAttr, "")
+	} else {
+		nov.CateName = doc.Find(rule.BookCateSelector).Text()
+	}
 	nov.CateName = this.filter(rule.BookCateFilter, nov.CateName)
 	nov.CateName = strings.TrimSpace(nov.CateName)
 
@@ -243,7 +252,11 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	}
 
 	// 获取小说标题
-	nov.Name = doc.Find(rule.BookTitleSelector).Text()
+	if len(rule.BookTitleAttr) > 0 {
+		nov.Name = doc.Find(rule.BookTitleSelector).AttrOr(rule.BookTitleAttr, "")
+	} else {
+		nov.Name = doc.Find(rule.BookTitleSelector).Text()
+	}
 	nov.Name = this.filter(rule.BookTitleFilter, nov.Name)
 	nov.Name = strings.TrimSpace(nov.Name)
 	if len(nov.Name) == 0 {
@@ -257,7 +270,11 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	}
 
 	// 获取小说作者
-	nov.Author = doc.Find(rule.BookAuthorSelector).Text()
+	if len(rule.BookAuthorAttr) > 0 {
+		nov.Author = doc.Find(rule.BookAuthorSelector).AttrOr(rule.BookAuthorAttr, "")
+	} else {
+		nov.Author = doc.Find(rule.BookAuthorSelector).Text()
+	}
 	nov.Author = this.filter(rule.BookAuthorFilter, nov.Author)
 	nov.Author = strings.TrimSpace(nov.Author)
 	if len(nov.Author) == 0 {
@@ -333,18 +350,20 @@ func (this *Snatch) GetChapter(provider *models.SnatchRule, rawurl string) (*Sna
 	chap.Desc = this.filter(rule.InfoDescFilter, chap.Desc)
 
 	// 获取上一页
-	preURL := doc.Find(rule.InfoPrePageSelector).AttrOr("href", "")
-	if preURL != "" {
-		if !this.IsBookURL(provider, preURL) {
-			preURL, _ = this.genrateURL(u, preURL)
+	preURL := ""
+	if rawurl := doc.Find(rule.InfoPrePageSelector).AttrOr("href", ""); len(rawurl) > 0 {
+		rawurl, _ = this.genrateURL(u, rawurl)
+		if !this.IsBookURL(provider, rawurl) {
+			preURL = rawurl
 		}
 	}
 
 	// 获取下一页
-	nextURL := doc.Find(rule.InfoNextPageSelector).AttrOr("href", "")
-	if nextURL != "" {
-		if !this.IsBookURL(provider, nextURL) {
-			nextURL, _ = this.genrateURL(u, nextURL)
+	nextURL := ""
+	if rawurl := doc.Find(rule.InfoNextPageSelector).AttrOr("href", ""); len(rawurl) > 0 {
+		rawurl, _ = this.genrateURL(u, rawurl)
+		if !this.IsBookURL(provider, rawurl) {
+			nextURL = rawurl
 		}
 	}
 

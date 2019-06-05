@@ -386,7 +386,7 @@ CREATE TABLE `nov_snatch_rule` (
   `state` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否启用，0：禁用，1：启用',
   `is_update` tinyint(1) NOT NULL COMMENT '是否强制更新用于小说信息',
   `charset` varchar(10) NOT NULL COMMENT '网站编码格式',
-  `cate_map` varchar(255) NOT NULL COMMENT '分类转换对应',
+  `cate_map` varchar(2555) NOT NULL COMMENT '分类转换对应',
   `rule` varchar(2555) NOT NULL COMMENT '采集规则',
   `test_data` varchar(2555) NOT NULL DEFAULT '' COMMENT '测试对比数据',
   `created_at` int(11) unsigned NOT NULL,

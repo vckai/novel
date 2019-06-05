@@ -86,11 +86,21 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        <span class='x-red'>*</span>名称CSS选择器
-                    </label>
-                    <div class="layui-input-block">
-                        <input lay-verify="required" type="text" name="rule.BookTitleSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookTitleSelector}}">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>名称CSS选择器
+                        </label>
+                        <div class="layui-input-block">
+                            <input lay-verify="required" type="text" name="rule.BookTitleSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookTitleSelector}}">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            名称选择属性
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookTitleAttr" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookTitleAttr}}">
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -102,11 +112,21 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        <span class='x-red'>*</span>作者CSS选择器
-                    </label>
-                    <div class="layui-input-block">
-                        <input lay-verify="required" type="text" name="rule.BookAuthorSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookAuthorSelector}}">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>作者CSS选择器
+                        </label>
+                        <div class="layui-input-block">
+                            <input lay-verify="required" type="text" name="rule.BookAuthorSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookAuthorSelector}}">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            作者选择属性
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookAuthorAttr" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookAuthorAttr}}">
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -118,11 +138,21 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        分类CSS选择器
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="rule.BookCateSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookCateSelector}}">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            分类CSS选择器
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookCateSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookCateSelector}}">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            分类选择属性
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookCateAttr" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookCateAttr}}">
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -150,11 +180,21 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        缩略图CSS选择器
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="rule.BookCoverSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookCoverSelector}}">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            缩略图CSS选择器
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookCoverSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookCoverSelector}}">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            缩略图选择属性
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookCoverAttr" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookCoverAttr}}">
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -254,6 +294,18 @@
                     </label>
                     <div class="layui-input-block">
                         <input type="text" name="rule.FindURL" autocomplete="off" class="layui-input" value="{{.Rule.Rules.FindURL}}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        搜索页面编码
+                    </label>
+                    <div class="layui-input-inline">
+                      <select name="rule.FindCharset" lay-verify="charset">
+                        <option value="">请选择搜索页面编码</option>
+                        <option value="UTF-8" {{if eq "UTF-8" .Rule.Rules.FindCharset}}selected{{end}}>UTF-8</option>
+                        <option value="GB18030" {{if eq "GB18030" .Rule.Rules.FindCharset}}selected{{end}}>GBK/GB2312</option>
+                      </select>
                     </div>
                 </div>
                 <div class="layui-form-item">

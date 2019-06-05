@@ -89,14 +89,18 @@ type Rule struct {
 
 	// 小说简介页面采集规则
 	BookTitleSelector            string `json:"book_title_selector"`
+	BookTitleAttr                string `json:"book_title_attr"`
 	BookTitleFilter              string `json:"book_title_filter"`
 	BookAuthorSelector           string `json:"book_author_selector"`
+	BookAuthorAttr               string `json:"book_author_attr"`
 	BookAuthorFilter             string `json:"book_author_filter"`
 	BookCateSelector             string `json:"book_cate_selector"`
+	BookCateAttr                 string `json:"book_cate_attr"`
 	BookCateFilter               string `json:"book_cate_filter"`
 	BookDescSelector             string `json:"book_desc_selector"`
 	BookDescFilter               string `json:"book_desc_filter"`
 	BookCoverSelector            string `json:"book_cover_selector"`
+	BookCoverAttr                string `json:"book_cover_attr"`
 	BookNoCover                  string `json:"book_no_cover"`
 	BookChapterURLSelector       string `json:"book_chapter_url_selector"`
 	BookLastChapterTitleSelector string `json:"book_last_chapter_title_selector"`
@@ -115,6 +119,7 @@ type Rule struct {
 
 	// 搜索页面采集规则
 	FindURL             string `json:"find_url"`
+	FindCharset         string `json:"find_charset"`
 	FindBookURLSelector string `json:"find_book_url_selector"`
 }
 

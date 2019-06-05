@@ -270,7 +270,7 @@ func (this *SnatchRuleController) Test() {
 	}
 
 	if find.Url != rule.Test.FindBookURL {
-		this.OutJson(1020, "章节内容页下一页URL对比失败："+find.Url)
+		this.OutJson(1020, "搜索小说URL对比失败："+find.Url)
 	}
 
 	this.OutJson(0, "测试成功")
