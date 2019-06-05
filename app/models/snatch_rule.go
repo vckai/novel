@@ -289,7 +289,7 @@ func (m *SnatchRule) GetAll(args *ArgsListRule) []*SnatchRule {
 	q := m.query().Filter("deleted_at", 0)
 
 	if len(args.Ids) > 0 {
-		q = q.Filter("id", args.Ids...)
+		q = q.Filter("id__in", args.Ids...)
 	}
 
 	q.OrderBy("-id").All(&list, "id", "name", "code", "url", "is_update", "state", "charset", "cate_map", "rule", "test_data", "created_at")
