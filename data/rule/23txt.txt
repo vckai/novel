@@ -1,0 +1,94 @@
+[
+    {
+        "name": "天籁小说",
+        "code": "23txt",
+        "url": "https://www.23txt.com/",
+        "state": 1,
+        "is_update": 0,
+        "charset": "GB18030",
+        "test": {
+            "book_url": "https://www.23txt.com/files/article/html/37/37532/",
+            "book_title": "圣墟（圣虚）",
+            "book_author": "辰东",
+            "book_cate": "玄幻小说",
+            "book_desc": "中崛起，在寂灭中",
+            "book_cover": "https://www.23txt.com/files/article/image/37/37532/37532s.jpg",
+            "book_chapter_url": "https://www.23txt.com/files/article/html/37/37532/",
+            "chapter_url": "https://www.23txt.com/files/article/html/37/37532/",
+            "chapter_catalog_url": "https://www.23txt.com/files/article/html/37/37532/12196289.html",
+            "chapter_catalog_title": "第一章 沙漠中的彼岸花",
+            "info_url": "https://www.23txt.com/files/article/html/37/37532/12196290.html",
+            "info_title": "第二章 后文明时代",
+            "info_desc": "疑似受惊，差点闯出栅栏",
+            "info_pre_page_url": "https://www.23txt.com/files/article/html/37/37532/12196289.html",
+            "info_next_page_url": "https://www.23txt.com/files/article/html/37/37532/12196291.html",
+            "find_book_kw": "圣墟",
+            "find_book_url": "https://www.23txt.com/files/article/html/37/37532/"
+        },
+        "rules": {
+            "is_book_url": "^https://www.23txt.com/files/article/html/([\\d]+)/([\\d]+)/$",
+            "is_crawler_url": "^https://www.23txt.com/([a-z]+)/$",
+            "book_title_selector": ".box_con #info h1",
+            "book_title_attr": "",
+            "book_title_filter": "",
+            "book_author_selector": ".box_con #info p:nth-of-type(1)",
+            "book_author_attr": "",
+            "book_author_filter": "作(.*)者[：|:]",
+            "book_cate_selector": ".box_con .con_top a:nth-of-type(2)",
+            "book_cate_attr": "",
+            "book_cate_filter": "",
+            "book_desc_selector": ".box_con #intro p",
+            "book_desc_filter": "",
+            "book_cover_selector": ".box_con #fmimg img",
+            "book_cover_attr": "",
+            "book_no_cover": "nocover.jpg",
+            "book_chapter_url_selector": "",
+            "book_last_chapter_title_selector": ".box_con #info p:nth-of-type(4) a",
+            "chapter_catalog_selector": "#list dd a ",
+            "chapter_abandon_num": 0,
+            "info_title_selector": ".bookname h1",
+            "info_title_filter": "",
+            "info_desc_selector": "#content",
+            "info_desc_filter": "[』]?天[\\s\\S]{0,4}籁[\\s\\S]{0,4}小[\\s\\S]{0,4}说(.*)ＣＯＭ",
+            "info_pre_page_selector": ".bottem2 a:nth-of-type(1)",
+            "info_next_page_selector": ".bottem2 a:nth-of-type(3)",
+            "find_url": "https://www.23txt.com/search.php?keyword=",
+            "find_charset": "UTF-8",
+            "find_book_url_selector": ".result-list .result-item:nth-of-type(1) .result-game-item-title a"
+        },
+        "cate_maps": [
+            {
+                "id": 1,
+                "name": "玄幻小说"
+            },
+            {
+                "id": 2,
+                "name": "修真小说"
+            },
+            {
+                "id": 3,
+                "name": "都市小说"
+            },
+            {
+                "id": 4,
+                "name": "历史小说"
+            },
+            {
+                "id": 6,
+                "name": "网游小说"
+            },
+            {
+                "id": 7,
+                "name": "科幻小说"
+            },
+            {
+                "id": 3,
+                "name": "言情小说"
+            },
+            {
+                "id": 13,
+                "name": "其他小说"
+            }
+        ]
+    }
+]
