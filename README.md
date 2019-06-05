@@ -56,3 +56,9 @@ cp ./conf/data.conf.example ./conf/data.conf
 ./novel
 ```
 然后在浏览器中输入localhost:8089 访问首页 进入localhost:8089/admin进入后台，初始用户名/密码：admin/admin123
+
+### 采集规则贡献
+
+| 站点 | 贡献人 |
+|:---:|:---:|
+|[笔趣阁bbiquge](https://www.bbiquge.com/)|[creantan](https://github.com/creantan)|
