@@ -147,6 +147,7 @@ func (this *Snatch) FindNovel(provider *models.SnatchRule, kw string) (*SnatchIn
 		return nil, ErrNotFindUrl
 	}
 
+	kw = strings.TrimSpace(kw)
 	kw = url.QueryEscape(kw)
 
 	// 解析URL
@@ -199,6 +200,7 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	t1 := time.Now()
 
 	// 解析URL
+	rawurl = strings.TrimSpace(rawurl)
 	u, err := url.Parse(rawurl)
 	if err != nil {
 		return nil, err
@@ -302,6 +304,7 @@ func (this *Snatch) GetChapter(provider *models.SnatchRule, rawurl string) (*Sna
 	t1 := time.Now()
 
 	// 解析URL
+	rawurl = strings.TrimSpace(rawurl)
 	u, err := url.Parse(rawurl)
 	if err != nil {
 		return nil, err
@@ -332,13 +335,17 @@ func (this *Snatch) GetChapter(provider *models.SnatchRule, rawurl string) (*Sna
 	// 获取上一页
 	preURL := doc.Find(rule.InfoPrePageSelector).AttrOr("href", "")
 	if preURL != "" {
-		preURL, _ = this.genrateURL(u, preURL)
+		if !this.IsBookURL(provider, preURL) {
+			preURL, _ = this.genrateURL(u, preURL)
+		}
 	}
 
 	// 获取下一页
 	nextURL := doc.Find(rule.InfoNextPageSelector).AttrOr("href", "")
 	if nextURL != "" {
-		nextURL, _ = this.genrateURL(u, nextURL)
+		if !this.IsBookURL(provider, nextURL) {
+			nextURL, _ = this.genrateURL(u, nextURL)
+		}
 	}
 
 	return &SnatchInfo{
@@ -363,6 +370,7 @@ func (this *Snatch) GetChapters(provider *models.SnatchRule, rawurl string) ([]*
 	}
 
 	// 解析URL
+	rawurl = strings.TrimSpace(rawurl)
 	u, err := url.Parse(rawurl)
 	if err != nil {
 		return nil, err
@@ -380,10 +388,10 @@ func (this *Snatch) GetChapters(provider *models.SnatchRule, rawurl string) ([]*
 	chapNo := uint32(1)
 
 	// 获取小说URL地址
-	abandonNum := 0
+	abandonNum := 1
 	doc.Find(rule.ChapterCatalogSelector).Each(func(i int, s *goquery.Selection) {
 		// 过滤掉最新章节
-		if abandonNum < rule.ChapterAbandonNum {
+		if rule.ChapterAbandonNum >= abandonNum {
 			abandonNum++
 			return
 		}
