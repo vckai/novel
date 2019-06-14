@@ -50,7 +50,7 @@ var (
 type Crawler struct {
 	initURL *url.URL
 
-	linkChans chan string
+	linkChans map[string]chan string
 
 	provider *models.SnatchRule
 
@@ -70,6 +70,7 @@ type Crawler struct {
 func NewCrawler() *Crawler {
 	return &Crawler{
 		runStatus: CRAWLER_WAIT,
+		linkChans: make(map[string]chan string),
 	}
 }
 
@@ -77,7 +78,7 @@ func NewCrawler() *Crawler {
 func (this *Crawler) Init(provideName string) (*Crawler, error) {
 	if this.runStatus != CRAWLER_WAIT {
 		log.Warn("爬虫任务正在运行中..")
-		return this, errors.New("task running..")
+		return this, errors.New("task is running..")
 	}
 
 	var err error
@@ -94,8 +95,9 @@ func (this *Crawler) Init(provideName string) (*Crawler, error) {
 	}
 
 	// 小说URL channels
-	this.linkChans = make(chan string, 5000)
+	this.linkChans[provideName] = make(chan string, 5000)
 
+	// Init BloomFilter
 	this.URLs = bloom.NewWithEstimates(MAX_BLOOM_SIZE, BLOOM_RATE)
 	this.bookURLs = bloom.NewWithEstimates(MAX_BLOOM_SIZE, BLOOM_RATE)
 
@@ -110,7 +112,7 @@ func (this *Crawler) Run() {
 	}
 
 	log.Info("开始运行爬虫，站点：", this.provider.Code)
-	go this.run()
+	this.run()
 }
 
 // 真正的运行逻辑
@@ -125,7 +127,7 @@ func (this *Crawler) run() {
 		go func() {
 			defer wg.Done()
 			for {
-				link, ok := <-this.linkChans
+				link, ok := <-this.linkChans[this.provider.Code]
 				if !ok {
 					return
 				}
@@ -144,7 +146,7 @@ func (this *Crawler) run() {
 		this.runCrawler(this.initURL, "")
 		log.Info("URL爬虫，采集URL:", this.countURL, "，采集小说URL:", this.countBookURL, "，耗时:", time.Since(t1))
 
-		close(this.linkChans)
+		close(this.linkChans[this.provider.Code])
 	}()
 
 	t1 := time.Now()
@@ -198,7 +200,7 @@ func (this *Crawler) runCrawler(baseURL *url.URL, referer string) {
 			this.bookURLs.AddString(link)
 
 			// 写入channel
-			this.linkChans <- link
+			this.linkChans[this.provider.Code] <- link
 
 			return
 		}
@@ -266,7 +268,7 @@ func (this *Crawler) NewHtml(rawurl string) (*goquery.Document, error) {
 	c := xhttp.NewClient(
 		&xhttp.ClientConfig{
 			Timeout:   10 * time.Second,
-			Dial:      500 * time.Millisecond,
+			Dial:      10 * time.Second,
 			KeepAlive: 60 * time.Second,
 			ProxyURL:  ProxyService.Get(),
 		})
