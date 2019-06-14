@@ -89,6 +89,7 @@ func (this *Snatch) IsBookURL(provider *models.SnatchRule, rawurl string) bool {
 		return false
 	}
 
+	rawurl = strings.TrimSpace(rawurl)
 	re, _ := regexp.Compile("(?U)" + rule.IsBookURL)
 	s := re.FindString(rawurl)
 
@@ -114,6 +115,8 @@ func (this *Snatch) IsCrawlerURL(provider *models.SnatchRule, rawurl string) boo
 	if len(rule.IsCrawlerURL) == 0 {
 		return true
 	}
+
+	rawurl = strings.TrimSpace(rawurl)
 
 	re, _ := regexp.Compile("(?U)" + rule.IsCrawlerURL)
 	s := re.FindString(rawurl)

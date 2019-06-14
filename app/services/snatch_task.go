@@ -41,6 +41,14 @@ const (
 
 	// 每次gc运行查找的数量
 	GCNUM = 100
+
+	// 执行间隔时间
+	INTERVAL_PERIOD time.Duration = 24 * time.Hour
+
+	// 每天执行自动获取新小说时间
+	HOUR_TO_TICK   int = 02
+	MINUTE_TO_TICK int = 03
+	SECOND_TO_TICK int = 05
 )
 
 var manager = NewSnatchTaskManager()
@@ -406,14 +414,20 @@ func (this *SnatchTaskManager) Run() {
 	}
 
 	go func() {
-		for _, task := range this.tasks {
-			this.taskChans <- task
+		for {
+			for _, task := range this.tasks {
+				this.taskChans <- task
+			}
+			// 休眠指定时间更新一次
+			time.Sleep(time.Duration(ConfigService.Int64("Uptime", 10)) * time.Minute)
 		}
-		// 休眠指定时间更新一次
-		time.Sleep(time.Duration(ConfigService.Int64("Uptime", 10)) * time.Minute)
 	}()
 
-	this.gc()
+	// 运行每天任务
+	go this.dayRun()
+
+	// 运行gc任务
+	go this.gc()
 }
 
 // 运行指定小说的采集任务
@@ -455,28 +469,76 @@ func (this *SnatchTaskManager) DelTask(novId uint32) error {
 	return nil
 }
 
+// 每天运行任务
+func (this *SnatchTaskManager) dayRun() {
+	ticker := updateTicker()
+	for {
+		<-ticker.C
+		log.Debug(time.Now(), "- just ticked")
+
+		go this.runCrawler()
+		go this.runRank()
+	}
+}
+
+// 运行爬虫任务
+func (this *SnatchTaskManager) runCrawler() {
+	if !ConfigService.Bool("AutoNewSnatchDay", false) {
+		return
+	}
+
+	providers := SnatchRuleService.GetSnatchs()
+	for _, provider := range providers {
+		crawler, err := CrawlerService.Init(provider.Code)
+		if err != nil {
+			log.Error("初始化爬虫失败：", err)
+		}
+
+		crawler.Run()
+	}
+}
+
+// 运行排行榜采集任务
+func (this *SnatchTaskManager) runRank() {
+	if !ConfigService.Bool("AutoSnatchRank", false) {
+		return
+	}
+
+	r := NewSnatchRank()
+	r.Run()
+}
+
 // 运行gc删除过期任务
 func (this *SnatchTaskManager) gc() {
 	ticker := time.NewTicker(time.Minute * time.Duration(GCRUNTIME))
 
-	go func() {
-		for _ = range ticker.C {
-			// 是否开启自动采集更新
-			if ConfigService.Bool("IsSnatch", true) {
-				log.Debug("gc running...")
-				i := 0
-				for novId, task := range this.tasks {
-					if i > GCNUM {
-						break
-					}
-					if task.IsGc() {
-						log.Debug("GC删除任务:", novId)
-						this.DelTask(novId)
-					}
-
-					i++
+	for _ = range ticker.C {
+		// 是否开启自动采集更新
+		if ConfigService.Bool("IsSnatch", true) {
+			log.Debug("gc running...")
+			i := 0
+			for novId, task := range this.tasks {
+				if i > GCNUM {
+					break
 				}
+				if task.IsGc() {
+					log.Debug("GC删除任务:", novId)
+					this.DelTask(novId)
+				}
+
+				i++
 			}
 		}
-	}()
+	}
+}
+
+// 更新定时下一次运行
+func updateTicker() *time.Ticker {
+	nextTick := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), HOUR_TO_TICK, MINUTE_TO_TICK, SECOND_TO_TICK, 0, time.Local)
+	if !nextTick.After(time.Now()) {
+		nextTick = nextTick.Add(INTERVAL_PERIOD)
+	}
+	log.Debug(nextTick, "- next tick")
+	diff := nextTick.Sub(time.Now())
+	return time.NewTicker(diff)
 }
