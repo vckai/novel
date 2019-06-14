@@ -95,16 +95,30 @@
 			</div>
 			<div class="layui-form-item">
 				<label for="is_menu" class="layui-form-label">
-					男生喜欢
+					新书推荐
 				</label>
 				<div class="layui-input-inline">
-				  <input type="checkbox" {{if .Novel.IsManLike}}checked="1"{{end}} name="is_man_like" lay-skin="switch" lay-filter="switchTest" title="男生喜欢" value="1" lay-text="是|否">
+				  <input type="checkbox" {{if .Novel.IsSignNewBook}}checked="1"{{end}} name="is_sign_new_book" lay-skin="switch" lay-filter="switchTest" title="新书推荐" value="1" lay-text="是|否">
 				</div>
 				<label for="is_menu" class="layui-form-label">
-					女生喜欢
+					收藏推荐
 				</label>
 				<div class="layui-input-inline">
-				  <input type="checkbox" {{if .Novel.IsGirlLike}}checked="1"{{end}} name="is_girl_like" lay-skin="switch" lay-filter="switchTest" title="女生喜欢" value="1" lay-text="是|否">
+				  <input type="checkbox" {{if .Novel.IsCollect}}checked="1"{{end}} name="is_collect" lay-skin="switch" lay-filter="switchTest" title="收藏推荐" value="1" lay-text="是|否">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="is_vipup" class="layui-form-label">
+					VIP更新
+				</label>
+				<div class="layui-input-inline">
+				  <input type="checkbox" {{if .Novel.IsVipUp}}checked="1"{{end}} name="is_vip_up" lay-skin="switch" lay-filter="switchTest" title="VIP更新" value="1" lay-text="是|否">
+				</div>
+				<label for="is_vip_reward" class="layui-form-label">
+					VIP打赏
+				</label>
+				<div class="layui-input-inline">
+				  <input type="checkbox" {{if .Novel.IsVipReward}}checked="1"{{end}} name="is_vip_reward" lay-skin="switch" lay-filter="switchTest" title="VIP打赏" value="1" lay-text="是|否">
 				</div>
 			</div>
 			<div class="layui-form-item">

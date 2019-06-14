@@ -152,10 +152,14 @@ func (this *BookController) AjaxRank() {
 		novels = services.NovelService.GetTodayRecs(10, 0)
 	case "2":
 		novels = services.NovelService.GetHots(10, 0)
-	case "3":
-		novels = services.NovelService.GetHots(10, 0)
-	case "4": //新书榜
+	case "3": // 新书榜
 		novels = services.NovelService.GetNews(10, 0)
+	case "4": // 原创榜
+		novels = services.NovelService.GetOriginals(10, 0)
+	case "5": // VIP推荐榜
+		novels = services.NovelService.GetVipRewards(10, 0)
+	case "6": // VIP更新
+		novels = services.NovelService.GetVipUps(10, 0)
 	case "cate":
 		cateId, _ := this.GetInt("cate_id")
 		// 获取指定分类小说列表

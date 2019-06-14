@@ -56,11 +56,11 @@ func (this *HomeController) Index() {
 		}
 	}
 
-	// 获取男生喜欢
-	this.Data["NovManLikes"] = services.NovelService.GetManLikes(3, 0)
+	// 获取签约新书推荐
+	this.Data["NovSignNewBooks"] = services.NovelService.GetSignNewBooks(3, 0)
 
-	// 获取女生喜欢
-	this.Data["NovGirlLikes"] = services.NovelService.GetGirlLikes(3, 0)
+	// 获取收藏
+	this.Data["NovCollects"] = services.NovelService.GetCollects(3, 0)
 
 	// 获取精品推荐
 	this.Data["NovVipRecs"] = services.NovelService.GetVipRecs(6, 0)

@@ -18,6 +18,7 @@
 			<div class="book-detail">
 				<h3 class="book-title">{{.Name}}</h3>
 				<p class="book-author"><em>{{.Author}}</em> | <em>{{.CateName}}</em></p>
+				<p class="book-author"><em>{{.ChapterTitle}}</em></p>
 				<div class="book-intro">{{.Desc | str2html}}</div>
 			</div>
 		</li>

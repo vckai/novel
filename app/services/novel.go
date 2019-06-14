@@ -136,6 +136,17 @@ func (this *Novel) GetVipRecs(size, offset int) []*models.Novel {
 	return novs
 }
 
+// 获取原创小说
+func (this *Novel) GetOriginals(size, offset int) []*models.Novel {
+	args := map[string]interface{}{
+		"is_original": 1,
+		"orderBy":     "-views",
+	}
+	novs, _ := models.NovelModel.GetAll(size, offset, args, "id", "name", "cover", "desc", "views", "author", "cate_id", "cate_name")
+
+	return novs
+}
+
 // 获取热门小说
 func (this *Novel) GetHots(size, offset int) []*models.Novel {
 	args := map[string]interface{}{
@@ -146,20 +157,20 @@ func (this *Novel) GetHots(size, offset int) []*models.Novel {
 	return novs
 }
 
-// 获取男生喜欢小说列表
-func (this *Novel) GetManLikes(size, offset int) []*models.Novel {
+// 获取新人签约榜列表
+func (this *Novel) GetSignNewBooks(size, offset int) []*models.Novel {
 	args := map[string]interface{}{
-		"is_man_like": 1,
+		"is_sign_new_book": 1,
 	}
 	novs, _ := this.GetList(size, offset, args)
 
 	return novs
 }
 
-// 获取女生喜欢小说列表
-func (this *Novel) GetGirlLikes(size, offset int) []*models.Novel {
+// 获取收藏榜列表
+func (this *Novel) GetCollects(size, offset int) []*models.Novel {
 	args := map[string]interface{}{
-		"is_girl_like": 1,
+		"is_collect": 1,
 	}
 	novs, _ := this.GetList(size, offset, args)
 
@@ -201,6 +212,26 @@ func (this *Novel) GetNewUps(size, offset int) []*models.Novel {
 func (this *Novel) GetNews(size, offset int) []*models.Novel {
 	args := map[string]interface{}{
 		"orderBy": "-id",
+	}
+	novs, _ := models.NovelModel.GetAll(size, offset, args, "id", "name", "cover", "desc", "views", "author", "cate_id", "cate_name")
+
+	return novs
+}
+
+// 获取VIP打赏
+func (this *Novel) GetVipRewards(size, offset int) []*models.Novel {
+	args := map[string]interface{}{
+		"is_vip_reward": "1",
+	}
+	novs, _ := models.NovelModel.GetAll(size, offset, args, "id", "name", "cover", "desc", "views", "author", "cate_id", "cate_name")
+
+	return novs
+}
+
+// 获取VIP更新
+func (this *Novel) GetVipUps(size, offset int) []*models.Novel {
+	args := map[string]interface{}{
+		"is_vip_up": "1",
 	}
 	novs, _ := models.NovelModel.GetAll(size, offset, args, "id", "name", "cover", "desc", "views", "author", "cate_id", "cate_name")
 
@@ -395,15 +426,15 @@ func (this *Novel) UpViews(novId uint32) {
 }
 
 // 更新小说连载状态
-func (this *Novel) UpStatus(novId uint32, status uint8) {
+func (this *Novel) UpStatus(novId uint32, status uint8) error {
 	nov := this.Get(novId)
 	if nov == nil {
-		return
+		return errors.New("小说不存在")
 	}
 
 	nov.Status = status
 
-	nov.Update("status")
+	return nov.Update("status")
 }
 
 // 修改小说简介信息
@@ -415,9 +446,8 @@ func (this *Novel) UpNovelInfo(nov *models.Novel) error {
 	}
 
 	nov.CateName = cate.Name
-	err := nov.Update("desc", "cover", "cate_id", "cate_name", "author")
 
-	return err
+	return nov.Update("desc", "cover", "cate_id", "cate_name", "author")
 }
 
 // 修改小说文字数
@@ -434,6 +464,15 @@ func (this *Novel) UpChapterTextNum(novId uint32, novTextNum int, isAdded bool) 
 	}
 
 	return nov.Update("text_num")
+}
+
+// 批量更新推荐
+func (this *Novel) UpRecBatch(field string, books []string) error {
+	if len(books) == 0 {
+		return errors.New("参数错误")
+	}
+
+	return models.NovelModel.UpRecBatch(field, books)
 }
 
 // 修改章节信息
@@ -482,7 +521,7 @@ func (this *Novel) Save(novel *models.Novel) error {
 
 	var err error
 	if novel.Id > 0 {
-		err = novel.Update("name", "desc", "cover", "cate_id", "cate_name", "author", "is_original", "is_hot", "is_rec", "is_vip_rec", "is_today_rec", "status", "is_man_like", "is_girl_like")
+		err = novel.Update("name", "desc", "cover", "cate_id", "cate_name", "author", "is_original", "is_hot", "is_rec", "is_vip_rec", "is_today_rec", "status", "is_sign_new_book", "is_collect", "is_vip_reward", "is_vip_up")
 	} else {
 		novel.Status = models.BOOKOPEN
 		err = novel.Insert()

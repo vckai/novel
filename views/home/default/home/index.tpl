@@ -132,8 +132,8 @@ $(document).ready(function() {
     
     <div class="r-right">
         <div class="tab-box">
-            <a href="javascript:void(0)" onmouseover="changeRank(3, this)" class="cur">畅销榜</a>
-            <a href="javascript:void(0)" onmouseover="changeRank(4, this)">新书榜</a>
+            <a href="javascript:void(0)" onmouseover="changeRank(3, this)" class="cur">新书榜</a>
+            <a href="javascript:void(0)" onmouseover="changeRank(4, this)">原创榜</a>
         </div>
         <ul class="r-list" id="rank_3"></ul>
         <ul class="r-list" id="rank_4" style="display: none;"></ul>
@@ -160,9 +160,9 @@ $(document).ready(function() {
 
 <div class="r-section">
     <div class="boy-like">
-        <h1 class="r-tit"><i class="r-ico boy-ico"></i>男生喜欢</h1>
+        <h1 class="r-tit"><i class="r-ico boy-ico"></i>新书推荐</h1>
         <ul class="boy-list">
-		{{range .NovManLikes}}
+		{{range .NovSignNewBooks}}
         	 <li>
                 <a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank">
                     <div class="rotate">
@@ -176,9 +176,9 @@ $(document).ready(function() {
         </ul>
     </div>
     <div class="girl-like">
-        <h1 class="r-tit"><i class="r-ico girl-ico"></i>女生喜欢</h1>
+        <h1 class="r-tit"><i class="r-ico girl-ico"></i>收藏推荐</h1>
         <ul class="girl-list">
-		{{range .NovGirlLikes}}
+		{{range .NovCollects}}
         	 <li>
                 <a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank">
                     <div class="rotate">
@@ -227,8 +227,8 @@ $(document).ready(function() {
     </div>
     <div class="r-right">
         <div class="tab-box">
-            <a href="javascript:void(0)" onmouseover="changeRank(5, this)" class="cur">男生榜</a>
-            <a href="javascript:void(0)" onmouseover="changeRank(6, this)">女生榜</a>
+            <a href="javascript:void(0)" onmouseover="changeRank(5, this)" class="cur">VIP打赏</a>
+            <a href="javascript:void(0)" onmouseover="changeRank(6, this)">VIP更新</a>
         </div>
         <ul class="r-list" id="rank_5"></ul>
         <ul class="r-list" id="rank_6" style="display: none;"></ul>

@@ -73,7 +73,7 @@ func (this *NovelController) Crawler() {
 			this.OutJson(1001, "爬虫运行失败："+err.Error())
 		}
 
-		crawler.Run()
+		go crawler.Run()
 
 		this.OutJson(0, "爬虫运行成功")
 
@@ -279,8 +279,10 @@ func (this *NovelController) save() {
 	novel.IsRec, _ = this.GetUint8("is_rec")
 	novel.IsVipRec, _ = this.GetUint8("is_vip_rec")
 	novel.IsTodayRec, _ = this.GetUint8("is_today_rec")
-	novel.IsManLike, _ = this.GetUint8("is_man_like")
-	novel.IsGirlLike, _ = this.GetUint8("is_girl_like")
+	novel.IsSignNewBook, _ = this.GetUint8("is_sign_new_book")
+	novel.IsCollect, _ = this.GetUint8("is_collect")
+	novel.IsVipReward, _ = this.GetUint8("is_vip_reward")
+	novel.IsVipUp, _ = this.GetUint8("is_vip_up")
 	novel.Status, _ = this.GetUint8("status")
 
 	err := services.NovelService.Save(novel)

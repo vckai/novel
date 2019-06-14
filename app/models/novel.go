@@ -43,8 +43,10 @@ type Novel struct {
 	IsRec            uint8  `orm:"size(1);default(0);"`
 	IsTodayRec       uint8  `orm:"size(1);default(0);"`
 	IsVipRec         uint8  `orm:"size(1);default(0);"`
-	IsManLike        uint8  `orm:"size(1);default(0);"`
-	IsGirlLike       uint8  `orm:"size(1);default(0);"`
+	IsVipReward      uint8  `orm:"size(1);default(0);"`
+	IsVipUp          uint8  `orm:"size(1);default(0);"`
+	IsSignNewBook    uint8  `orm:"size(1);default(0);"`
+	IsCollect        uint8  `orm:"size(1);default(0);"`
 	Status           uint8  `orm:"size(11);default(0);"`
 	Views            uint32 `orm:"size(11);default(0);"`
 	CollectNum       uint32 `orm:"size(11);default(0)"`
@@ -105,13 +107,31 @@ func (m *Novel) Update(fields ...string) error {
 	return nil
 }
 
+// 批量更新推荐
+func (m *Novel) UpRecBatch(field string, books []string) error {
+	marks := make([]string, len(books))
+	for i := range marks {
+		marks[i] = "?"
+	}
+
+	// 取消之前推荐
+	sqlStr := fmt.Sprintf("UPDATE nov_novel SET %s=0, updated_at=? WHERE `%s`=1", field, field)
+	orm.NewOrm().Raw(sqlStr, time.Now().Unix()).Exec()
+
+	// 更新新书推荐
+	sqlStr = fmt.Sprintf("UPDATE nov_novel SET %s=1, updated_at=? WHERE `name` IN(%s)", field, strings.Join(marks, ", "))
+	_, err := orm.NewOrm().Raw(sqlStr, time.Now().Unix(), books).Exec()
+
+	return err
+}
+
 // 批量删除
 func (m *Novel) DeleteBatch(ids []string) error {
 	marks := make([]string, len(ids))
 	for i := range marks {
 		marks[i] = "?"
 	}
-	sqlStr := fmt.Sprintf("DELETE FROM nov_novel WHERE `id` %s", fmt.Sprintf("IN (%s)", strings.Join(marks, ", ")))
+	sqlStr := fmt.Sprintf("DELETE FROM nov_novel WHERE `id` IN(%s)", strings.Join(marks, ", "))
 
 	_, err := orm.NewOrm().Raw(sqlStr, ids).Exec()
 
@@ -241,7 +261,7 @@ func (m *Novel) optionHandle(args map[string]interface{}) orm.QuerySeter {
 		qs = qs.Filter("name__contains", q.(string))
 	}
 
-	argsFilters := []string{"status", "is_original", "is_hot", "is_rec", "is_vip_rec", "is_today_rec", "cate_id", "is_man_like", "is_girl_like"}
+	argsFilters := []string{"status", "is_original", "is_hot", "is_rec", "is_vip_rec", "is_today_rec", "cate_id", "is_sign_new_book", "is_collect", "is_vip_up", "is_vip_reward"}
 	for _, v := range argsFilters {
 		if c, ok := args[v]; ok && c.(int) > 0 {
 			qs = qs.Filter(v, c.(int))
