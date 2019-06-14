@@ -221,7 +221,7 @@ func (this *Novel) GetNews(size, offset int) []*models.Novel {
 // 获取VIP打赏
 func (this *Novel) GetVipRewards(size, offset int) []*models.Novel {
 	args := map[string]interface{}{
-		"is_vip_reward": "1",
+		"is_vip_reward": 1,
 	}
 	novs, _ := models.NovelModel.GetAll(size, offset, args, "id", "name", "cover", "desc", "views", "author", "cate_id", "cate_name")
 
@@ -231,7 +231,7 @@ func (this *Novel) GetVipRewards(size, offset int) []*models.Novel {
 // 获取VIP更新
 func (this *Novel) GetVipUps(size, offset int) []*models.Novel {
 	args := map[string]interface{}{
-		"is_vip_up": "1",
+		"is_vip_up": 1,
 	}
 	novs, _ := models.NovelModel.GetAll(size, offset, args, "id", "name", "cover", "desc", "views", "author", "cate_id", "cate_name")
 
