@@ -87,7 +87,7 @@ func (m *Banner) DeleteBatch(ids []string) error {
 	for i := range marks {
 		marks[i] = "?"
 	}
-	sqlStr := fmt.Sprintf("DELETE FROM nov_banner WHERE `id` %s", fmt.Sprintf("IN (%s)", strings.Join(marks, ", ")))
+	sqlStr := fmt.Sprintf("DELETE FROM nov_banner WHERE `id` IN(%s)", strings.Join(marks, ", "))
 
 	_, err := orm.NewOrm().Raw(sqlStr, ids).Exec()
 
