@@ -194,7 +194,6 @@ func (this GroupController) getRolesChildHtml(roles []*models.Role, rootId uint3
 			}
 		}
 	}
-	println(isAllchecked)
 
 	return html, isAllchecked
 }
@@ -203,7 +202,7 @@ func (this GroupController) getRolesChildHtml(roles []*models.Role, rootId uint3
 func (this GroupController) getRoleFormatHtml(role *models.Role, rootId uint32, selRoleIds []string) (string, bool) {
 	sel := ""
 	isChecked := false
-	if role.IsDefault == 1 || utils.InArray(fmt.Sprint(role.Id), selRoleIds) {
+	if (role.IsDefault == 1 && role.Id == 0) || utils.InArray(fmt.Sprint(role.Id), selRoleIds) {
 		sel = "checked"
 		isChecked = true
 	}
