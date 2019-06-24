@@ -18,7 +18,6 @@ import (
 	"errors"
 
 	"github.com/vckai/novel/app/models"
-	"github.com/vckai/novel/app/utils"
 )
 
 // 定义SearchLogService
@@ -30,32 +29,8 @@ func NewSearchLog() *SearchLog {
 }
 
 // 获取搜索日记列表
-func (this *SearchLog) GetAll(size, offset int, args map[string]interface{}) ([]*models.SearchLog, int64) {
-	qs := map[string]string{}
-
-	if st, ok := args["st"]; ok && len(st.(string)) > 0 {
-		t := utils.GetDateParse(st.(string))
-		qs["st"] = utils.ToStr(t)
-	}
-
-	if et, ok := args["et"]; ok && len(et.(string)) > 0 {
-		t := utils.GetDateParse(et.(string))
-		// 结束时间+1天，时间戳转换为次日凌晨
-		t += 60 * 60 * 24
-		qs["et"] = utils.ToStr(t)
-	}
-
-	if q, ok := args["q"]; ok && len(q.(string)) > 0 {
-		qs["q"] = q.(string)
-	}
-
-	if c, ok := args["count"]; ok && c.(bool) == true {
-		qs["count"] = "1"
-	}
-
-	searchLogs, count := models.SearchLogModel.GetAll(size, offset, qs)
-
-	return searchLogs, count
+func (this *SearchLog) GetAll(args models.ArgsSearchLogList) ([]*models.SearchLog, int64) {
+	return models.SearchLogModel.GetAll(args)
 }
 
 // 批量删除搜索日记

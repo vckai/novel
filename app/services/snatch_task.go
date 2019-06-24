@@ -382,9 +382,13 @@ func NewSnatchTaskManager() *SnatchTaskManager {
 
 // 加载小说写入任务队列
 func (this *SnatchTaskManager) LoadNovels() int {
-	novs, _ := NovelService.GetAll(10000000, 0, map[string]interface{}{
-		"status": int(models.BOOKOPEN),
-	}, "id", "name", "status")
+	args := models.ArgsNovelList{}
+	args.Limit = 10000000
+	args.Offset = 0
+	args.FilterMaps = map[string]int{"status": int(models.BOOKOPEN)}
+	args.Fields = []string{"id", "name", "status"}
+
+	novs, _ := NovelService.GetAll(args)
 
 	for _, v := range novs {
 		this.AddTask(v.Id)

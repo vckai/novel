@@ -30,28 +30,18 @@ func NewSerach() *Search {
 
 // 获取推荐的搜索关键字
 func (this *Search) GetRes(size int) []*models.Search {
-	qs := map[string]string{}
+	args := models.ArgsSearchList{}
+	args.IsRec = 1
+	args.Limit = size
 
-	qs["is_rec"] = "1"
-	list, _ := models.SearchModel.GetAll(size, 0, qs)
+	list, _ := models.SearchModel.GetAll(args)
 
 	return list
 }
 
 // 获取搜索记录列表
-func (this *Search) GetAll(size, offset int, args map[string]interface{}) ([]*models.Search, int64) {
-	qs := map[string]string{}
-
-	if q, ok := args["q"]; ok {
-		qs["q"] = q.(string)
-	}
-
-	if c, ok := args["count"]; ok && c == true {
-		qs["count"] = "1"
-	}
-	list, count := models.SearchModel.GetAll(size, offset, qs)
-
-	return list, count
+func (this *Search) GetAll(args models.ArgsSearchList) ([]*models.Search, int64) {
+	return models.SearchModel.GetAll(args)
 }
 
 // 设置推荐/取消推荐

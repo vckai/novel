@@ -18,7 +18,6 @@ import (
 	"errors"
 
 	"github.com/vckai/novel/app/models"
-	"github.com/vckai/novel/app/utils"
 )
 
 // 定义AdminLogService
@@ -29,7 +28,7 @@ func NewAdminLog() *AdminLog {
 	return &AdminLog{}
 }
 
-// 获取单个管理员信息
+// 获取单个操作日记信息
 func (this *AdminLog) Get(id uint32) *models.AdminLog {
 	if id < 0 {
 		return nil
@@ -44,33 +43,9 @@ func (this *AdminLog) Get(id uint32) *models.AdminLog {
 	return AdminLog
 }
 
-// 批量获取管理员列表
-func (this *AdminLog) GetAll(size, offset int, args map[string]interface{}) ([]*models.AdminLog, int64) {
-	qs := map[string]string{}
-
-	if st, ok := args["st"]; ok && len(st.(string)) > 0 {
-		t := utils.GetDateParse(st.(string))
-		qs["st"] = utils.ToStr(t)
-	}
-
-	if et, ok := args["et"]; ok && len(et.(string)) > 0 {
-		t := utils.GetDateParse(et.(string))
-		// 结束时间+1天，时间戳转换为次日凌晨
-		t += 60 * 60 * 24
-		qs["et"] = utils.ToStr(t)
-	}
-
-	if q, ok := args["q"]; ok && len(q.(string)) > 0 {
-		qs["q"] = q.(string)
-	}
-
-	if c, ok := args["count"]; ok && c.(bool) == true {
-		qs["count"] = "1"
-	}
-
-	AdminLogs, count := models.AdminLogModel.GetAll(size, offset, qs)
-
-	return AdminLogs, count
+// 批量获取操作日记列表
+func (this *AdminLog) GetAll(args models.ArgsAdminLog) ([]*models.AdminLog, int64) {
+	return models.AdminLogModel.GetAll(args)
 }
 
 // 批量删除操作日记

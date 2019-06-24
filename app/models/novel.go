@@ -29,6 +29,14 @@ const (
 	BOOKEUNUCHS
 )
 
+type ArgsNovelList struct {
+	ArgsBase
+	StartTextNum        int
+	EndTextNum          int
+	MaxChapterUpdatedAt int64
+	FilterMaps          map[string]int
+}
+
 // 小说内容
 type Novel struct {
 	Id               uint32 `orm:"auto"`
@@ -68,7 +76,7 @@ func NewNovel() *Novel {
 // 初始化
 // 注册模型
 func init() {
-	orm.RegisterModelWithPrefix("nov_", new(Novel))
+	orm.RegisterModelWithPrefix(TABLE_PREFIX, new(Novel))
 }
 
 func (m *Novel) query() orm.QuerySeter {
@@ -115,11 +123,11 @@ func (m *Novel) UpRecBatch(field string, books []string) error {
 	}
 
 	// 取消之前推荐
-	sqlStr := fmt.Sprintf("UPDATE nov_novel SET %s=0, updated_at=? WHERE `%s`=1", field, field)
+	sqlStr := fmt.Sprintf("UPDATE %snovel SET %s=0, updated_at=? WHERE `%s`=1", TABLE_PREFIX, field, field)
 	orm.NewOrm().Raw(sqlStr, time.Now().Unix()).Exec()
 
 	// 更新新书推荐
-	sqlStr = fmt.Sprintf("UPDATE nov_novel SET %s=1, updated_at=? WHERE `name` IN(%s)", field, strings.Join(marks, ", "))
+	sqlStr = fmt.Sprintf("UPDATE %snovel SET %s=1, updated_at=? WHERE `name` IN(%s)", TABLE_PREFIX, field, strings.Join(marks, ", "))
 	_, err := orm.NewOrm().Raw(sqlStr, time.Now().Unix(), books).Exec()
 
 	return err
@@ -131,7 +139,7 @@ func (m *Novel) DeleteBatch(ids []string) error {
 	for i := range marks {
 		marks[i] = "?"
 	}
-	sqlStr := fmt.Sprintf("DELETE FROM nov_novel WHERE `id` IN(%s)", strings.Join(marks, ", "))
+	sqlStr := fmt.Sprintf("DELETE FROM %snovel WHERE `id` IN(%s)", TABLE_PREFIX, strings.Join(marks, ", "))
 
 	_, err := orm.NewOrm().Raw(sqlStr, ids).Exec()
 
@@ -167,30 +175,36 @@ func (m *Novel) GetByName(name string) *Novel {
 }
 
 // 获取小说列表
-func (m *Novel) GetAll(size, offset int, args map[string]interface{}, fields ...string) ([]*Novel, int64) {
+func (m *Novel) GetAll(args ArgsNovelList) ([]*Novel, int64) {
 	list := make([]*Novel, 0)
 
 	qs := m.optionHandle(args)
 
 	// 统计
 	var count int64 = 0
-	isCount := false
-	if c, ok := args["count"]; ok && c.(bool) == true {
-		isCount = true
+	if args.Count {
 		count, _ = qs.Count()
 	}
 
 	// 排序
 	orderBy := "-id"
-	if c, ok := args["orderBy"]; ok && len(c.(string)) > 0 {
-		orderBy = c.(string)
+	if args.OrderBy != "" {
+		orderBy = args.OrderBy
 	}
 
-	if count > 0 || isCount == false {
-		if len(fields) == 0 {
-			fields = []string{"id", "name", "author", "cate_id", "cate_name", "status", "is_original", "is_hot", "is_rec", "is_vip_rec", "chapter_updated_at", "chapter_num"}
-		}
-		qs.OrderBy(orderBy).Limit(size, offset).All(&list, fields...)
+	// 获取字段
+	fields := []string{"id", "name", "author", "cate_id", "cate_name", "status", "is_original", "is_hot", "is_rec", "is_vip_rec", "chapter_updated_at", "chapter_num"}
+	if len(args.Fields) == 0 {
+		fields = args.Fields
+	}
+
+	// 分页
+	if args.Limit > 0 {
+		qs = qs.Limit(args.Limit, args.Offset)
+	}
+
+	if count > 0 || args.Count == false {
+		qs.OrderBy(orderBy).All(&list, fields...)
 	}
 
 	return list, count
@@ -252,34 +266,34 @@ func (m Novel) IsVipRecName() string {
 }
 
 // 条件生成
-func (m *Novel) optionHandle(args map[string]interface{}) orm.QuerySeter {
+func (m *Novel) optionHandle(args ArgsNovelList) orm.QuerySeter {
 	qs := m.query()
 	qs = qs.Filter("deleted_at", 0)
 
 	// 名称搜索
-	if q, ok := args["q"]; ok && len(q.(string)) > 0 {
-		qs = qs.Filter("name__contains", q.(string))
+	if args.Keyword != "" {
+		qs = qs.Filter("name__contains", args.Keyword)
 	}
 
 	argsFilters := []string{"status", "is_original", "is_hot", "is_rec", "is_vip_rec", "is_today_rec", "cate_id", "is_sign_new_book", "is_collect", "is_vip_up", "is_vip_reward"}
 	for _, v := range argsFilters {
-		if c, ok := args[v]; ok && c.(int) > 0 {
-			qs = qs.Filter(v, c.(int))
+		if c, ok := args.FilterMaps[v]; ok && c > 0 {
+			qs = qs.Filter(v, c)
 		}
 	}
 
 	// 字数过滤
-	if st, ok := args["start_text_num"]; ok && st.(int) > 0 {
-		qs = qs.Filter("text_num__gt", st.(int))
+	if args.StartTextNum > 0 {
+		qs = qs.Filter("text_num__gt", args.StartTextNum)
 	}
 	// 字数过滤
-	if et, ok := args["end_text_num"]; ok && et.(int) > 0 {
-		qs = qs.Filter("text_num__lte", et.(int))
+	if args.EndTextNum > 0 {
+		qs = qs.Filter("text_num__lte", args.EndTextNum)
 	}
 
 	// 章节更新时间过滤
-	if m, ok := args["max_chapter_at"]; ok && m.(int64) > 0 {
-		qs = qs.Filter("chapter_updated_at__gt", m.(int64))
+	if args.MaxChapterUpdatedAt > 0 {
+		qs = qs.Filter("chapter_updated_at__gt", args.MaxChapterUpdatedAt)
 	}
 
 	return qs

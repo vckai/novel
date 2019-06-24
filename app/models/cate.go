@@ -40,7 +40,7 @@ func NewCate() *Cate {
 // 初始化
 // 注册模型
 func init() {
-	orm.RegisterModelWithPrefix("nov_", new(Cate))
+	orm.RegisterModelWithPrefix(TABLE_PREFIX, new(Cate))
 }
 
 func (m *Cate) query() orm.QuerySeter {
@@ -83,7 +83,7 @@ func (m *Cate) DeleteBatch(ids []string) error {
 	for i := range marks {
 		marks[i] = "?"
 	}
-	sqlStr := fmt.Sprintf("DELETE FROM nov_cate WHERE `id` IN(%s)", strings.Join(marks, ", "))
+	sqlStr := fmt.Sprintf("DELETE FROM %scate WHERE `id` IN(%s)", TABLE_PREFIX, strings.Join(marks, ", "))
 
 	_, err := orm.NewOrm().Raw(sqlStr, ids).Exec()
 

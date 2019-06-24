@@ -52,7 +52,7 @@ func NewChapter() *Chapter {
 // 初始化
 // 注册模型
 func init() {
-	orm.RegisterModelWithPrefix("nov_", new(Chapter))
+	orm.RegisterModelWithPrefix(TABLE_PREFIX, new(Chapter))
 }
 
 func (m *Chapter) newOrm() orm.Ormer {
@@ -75,7 +75,7 @@ func (m *Chapter) getTable() string {
 		return ""
 	}
 
-	return fmt.Sprintf("nov_chapter_%04d", m.NovId%TABLE_CHAPTER_SLICE_NUM)
+	return fmt.Sprintf("%schapter_%04d", TABLE_PREFIX, m.NovId%TABLE_CHAPTER_SLICE_NUM)
 }
 
 // 添加

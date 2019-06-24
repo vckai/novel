@@ -29,21 +29,25 @@ type NovelController struct {
 
 // 小说列表
 func (this *NovelController) Index() {
-	q := this.GetString("q")
+	kw := this.GetString("kw")
 	size := 10
 	p, _ := this.GetInt("p", 1)
-	offset := (p - 1) * size
-	search := map[string]interface{}{
-		"q":     q,
-		"p":     p,
-		"count": true,
-	}
-	novels, count := services.NovelService.GetAll(size, offset, search)
 
-	this.Data["Search"] = search
+	args := models.ArgsNovelList{}
+	args.Count = true
+	args.Limit = size
+	args.Offset = (p - 1) * size
+	args.Keyword = kw
+
+	novels, count := services.NovelService.GetAll(args)
+
+	this.Data["Search"] = map[string]interface{}{
+		"kw":    kw,
+		"page":  p,
+		"limit": size,
+	}
 	this.Data["List"] = novels
 	this.Data["Count"] = count
-	this.Data["Limit"] = size
 	this.View("novel/index.tpl")
 }
 

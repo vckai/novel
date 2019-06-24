@@ -17,6 +17,7 @@ package admin
 import (
 	"strings"
 
+	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
 )
 
@@ -26,21 +27,26 @@ type SearchController struct {
 
 // 搜索记录列表
 func (this *SearchController) Index() {
-	q := this.GetString("q")
+	kw := this.GetString("q")
 	size := 10
 	p, _ := this.GetInt("p", 1)
-	offset := (p - 1) * size
-	search := map[string]interface{}{
-		"q":     q,
-		"p":     p,
-		"count": true,
-	}
-	list, count := services.SearchService.GetAll(size, offset, search)
 
-	this.Data["Search"] = search
+	args := models.ArgsSearchList{}
+	args.Count = true
+	args.Limit = size
+	args.Offset = (p - 1) * size
+	args.IsRec = -1
+	args.Keyword = kw
+
+	list, count := services.SearchService.GetAll(args)
+
+	this.Data["Search"] = map[string]interface{}{
+		"kw":    kw,
+		"page":  p,
+		"limit": size,
+	}
 	this.Data["List"] = list
 	this.Data["Count"] = count
-	this.Data["Limit"] = size
 	this.View("search/index.tpl")
 }
 

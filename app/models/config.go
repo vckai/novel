@@ -37,7 +37,7 @@ func NewConfig() *Config {
 // 初始化
 // 注册模型
 func init() {
-	orm.RegisterModelWithPrefix("nov_", new(Config))
+	orm.RegisterModelWithPrefix(TABLE_PREFIX, new(Config))
 }
 
 func (m *Config) query() orm.QuerySeter {

@@ -15,10 +15,18 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/astaxie/beego/orm"
 )
+
+type ArgsNovelLinksList struct {
+	ArgsBase
+	NovId  uint32
+	Link   string
+	Source string
+}
 
 // 小说采集来源列表内容
 type NovelLinks struct {
@@ -39,7 +47,7 @@ func NewNovelLinks() *NovelLinks {
 // 初始化
 // 注册模型
 func init() {
-	orm.RegisterModelWithPrefix("nov_", new(NovelLinks))
+	orm.RegisterModelWithPrefix(TABLE_PREFIX, new(NovelLinks))
 }
 
 func (m *NovelLinks) query() orm.QuerySeter {
@@ -74,7 +82,7 @@ func (m *NovelLinks) Delete(forceDelete ...bool) error {
 
 // 删除指定小说所有采集点
 func (m *NovelLinks) DelByNovId(novId uint32) error {
-	_, err := orm.NewOrm().Raw("DELETE FROM nov_novel_links WHERE nov_id=?", novId).Exec()
+	_, err := orm.NewOrm().Raw(fmt.Sprintf("DELETE FROM %snovel_links WHERE nov_id=?", TABLE_PREFIX), novId).Exec()
 
 	return err
 }
@@ -92,52 +100,59 @@ func (m *NovelLinks) GetByLink(link, source string) *NovelLinks {
 }
 
 // 获取小说采集点列表
-func (m *NovelLinks) GetAll(size, offset int, args map[string]interface{}, fields ...string) ([]*NovelLinks, int64) {
+func (m *NovelLinks) GetAll(args ArgsNovelLinksList) ([]*NovelLinks, int64) {
 	list := make([]*NovelLinks, 0)
 
 	qs := m.optionHandle(args)
 
 	// 统计
 	var count int64 = 0
-	isCount := false
-	if c, ok := args["count"]; ok && c.(bool) == true {
-		isCount = true
+	if args.Count {
 		count, _ = qs.Count()
+	}
+
+	// 分页
+	if args.Limit > 0 {
+		qs = qs.Limit(args.Limit, args.Offset)
 	}
 
 	// 排序
 	orderBy := "-id"
-	if c, ok := args["orderBy"]; ok && len(c.(string)) > 0 {
-		orderBy = c.(string)
+	if args.OrderBy != "" {
+		orderBy = args.OrderBy
 	}
 
-	if count > 0 || isCount == false {
-		if len(fields) == 0 {
-			fields = []string{"id", "nov_id", "link", "source", "chapter_link", "created_at"}
-		}
-		qs.OrderBy(orderBy).Limit(size, offset).All(&list, fields...)
+	// 查询字段
+	fields := []string{"id", "nov_id", "link", "source", "chapter_link", "created_at"}
+	if len(args.Fields) == 0 {
+		fields = args.Fields
+	}
+
+	if count > 0 || args.Count == false {
+		qs.OrderBy(orderBy).All(&list, fields...)
 	}
 
 	return list, count
 }
 
 // 条件生成
-func (m *NovelLinks) optionHandle(args map[string]interface{}) orm.QuerySeter {
+func (m *NovelLinks) optionHandle(args ArgsNovelLinksList) orm.QuerySeter {
 	qs := m.query()
 	qs = qs.Filter("deleted_at", 0)
 
 	// 小说ID
-	if novId, ok := args["nov_id"]; ok && novId.(uint32) > 0 {
-		qs = qs.Filter("nov_id__exact", novId.(uint32))
+	if args.NovId > 0 {
+		qs = qs.Filter("nov_id__exact", args.NovId)
 	}
 
 	// 采集URL
-	if link, ok := args["link"]; ok && len(link.(string)) > 0 {
-		qs = qs.Filter("link__exact", link.(string))
+	if args.Link != "" {
+		qs = qs.Filter("link__exact", args.Link)
 	}
+
 	// 来源站点
-	if source, ok := args["source"]; ok && len(source.(string)) > 0 {
-		qs = qs.Filter("source__exact", source.(string))
+	if args.Source != "" {
+		qs = qs.Filter("source__exact", args.Source)
 	}
 
 	return qs

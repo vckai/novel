@@ -22,6 +22,12 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+type ArgsSearchLogList struct {
+	ArgsBase
+	StartTime int64
+	EndTime   int64
+}
+
 // 搜索日记操作
 type SearchLog struct {
 	Id        uint64 `orm:"auto"`
@@ -100,32 +106,39 @@ func (m *SearchLog) Delete(forceDelete ...bool) error {
 }
 
 // 获取搜索日记列表
-func (m *SearchLog) GetAll(size, offset int, args map[string]string) ([]*SearchLog, int64) {
+func (m *SearchLog) GetAll(args ArgsSearchLogList) ([]*SearchLog, int64) {
 	list := make([]*SearchLog, 0)
-	qs := m.query()
-	qs = qs.Filter("deleted_at", 0)
+	qs := m.query().Filter("deleted_at", 0)
 
-	if st, ok := args["st"]; ok && len(st) > 0 {
-		qs = qs.Filter("created_at__gte", st)
+	if args.StartTime > 0 {
+		qs = qs.Filter("created_at__gte", args.StartTime)
 	}
 
-	if et, ok := args["et"]; ok && len(et) > 0 {
-		qs = qs.Filter("created_at__lte", et)
+	if args.EndTime > 0 {
+		qs = qs.Filter("created_at__lte", args.EndTime)
 	}
 
-	if q, ok := args["q"]; ok && len(q) > 0 {
-		qs = qs.Filter("kw__contains", q)
+	if args.Keyword != "" {
+		qs = qs.Filter("kw__contains", args.Keyword)
 	}
 
 	var count int64 = 0
-	isCount := false
-	if c, ok := args["count"]; ok && len(c) > 0 {
-		isCount = true
+	if args.Count {
 		count, _ = qs.Count()
 	}
 
-	if count > 0 || isCount == false {
-		qs.OrderBy("-id").Limit(size, offset).All(&list, "id", "kw", "uid", "source", "ip", "is_result", "created_at")
+	// 分页
+	if args.Limit > 0 {
+		qs = qs.Limit(args.Limit, args.Offset)
+	}
+
+	orderBy := "-id"
+	if args.OrderBy != "" {
+		orderBy = args.OrderBy
+	}
+
+	if count > 0 || args.Count == false {
+		qs.OrderBy(orderBy).All(&list, "id", "kw", "uid", "source", "ip", "is_result", "created_at")
 	}
 
 	return list, count

@@ -35,6 +35,13 @@ type AdminLog struct {
 	DeletedAt uint32 `orm:"size(11);default(0)"`
 }
 
+// 管理日记列表参数
+type ArgsAdminLog struct {
+	ArgsBase
+	StartTime int64
+	EndTime   int64
+}
+
 func NewAdminLog() *AdminLog {
 	return &AdminLog{}
 }
@@ -42,7 +49,7 @@ func NewAdminLog() *AdminLog {
 // 初始化
 // 注册模型
 func init() {
-	orm.RegisterModelWithPrefix("nov_", new(AdminLog))
+	orm.RegisterModelWithPrefix(TABLE_PREFIX, new(AdminLog))
 }
 
 func (m *AdminLog) query() orm.QuerySeter {
@@ -85,7 +92,7 @@ func (m *AdminLog) DeleteBatch(ids []string) error {
 	for i := range marks {
 		marks[i] = "?"
 	}
-	sqlStr := fmt.Sprintf("UPDATE nov_admin_log SET deleted_at=? WHERE `id` IN(%s)", strings.Join(marks, ", "))
+	sqlStr := fmt.Sprintf("UPDATE %sadmin_log SET deleted_at=? WHERE `id` IN(%s)", TABLE_PREFIX, strings.Join(marks, ", "))
 
 	_, err := orm.NewOrm().Raw(sqlStr, uint32(time.Now().Unix()), ids).Exec()
 
@@ -107,33 +114,41 @@ func (m *AdminLog) Delete(forceDelete ...bool) error {
 	return nil
 }
 
-// 获取多个日记
-func (m *AdminLog) GetAll(size, offset int, args map[string]string) ([]*AdminLog, int64) {
+// 获取日记列表
+func (m *AdminLog) GetAll(args ArgsAdminLog) ([]*AdminLog, int64) {
 	list := make([]*AdminLog, 0)
 	qs := m.query()
 	qs = qs.Filter("deleted_at", 0)
 
-	if st, ok := args["st"]; ok && len(st) > 0 {
-		qs = qs.Filter("created_at__gte", st)
+	if args.StartTime > 0 {
+		qs = qs.Filter("created_at__gte", args.StartTime)
 	}
 
-	if et, ok := args["et"]; ok && len(et) > 0 {
-		qs = qs.Filter("created_at__lte", et)
+	if args.EndTime > 0 {
+		qs = qs.Filter("created_at__lte", args.EndTime)
 	}
 
-	if q, ok := args["q"]; ok && len(q) > 0 {
-		qs = qs.Filter("content__contains", q)
+	if args.Keyword != "" {
+		qs = qs.Filter("content__contains", args.Keyword)
 	}
 
 	var count int64 = 0
-	isCount := false
-	if c, ok := args["count"]; ok && len(c) > 0 {
-		isCount = true
+	if args.Count {
 		count, _ = qs.Count()
 	}
 
-	if count > 0 || isCount == false {
-		qs.OrderBy("-id").Limit(size, offset).All(&list, "id", "name", "content", "type", "ip", "created_at")
+	// 分页
+	if args.Limit > 0 {
+		qs = qs.Limit(args.Limit, args.Offset)
+	}
+
+	orderBy := "-id"
+	if args.OrderBy != "" {
+		orderBy = args.OrderBy
+	}
+
+	if count > 0 || args.Count == false {
+		qs.OrderBy(orderBy).All(&list, "id", "name", "content", "type", "ip", "created_at")
 	}
 
 	return list, count

@@ -18,7 +18,7 @@
                         <input type="hidden" class="layui-input" name="et" value="{{.Search.et}}">
                      </div>
                     <div class="layui-input-inline">
-                      <input type="text" name="q"  placeholder="请输入关键字" autocomplete="off" class="layui-input" value="{{.Search.q}}">
+                      <input type="text" name="kw" placeholder="请输入关键字" autocomplete="off" class="layui-input" value="{{.Search.kw}}">
                     </div>
                     <div class="layui-input-inline" style="width:80px">
                         <button type="button" class="layui-btn" id="btn-search"><i class="layui-icon">&#xe615;</i></button>
@@ -69,24 +69,26 @@
 	<script>
 		window.onload = function () {
 			layui.use(['element', 'layer', 'laydate', 'laypage', 'form'], function() {
-				var $ = layui.jquery;//jquery
-				var laydate = layui.laydate;//日期插件
-				var lement = layui.element;//面包导航
-				var layer = layui.layer;//弹出层
-				var laypage = layui.laypage;//分页
+				var $ = layui.jquery;        // jquery
+				var laydate = layui.laydate; // 日期插件
+				var lement = layui.element;  // 面包导航
+				var layer = layui.layer;     // 弹出层
+				var laypage = layui.laypage; // 分页
 
 				// 分页
 				laypage.render({
 					elem: 'page',
 					count: {{.Count}},
-					limit: {{.Limit}},
-					curr:  {{.Search.p}},
+					limit: {{.Search.limit}},
+					curr:  {{.Search.page}},
 					prev: '<em><</em>',
 					next: '<em>></em>',
 					skip: false,
 					jump: function (obj, first) {
 						if (first != true) {
-							top.load_page({{urlfor "admin.AdminLogController.Index"}} + "?p=" + obj.curr + "&st={{.Search.st}}" + "&et={{.Search.et}}" + "&q={{.Search.q}}");
+                            var query = $('.x-search-form').serialize();
+                            query += "&p=" + obj.curr;
+							top.load_page({{urlfor "admin.AdminLogController.Index"}} + "?" + query);
 						}
 					}
 				}); 

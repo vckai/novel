@@ -22,6 +22,11 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+type ArgsSearchList struct {
+	ArgsBase
+	IsRec int
+}
+
 // 搜索记录管理模型
 type Search struct {
 	Id        uint64 `orm:"auto"`
@@ -39,7 +44,7 @@ func NewSearch() *Search {
 // 初始化
 // 注册模型
 func init() {
-	orm.RegisterModelWithPrefix("nov_", new(Search))
+	orm.RegisterModelWithPrefix(TABLE_PREFIX, new(Search))
 }
 
 func (m *Search) query() orm.QuerySeter {
@@ -74,7 +79,7 @@ func (m *Search) DeleteBatch(ids []string) error {
 	for i := range marks {
 		marks[i] = "?"
 	}
-	sqlStr := fmt.Sprintf("DELETE FROM nov_search WHERE `id` IN(%s)", strings.Join(marks, ", "))
+	sqlStr := fmt.Sprintf("DELETE FROM %ssearch WHERE `id` IN(%s)", TABLE_PREFIX, strings.Join(marks, ", "))
 
 	_, err := orm.NewOrm().Raw(sqlStr, ids).Exec()
 
@@ -83,7 +88,7 @@ func (m *Search) DeleteBatch(ids []string) error {
 
 // 更新搜索记录、不存在新增，存在更新搜索次数
 func (m *Search) InsertOrIncrement(kw string) error {
-	sqlStr := "INSERT INTO nov_search SET kw=?, views=1, is_rec=0, created_at=?, updated_at=? ON DUPLICATE KEY UPDATE `views` = `views` + 1, updated_at=?"
+	sqlStr := fmt.Sprintf("INSERT INTO %ssearch SET kw=?, views=1, is_rec=0, created_at=?, updated_at=? ON DUPLICATE KEY UPDATE `views` = `views` + 1, updated_at=?", TABLE_PREFIX)
 
 	t := uint32(time.Now().Unix())
 	_, err := orm.NewOrm().Raw(sqlStr, kw, t, t, t).Exec()
@@ -92,28 +97,36 @@ func (m *Search) InsertOrIncrement(kw string) error {
 }
 
 // 获取搜索记录列表
-func (m *Search) GetAll(size, offset int, args map[string]string) ([]*Search, int64) {
+func (m *Search) GetAll(args ArgsSearchList) ([]*Search, int64) {
 	list := make([]*Search, 0)
 	qs := m.query()
 
-	if q, ok := args["q"]; ok && len(q) > 0 {
-		qs = qs.Filter("kw__contains", q)
+	if args.Keyword != "" {
+		qs = qs.Filter("kw__contains", args.Keyword)
 	}
 
 	// 是否推荐
-	if isRec, ok := args["is_rec"]; ok {
-		qs = qs.Filter("is_rec", isRec)
+	if args.IsRec >= 0 {
+		qs = qs.Filter("is_rec", args.IsRec)
 	}
 
 	var count int64 = 0
-	isCount := false
-	if c, ok := args["count"]; ok && len(c) > 0 {
-		isCount = true
+	if args.Count {
 		count, _ = qs.Count()
 	}
 
-	if count > 0 || isCount == false {
-		qs.Limit(size, offset).All(&list, "id", "kw", "views", "is_rec", "created_at")
+	// 分页
+	if args.Limit > 0 {
+		qs = qs.Limit(args.Limit, args.Offset)
+	}
+
+	orderBy := "-id"
+	if args.OrderBy != "" {
+		orderBy = args.OrderBy
+	}
+
+	if count > 0 || args.Count == false {
+		qs.OrderBy(orderBy).All(&list, "id", "kw", "views", "is_rec", "created_at")
 	}
 
 	return list, count

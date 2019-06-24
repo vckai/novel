@@ -12,7 +12,7 @@
                 <div class="layui-form-pane" style="margin-top: 15px;">
                   <div class="layui-form-item">
                     <div class="layui-input-inline">
-                      <input type="text" name="q" placeholder="请输入小说名称" autocomplete="off" class="layui-input" value="{{.Search.q}}">
+                      <input type="text" name="kw" placeholder="请输入小说名称" autocomplete="off" class="layui-input" value="{{.Search.kw}}">
                     </div>
                     <div class="layui-input-inline" style="width:80px">
                         <button class="layui-btn" type="button" id="btn-search"><i class="layui-icon">&#xe615;</i></button>
@@ -112,20 +112,20 @@
 				layui.laypage.render({
 					elem: 'page',
 					count: {{.Count}},
-					limit: {{.Limit}},
-					curr:  {{.Search.p}},
+					limit: {{.Search.limit}},
+					curr:  {{.Search.page}},
 					prev: '<em><</em>',
 					next: '<em>></em>',
 					skip: false,
 					jump: function (obj, first) {
 						if (first != true) {
-							top.load_page({{urlfor "admin.NovelController.Index"}} + "?p=" + obj.curr + "&q={{.Search.q}}");
+							top.load_page({{urlfor "admin.NovelController.Index"}} + "?p=" + obj.curr + "&kw={{.Search.kw}}");
 						}
 					}
 				}); 
 			});
 
-            $("input[name='q']").on("keydown", function (event) {
+            $("input[name='kw']").on("keydown", function (event) {
                 if (event.keyCode == 13) {
                     $("#btn-search").click(); 
                 } 
