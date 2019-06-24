@@ -326,6 +326,16 @@ html{color: #666}
                 } else {
                     data.field.IsSnatch = "1";
                 }
+                if (typeof data.field.AutoNewSnatchDay == "undefined") {
+                    data.field.AutoNewSnatchDay = "0";
+                } else {
+                    data.field.AutoNewSnatchDay = "1";
+                }
+                if (typeof data.field.AutoSnatchRank == "undefined") {
+                    data.field.AutoSnatchRank = "0";
+                } else {
+                    data.field.AutoSnatchRank = "1";
+                }
                 ajax_post(url, data.field, function () {
                     top.load_page(tourl + '?tab=snatch')
                 }, true, false);
