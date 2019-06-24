@@ -46,17 +46,12 @@ func (this *Group) Get(id uint32) *models.Group {
 
 // 验证该权限组是否有接口权限
 func (this *Group) ValidPurview(groupId uint32, module, action string) bool {
-	// 超级管理
-	if groupId == 1 {
-		return true
-	}
-
 	group := GroupService.Get(groupId)
 	if group == nil {
 		return false
 	}
 
-	return RoleService.ValidPurview(module, action, group.GetRoleIds())
+	return RoleService.ValidPurview(groupId, module, action, group.GetRoleIds())
 }
 
 // 获取当前权限组菜单列表

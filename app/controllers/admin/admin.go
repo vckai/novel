@@ -61,7 +61,7 @@ func (this *AdminController) Edit() {
 
 	id, _ := this.GetUint32("id")
 	if id < 1 {
-		id = this.GetUid()
+		this.Msg("参数错误")
 	}
 
 	admin := services.AdminService.Get(id)
@@ -83,7 +83,7 @@ func (this *AdminController) Edit() {
 func (this *AdminController) EditPass() {
 	id, _ := this.GetUint32("id")
 	if id < 1 {
-		id = this.GetUid()
+		this.Msg("参数错误")
 	}
 
 	admin := services.AdminService.Get(id)

@@ -129,6 +129,11 @@ func (this *BaseController) Msg(msg string, args ...interface{}) {
 		isTop = args[1].(bool)
 	}
 
+	// ajax 返回json
+	if this.IsAjax() {
+		this.OutJson(1001, msg, url, isTop)
+	}
+
 	this.Data["Url"] = url
 	this.Data["Msg"] = msg
 	this.Data["Wait"] = 2

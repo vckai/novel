@@ -24,8 +24,8 @@
                 </a> 
                 <!-- 二级菜单 -->
                 <dl class="layui-nav-child layui-anim layui-anim-upbit x-nav-child">
-                  <dd><a href="javascript:;" onclick="x_admin_show('个人信息', '{{urlfor "admin.AdminController.Edit"}}', 550, 500)">个人信息</a></dd>
-                  <dd><a href="javascript:;" onclick="x_admin_show('修改密码', '{{urlfor "admin.AdminController.EditPass"}}', 550, 300)">修改密码</a></dd>
+                  <dd><a href="javascript:;" onclick="x_admin_show('个人信息', '{{urlfor "admin.MainController.EditUser"}}', 550, 500)">个人信息</a></dd>
+                  <dd><a href="javascript:;" onclick="x_admin_show('修改密码', '{{urlfor "admin.MainController.EditPass"}}', 550, 300)">修改密码</a></dd>
                   <hr />
                   <dd><a href="{{urlfor "admin.LoginController.Logout"}}">退出</a></dd>
                 </dl>

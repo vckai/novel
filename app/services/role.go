@@ -45,20 +45,24 @@ func (this *Role) GetRole(id uint32) *models.Role {
 }
 
 // 检查是否有权限
-func (this *Role) ValidPurview(module, action string, roleIds []string) bool {
-	if len(roleIds) == 0 {
-		return false
-	}
-
+func (this *Role) ValidPurview(groupId uint32, module, action string, roleIds []string) bool {
 	role := models.RoleModel.GetByPurview(module, action)
-	if role == nil {
+	if role.Id == 0 && groupId == 1 {
 		// 权限不存在，自动生成权限记录
 		r := &models.Role{
 			Name:   module + "/" + action,
 			Module: module,
 			Action: action,
 		}
-		this.Save(r)
+		r.Insert()
+		return true
+	}
+
+	if groupId == 1 {
+		return true
+	}
+
+	if len(roleIds) == 0 {
 		return false
 	}
 

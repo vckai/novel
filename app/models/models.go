@@ -20,6 +20,20 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+const (
+	// 表前缀
+	TABLE_PREFIX = "nov_"
+)
+
+type ArgsBase struct {
+	Count   bool
+	Limit   int
+	Offset  int
+	OrderBy string
+	Fields  []string
+	Keyword string
+}
+
 var (
 	RoleModel       *Role
 	AdminModel      *Admin

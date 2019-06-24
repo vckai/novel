@@ -106,7 +106,7 @@ func (m *Role) GetMenus(roleIds []string) []*Role {
 
 	// 根据权限过滤
 	if len(roleIds) > 0 {
-		qs.Filter("id__in", roleIds)
+		qs = qs.Filter("id__in", roleIds)
 	}
 	qs.OrderBy("-sort").All(&list, "id", "pid", "name", "icon", "module", "action")
 

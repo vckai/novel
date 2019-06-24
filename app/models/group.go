@@ -42,7 +42,7 @@ func NewGroup() *Group {
 // 初始化
 // 注册模型
 func init() {
-	orm.RegisterModelWithPrefix("nov_", new(Group))
+	orm.RegisterModelWithPrefix(TABLE_PREFIX, new(Group))
 }
 
 func (m *Group) query() orm.QuerySeter {
