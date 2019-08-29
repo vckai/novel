@@ -313,7 +313,7 @@ func (this *Novel) GetEnds(size, offset int) []*models.Novel {
 // 批量获取小说列表
 // 用于前台查询
 func (this *Novel) GetList(size, offset int, qs map[string]interface{}) ([]*models.Novel, int64) {
-	args := models.ArgsNovelList{}
+	args := models.ArgsNovelList{FilterMaps: make(map[string]int, 0)}
 
 	// 字数查询
 	if textNum, ok := qs["text_num"]; ok {
@@ -352,11 +352,36 @@ func (this *Novel) GetList(size, offset int, qs map[string]interface{}) ([]*mode
 		}
 	}
 
+	// 排序
+	if ot, ok := qs["ot"]; ok {
+		switch ot.(int) {
+		case 1:
+			args.ArgsBase.OrderBy = "-views"
+		case 2:
+			args.ArgsBase.OrderBy = "-chapter_updated_at"
+		case 3:
+			args.ArgsBase.OrderBy = "-text_num"
+		default:
+		}
+	}
+
+	if count, ok := qs["count"]; ok {
+		args.Count = count.(bool)
+	}
+
 	args.Limit = size
 	args.Offset = offset
 
 	if kw, ok := qs["q"]; ok && len(kw.(string)) > 0 {
 		args.Keyword = kw.(string)
+	}
+
+	if cateId, ok := qs["cate_id"]; ok && cateId.(int) > 0 {
+		args.FilterMaps["cate_id"] = cateId.(int)
+	}
+
+	if status, ok := qs["status"]; ok && status.(int) > 0 {
+		args.FilterMaps["status"] = status.(int)
 	}
 
 	args.Fields = []string{"id", "name", "cover", "desc", "author", "cate_id", "cate_name", "text_num", "status", "cate_id", "chapter_title"}
