@@ -21,7 +21,7 @@
 			</div>
 			<div class="layui-form-item">
 				<label for="is_menu" class="layui-form-label">
-					是否首页菜单
+					首页菜单
 				</label>
 				<div class="layui-input-block">
 				  <input type="checkbox" {{if .Cate.IsMenu}}checked="1"{{end}} name="is_menu" lay-skin="switch" lay-filter="switchTest" title="菜单" value="1" lay-text="是|否">
@@ -29,7 +29,7 @@
 			</div>
 			<div class="layui-form-item">
 				<label for="is_home" class="layui-form-label">
-					是否首页模块
+					首页模块
 				</label>
 				<div class="layui-input-block">
 				  <input type="checkbox" {{if .Cate.IsHome}}checked="1"{{end}} name="is_home" lay-skin="switch" lay-filter="switchTest" title="首页" value="1" lay-text="是|否">
