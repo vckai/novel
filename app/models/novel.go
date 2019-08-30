@@ -194,7 +194,7 @@ func (m *Novel) GetAll(args ArgsNovelList) ([]*Novel, int64) {
 
 	// 获取字段
 	fields := []string{"id", "name", "author", "cate_id", "cate_name", "status", "is_original", "is_hot", "is_rec", "is_vip_rec", "chapter_updated_at", "chapter_num"}
-	if len(args.Fields) == 0 {
+	if len(args.Fields) > 0 {
 		fields = args.Fields
 	}
 
