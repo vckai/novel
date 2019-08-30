@@ -18,6 +18,7 @@ import (
 	"errors"
 	"math"
 	"time"
+	"unicode/utf8"
 
 	"github.com/astaxie/beego/validation"
 
@@ -225,14 +226,36 @@ func (this *Chapter) Save(chapter *models.Chapter) error {
 		}
 	}
 
+	novel := NovelService.Get(chapter.NovId)
+	if novel == nil {
+		return errors.New("小说不存在")
+	}
+
+	// 章节数统计
+	textNum := utf8.RuneCountInString(chapter.Desc)
+
+	chapter.TextNum = uint32(textNum)
+
+	novTextNum := novel.TextNum
+	chapterNum := novel.ChapterNum
+
 	var err error
 	if chapter.Id > 0 {
 		err = chapter.Update("nov_id", "title", "desc", "chapter_no")
 	} else {
+		novTextNum += chapter.TextNum
+		chapterNum++
 		err = chapter.Insert()
 	}
 
-	return err
+	if err != nil {
+		return err
+	}
+
+	// 更新小说主信息
+	NovelService.UpChapterInfo(novel.Id, int(novTextNum), int(chapterNum), chapter.Id, chapter.Title, novel.Status)
+
+	return nil
 }
 
 // 章节浏览次数累加
