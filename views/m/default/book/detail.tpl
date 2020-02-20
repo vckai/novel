@@ -81,12 +81,14 @@
             $("body").css("background-color", "rgb(249, 249, 249)").css("color", "rgb(0, 0, 0)")
 			$("span[role='button']").css("background-color", "#e6e6e6").css("color", "rgb(0, 0, 0)") //按钮
 			$("a[role='button']").css("background-color", "#e6e6e6").css("color", "rgb(0, 0, 0)") //按钮
+			$("#footer_submit_btn").css("background-color", "#e6e6e6").css("color", "rgb(0, 0, 0)") //底部搜索按钮
 			$("footer").css("background-color", "rgb(249, 249, 249)").css("color", "rgb(0, 0, 0)") //底部
         } else {
             localStorage.setItem("d", "off"); //关灯
             $("body").css("background-color", "rgb(34, 34, 34)").css("color", "rgb(153, 153, 153)")
 			$("span[role='button']").css("background-color", "rgb(34, 34, 34)").css("color", "rgb(153, 153, 153)")//按钮
 			$("a[role='button']").css("background-color", "rgb(34, 34, 34)").css("color", "rgb(153, 153, 153)")//按钮
+			$("#footer_submit_btn").css("background-color", "rgb(34, 34, 34)").css("color", "rgb(153, 153, 153)") //底部搜索按钮
 			$("footer").css("background-color", "rgb(34, 34, 34)").css("color", "rgb(153, 153, 153)")//底部
         }
 
