@@ -56,55 +56,60 @@
 </div>
 
 <script type="text/javascript">
-function light(off) {
-    var bgcolor = '#222222';
-    var color = '#999999';
+    $(function () {
+        var d = localStorage.getItem("d"); //获取灯
+        if (d != null) {
+            if (d != 'off') { //开启
+                light("on")
+            } else { //关
+                light("off")
+            }
+        }
 
-    if(off != 'off') {
-        var bgcolor = '#f9f9f9';
-        var color = '#000000';
+        var book_font_sizi = localStorage.getItem("book_font_sizi"); //获取书本字体大小
+        if (book_font_sizi != null) {
+            font(book_font_sizi)
+        }
+    })
+
+
+    function light(off) {
+
+
+        if (off != 'off') {
+            localStorage.setItem("d", "on"); //开灯
+            $("body").css("background-color", "rgb(249, 249, 249)").css("color", "rgb(0, 0, 0)")
+			$("span[role='button']").css("background-color", "#e6e6e6").css("color", "rgb(0, 0, 0)") //按钮
+			$("a[role='button']").css("background-color", "#e6e6e6").css("color", "rgb(0, 0, 0)") //按钮
+			$("footer").css("background-color", "rgb(249, 249, 249)").css("color", "rgb(0, 0, 0)") //底部
+        } else {
+            localStorage.setItem("d", "off"); //关灯
+            $("body").css("background-color", "rgb(34, 34, 34)").css("color", "rgb(153, 153, 153)")
+			$("span[role='button']").css("background-color", "rgb(34, 34, 34)").css("color", "rgb(153, 153, 153)")//按钮
+			$("a[role='button']").css("background-color", "rgb(34, 34, 34)").css("color", "rgb(153, 153, 153)")//按钮
+			$("footer").css("background-color", "rgb(34, 34, 34)").css("color", "rgb(153, 153, 153)")//底部
+        }
+
     }
 
-    document.cookie = "light=" + off + ";path=/";
+    function font(size) {
+        var big = '26px';
+        var middle = '22px';
+        var small = '16px';
 
-    document.body.style.backgroundColor = bgcolor;
-    document.body.style.color = color;
-
-    document.getElementsByTagName('footer')[0].style.backgroundColor = bgcolor;
-    document.getElementsByTagName('footer')[0].style.color = color;
-
-    var btnEl = document.getElementsByClassName('am-btn-default');
-    var total = btnEl.length;
-    for (var i = 0; i < total; i++) {
-        document.getElementsByClassName('am-btn-default')[i].style.backgroundColor = bgcolor;
-        document.getElementsByClassName('am-btn-default')[i].style.color = color;
-    }
-
-    var btnEl = document.getElementsByClassName('am-gotop')[0].getElementsByTagName('a');
-    var total = btnEl.length;
-    for (var i = 0; i < total; i++) {
-        btnEl[i].style.backgroundColor = bgcolor;
-        btnEl[i].style.color = color;
-    }
-}
-
-function font(size) {
-    var big = '26px';
-    var middle = '22px';
-    var small = '16px';
-
-    switch(size) {
+        switch (size) {
         case 'big':
             document.getElementsByTagName('article')[0].style.fontSize = big;
+            localStorage.setItem("book_font_sizi", "big");
             break;
         case 'middle':
             document.getElementsByTagName('article')[0].style.fontSize = middle;
+            localStorage.setItem("book_font_sizi", "middle");
             break;
         case 'small':
             document.getElementsByTagName('article')[0].style.fontSize = small;
+            localStorage.setItem("book_font_sizi", "small");
             break;
+        }
     }
-
-    document.cookie = "font="+size+";path=/";
-}
 </script>
