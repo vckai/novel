@@ -2,7 +2,7 @@
 	<div class="header" style="height:78px">
 	  <div class="searchbox">
 	      <a href="/" class="logo">
-	          <img src="{{.aOut.Logo}}" alt="{{.aOut.Title}}">
+	          <img src="{{.aOut.Logo}}" alt="{{.aOut.Title}}" style="max-width: 150px;">
 	      </a>
 	      <form action="{{urlfor "home.HomeController.Search"}}" method="get" class="searchform" id="searchForm" onsubmit="return checkSearch()">
 	          <div class="querybox">
