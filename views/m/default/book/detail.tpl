@@ -78,7 +78,7 @@
 
         if (off != 'off') {
             localStorage.setItem("d", "on"); //开灯
-            $("body").css("background-color", "rgb(249, 249, 249)").css("color", "rgb(0, 0, 0)")
+            $("body").css("background-color", "rgb(241, 241, 241)").css("color", "rgb(0, 0, 0)")
 			$("span[role='button']").css("background-color", "#e6e6e6").css("color", "rgb(0, 0, 0)") //按钮
 			$("a[role='button']").css("background-color", "#e6e6e6").css("color", "rgb(0, 0, 0)") //按钮
 			$("#footer_submit_btn").css("background-color", "#e6e6e6").css("color", "rgb(0, 0, 0)") //底部搜索按钮
