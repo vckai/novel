@@ -88,7 +88,7 @@ html{color: #666}
                             <span class='x-red'>*</span>手机网站模板
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="MobielTheme" autocomplete="off" class="layui-input" lay-verify="required" value="{{.Config.MobileTheme}}" />
+                            <input type="text" name="MobileTheme" autocomplete="off" class="layui-input" lay-verify="required" value="{{.Config.MobileTheme}}" />
                         </div>
                     </div>
                     <div class="layui-form-item">
