@@ -409,9 +409,20 @@ func (this *Snatch) GetChapters(provider *models.SnatchRule, rawurl string) ([]*
 	lastChap := ""
 	chapNo := uint32(1)
 
-	// 获取小说URL地址
+	catalogSelector := doc.Find(rule.ChapterCatalogSelector)
+
+	// 章节数量
+	catalogSize := catalogSelector.Size()
+
+	// 新书章节小于丢弃数量情况，防止丢失章节
+	// 丢弃章节 = 章节数量 / 2
+	if rule.ChapterAbandonNum > 0 && catalogSize < rule.ChapterAbandonNum*2 {
+		rule.ChapterAbandonNum = catalogSize / 2
+	}
+
 	abandonNum := 1
-	doc.Find(rule.ChapterCatalogSelector).Each(func(i int, s *goquery.Selection) {
+	// 获取小说URL地址
+	catalogSelector.Each(func(i int, s *goquery.Selection) {
 		// 过滤掉最新章节
 		if rule.ChapterAbandonNum >= abandonNum {
 			abandonNum++
