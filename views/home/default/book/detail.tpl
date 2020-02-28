@@ -139,9 +139,9 @@
                 <div class="tool-help">
                     <div class="tool-help-title">键盘快捷键</div>
                     <div class="tool-help-keyboard">
-                        <p>全屏阅读 / 退出全屏阅读</p>
-                        <p>前后翻页（横向阅读模式可用）</p>
-                        <p>上下移动（竖向阅读模式可用）</p>
+                        <p>F11全屏阅读 / 退出全屏阅读</p>
+                        <p> <i class="fa fa-long-arrow-down"></i><i class="fa fa-long-arrow-down"></i>左右键盘  (上一页、下一页）</p>
+                        <p><i class="fa fa-long-arrow-up"></i><i class="fa fa-long-arrow-down"></i>上下移动（上下移动）</p>
                     </div>
                     <div class="tool-help-btn"><a href="javascript:;">我知道了</a></div>
                 </div>
