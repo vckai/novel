@@ -99,6 +99,7 @@ func (this *BookController) Detail() {
 
 	this.Data["Nov"] = nov
 	this.Data["Chap"] = chap
+	this.Data["Pre"] = services.ChapterService.GetPre(chap.NovId, chap.ChapterNo)
 	this.Data["Next"] = services.ChapterService.GetNext(chap.NovId, chap.ChapterNo)
 	this.Data["Title"] = chap.Title + " - " + nov.Name
 
