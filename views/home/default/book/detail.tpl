@@ -250,9 +250,9 @@
     <script type="text/javascript">
         var setting = {
             bgColor: null, //背景颜色
-            fontSize: null,//字体大小
-            fontSpacing: null,//文字间距
-            autoRoll: null //自动滚屏
+            fontSize: 18,//字体大小
+            fontSpacing: 0,//文字间距
+            autoRoll: 0 //自动滚屏
         }
 
         $(function () {
