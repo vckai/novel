@@ -184,6 +184,7 @@ func (this *Crawler) runCrawler(baseURL *url.URL, referer string) {
 		uri, _ := s.Attr("href")
 		u, err := this.genrateURL(baseURL, uri)
 		if err != nil {
+			log.Warn("采集URL不可用：", uri, u, err)
 			return
 		}
 
@@ -211,7 +212,7 @@ func (this *Crawler) runCrawler(baseURL *url.URL, referer string) {
 		}
 
 		// URL已经爬过
-		if this.URLs.TestString(rawurl) {
+		if this.URLs.TestString(link) {
 			return
 		}
 
@@ -219,7 +220,7 @@ func (this *Crawler) runCrawler(baseURL *url.URL, referer string) {
 		time.Sleep(time.Duration(1) * time.Millisecond)
 
 		// 递归爬虫URL
-		this.runCrawler(u, rawurl)
+		this.runCrawler(u, link)
 	})
 
 	return
@@ -238,6 +239,7 @@ func (this *Crawler) snatchBook(link string) {
 
 // 生成返回完整的URL地址
 func (this *Crawler) genrateURL(base *url.URL, rawurl string) (*url.URL, error) {
+	// 非法URI
 	if strings.Contains(rawurl, "javascript:") ||
 		strings.Contains(rawurl, "(") ||
 		strings.Contains(rawurl, "mailto") {
@@ -250,7 +252,7 @@ func (this *Crawler) genrateURL(base *url.URL, rawurl string) (*url.URL, error) 
 	}
 
 	// 非当前域名下的URL直接返回空
-	if u.Hostname() != base.Hostname() {
+	if u.Hostname() != "" && u.Hostname() != base.Hostname() {
 		return nil, ErrNotCurrSiteURL
 	}
 
