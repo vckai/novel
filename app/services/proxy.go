@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
+	"sync"
 	"time"
 
 	"github.com/parnurzeal/gorequest"
@@ -39,6 +40,8 @@ const (
 
 // 定义CrawlerService
 type Proxy struct {
+	sync.RWMutex
+
 	ips         []string
 	state       int
 	lastGetTime time.Time
@@ -58,11 +61,11 @@ func NewProxy() *Proxy {
 func (this *Proxy) Init() {
 	go func() {
 		for {
+			this.run()
+
 			// 休眠指定时间更新
 			upTime := ConfigService.Int("ProxyUpTime", 10)
 			time.Sleep(time.Duration(upTime) * time.Minute)
-
-			this.run()
 		}
 	}()
 
@@ -101,15 +104,17 @@ func (this *Proxy) run() {
 			Timeout:   10 * time.Second,
 			Dial:      500 * time.Millisecond,
 			KeepAlive: 60 * time.Second,
-			ProxyURL:  ProxyService.Get(),
 		})
 
 	body, _, err := c.Get(context.TODO(), ConfigService.String("ProxyURL"), nil)
 	if err != nil {
 		this.state = STATE_WAIT
-		log.Error("Get Proxy Body Error: ", err)
+		log.Error("获取代理IP列表错误： ", err)
 		return
 	}
+
+	this.Lock()
+	defer this.Unlock()
 
 	data := gjson.ParseBytes(body)
 	data.Get("data").ForEach(func(key, value gjson.Result) bool {
@@ -124,26 +129,49 @@ func (this *Proxy) run() {
 		return true
 	})
 
-	log.Info("获取到代理IP:", len(this.ips))
+	log.Info("获取到代理IP:", this.Count())
 	this.state = STATE_WAIT
 }
 
 // 获取可用IP数量
 func (this *Proxy) Count() int {
+	this.RLock()
+	defer this.RUnlock()
+
 	return len(this.ips)
 }
 
 // 获取所有IP
 func (this *Proxy) GetAll() []string {
-	if this.Count() == 0 {
-		this.run()
-	}
+	this.RLock()
+	defer this.RUnlock()
 
 	return this.ips
 }
 
+// 随机获取一个代理IP
+func (this *Proxy) get() string {
+	this.RLock()
+	defer this.RUnlock()
+
+	ips := this.ips
+	x := len(ips)
+
+	if x == 0 {
+		return ""
+	}
+
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	proxy := "http://" + ips[r.Intn(x)]
+
+	return proxy
+}
+
 // 删除IP
 func (this *Proxy) Del(ip string) error {
+	this.Lock()
+	defer this.Unlock()
+
 	ips := this.ips
 	for k, v := range ips {
 		if v == ip {
@@ -166,13 +194,7 @@ func (this *Proxy) Get() string {
 	case HTTP_PROXY:
 		proxy = ConfigService.String("ProxyURL")
 	default:
-		r := rand.New(rand.NewSource(time.Now().UnixNano()))
-		ips := this.GetAll()
-		x := len(ips)
-
-		if x > 0 {
-			proxy = "http://" + ips[r.Intn(x)]
-		}
+		proxy = this.get()
 	}
 
 	return proxy
