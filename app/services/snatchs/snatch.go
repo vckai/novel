@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -28,6 +29,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/astaxie/beego"
 	"github.com/axgle/mahonia"
+	"github.com/vckai/novel/app/utils/log"
 
 	xhttp "github.com/vckai/novel/app/librarys/net/http"
 	"github.com/vckai/novel/app/models"
@@ -134,6 +136,8 @@ func (this *Snatch) FindNovel(provider *models.SnatchRule, kw string) (*SnatchIn
 		return nil, ErrNotProvider
 	}
 
+	t1 := time.Now()
+
 	rule := provider.Rules
 
 	if rule == nil {
@@ -185,7 +189,17 @@ func (this *Snatch) FindNovel(provider *models.SnatchRule, kw string) (*SnatchIn
 		return nil, ErrNotNovLink
 	}
 
-	return this.GetNovel(provider, novURL)
+	// 获取小说简介
+	info, err := this.GetNovel(provider, novURL)
+	if err != nil {
+		return nil, err
+	}
+
+	info.UseTime = time.Since(t1)
+
+	log.Debug(fmt.Sprintf("[%s]查找小说[%s]，使用时间：%v", provider.Name, info.Nov.Name, info.UseTime))
+
+	return info, nil
 }
 
 // 获取一本小说
@@ -299,12 +313,15 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 		chapterLink, _ = this.genrateURL(u, chapterLink)
 	}
 
+	useTime := time.Since(t1)
+	log.Debug(fmt.Sprintf("[%s]获取小说[%s]，使用时间：%v", provider.Name, nov.Name, useTime))
+
 	return &SnatchInfo{
 		ChapterUrl: chapterLink,
 		Title:      provider.Name,
 		Source:     provider.Code,
 		Url:        rawurl,
-		UseTime:    time.Since(t1),
+		UseTime:    useTime,
 		Nov:        nov,
 	}, nil
 }
@@ -370,6 +387,8 @@ func (this *Snatch) GetChapter(provider *models.SnatchRule, rawurl string) (*Sna
 		}
 	}
 
+	log.Debug(fmt.Sprintf("[%s]获取小说章节内容[%s]，使用时间：%v", provider.Name, chap.Title, time.Since(t1)))
+
 	return &SnatchInfo{
 		Source:  provider.Code,
 		Chap:    chap,
@@ -384,6 +403,7 @@ func (this *Snatch) GetChapters(provider *models.SnatchRule, rawurl string) ([]*
 	if provider == nil {
 		return nil, ErrNotProvider
 	}
+	t1 := time.Now()
 
 	rule := provider.Rules
 
@@ -456,6 +476,8 @@ func (this *Snatch) GetChapters(provider *models.SnatchRule, rawurl string) ([]*
 		chapNo++
 	})
 
+	log.Debug(fmt.Sprintf("[%s]获取小说章节列表[%s]，使用时间：%v", provider.Name, rawurl, time.Since(t1)))
+
 	return links, nil
 }
 
@@ -494,8 +516,10 @@ func (this *Snatch) newHtml(rawurl, charset string) (*goquery.Document, *http.Re
 			break
 		}
 
+		log.Debug("请求失败：", rawurl, err)
+
 		// 休眠10ms，防止采集速度过快被屏蔽
-		time.Sleep(time.Duration(50) * time.Millisecond)
+		time.Sleep(time.Duration(10) * time.Millisecond)
 	}
 
 	if err != nil {
@@ -518,6 +542,7 @@ func (this *Snatch) newHtml(rawurl, charset string) (*goquery.Document, *http.Re
 	return doc, resp, nil
 }
 
+// 采集内容过滤
 func (this *Snatch) filter(filter, kw string) string {
 	if len(kw) == 0 {
 		return kw
