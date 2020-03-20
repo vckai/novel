@@ -114,7 +114,6 @@ func (this *Proxy) run() {
 	}
 
 	this.Lock()
-	defer this.Unlock()
 
 	data := gjson.ParseBytes(body)
 	data.Get("data").ForEach(func(key, value gjson.Result) bool {
@@ -128,6 +127,8 @@ func (this *Proxy) run() {
 		this.ips = append(this.ips, host)
 		return true
 	})
+
+	this.Unlock()
 
 	log.Info("获取到代理IP:", this.Count())
 	this.state = STATE_WAIT
