@@ -51,32 +51,32 @@ type CateMap struct {
 	Name string `json:"name"`
 }
 
-// 采集测试数据
+// 采集测试对比数据
 type SnatchTestData struct {
-	// 小说简介页面URL
-	BookURL        string `json:"book_url"`
-	BookTitle      string `json:"book_title"`
-	BookAuthor     string `json:"book_author"`
-	BookCate       string `json:"book_cate"`
-	BookDesc       string `json:"book_desc"`
-	BookCover      string `json:"book_cover"`
-	BookChapterURL string `json:"book_chapter_url"`
+	// 小说简介页面
+	BookURL        string `json:"book_url"`         // 小说简介URL
+	BookTitle      string `json:"book_title"`       // 小说标题
+	BookAuthor     string `json:"book_author"`      // 小说作者
+	BookCate       string `json:"book_cate"`        // 小说分类名
+	BookDesc       string `json:"book_desc"`        // 小说简介
+	BookCover      string `json:"book_cover"`       // 小说封面LOGO
+	BookChapterURL string `json:"book_chapter_url"` // 小说章节页面URL
 
-	// 章节列表
-	ChapterURL          string `json:"chapter_url"`
-	ChapterCatalogURL   string `json:"chapter_catalog_url"`
-	ChapterCatalogTitle string `json:"chapter_catalog_title"`
+	// 章节目录
+	ChapterURL          string `json:"chapter_url"`           // 章节目录URL
+	ChapterCatalogURL   string `json:"chapter_catalog_url"`   // 章节目录中第一个章节的URL地址
+	ChapterCatalogTitle string `json:"chapter_catalog_title"` // 章节目录中第一个章节的标题
 
 	// 详情页面
-	InfoURL         string `json:"info_url"`
-	InfoTitle       string `json:"info_title"`
-	InfoDesc        string `json:"info_desc"`
-	InfoPrePageURL  string `json:"info_pre_page_url"`
-	InfoNextPageURL string `json:"info_next_page_url"`
+	InfoURL         string `json:"info_url"`           // 小说章节页面URL
+	InfoTitle       string `json:"info_title"`         // 小说章节标题
+	InfoDesc        string `json:"info_desc"`          // 小说章节内容
+	InfoPrePageURL  string `json:"info_pre_page_url"`  // 上一章节URL
+	InfoNextPageURL string `json:"info_next_page_url"` // 下一章节URL
 
 	// 搜索页面获得URL
-	FindBookKw  string `json:"find_book_kw"`
-	FindBookURL string `json:"find_book_url"`
+	FindBookKw  string `json:"find_book_kw"`  // 搜索关键词
+	FindBookURL string `json:"find_book_url"` // 搜索结果小说简介页面的URL
 }
 
 // 采集规则
@@ -88,8 +88,8 @@ type Rule struct {
 	IsCrawlerURL string `json:"is_crawler_url"`
 
 	// 小说简介页面采集规则
-	BookTitleSelector            string `json:"book_title_selector"`
-	BookTitleAttr                string `json:"book_title_attr"`
+	BookTitleSelector            string `json:"book_title_selector"` // 小说标题
+	BookTitleAttr                string `json:"book_title_attr"`     // 小说标题css选择器获取属性
 	BookTitleFilter              string `json:"book_title_filter"`
 	BookAuthorSelector           string `json:"book_author_selector"`
 	BookAuthorAttr               string `json:"book_author_attr"`
@@ -98,16 +98,20 @@ type Rule struct {
 	BookCateAttr                 string `json:"book_cate_attr"`
 	BookCateFilter               string `json:"book_cate_filter"`
 	BookDescSelector             string `json:"book_desc_selector"`
+	BookDescAttr                 string `json:"book_desc_attr"`
 	BookDescFilter               string `json:"book_desc_filter"`
 	BookCoverSelector            string `json:"book_cover_selector"`
 	BookCoverAttr                string `json:"book_cover_attr"`
 	BookNoCover                  string `json:"book_no_cover"`
 	BookChapterURLSelector       string `json:"book_chapter_url_selector"`
+	BookChapterURLAttr           string `json:"book_chapter_url_attr"`
 	BookLastChapterTitleSelector string `json:"book_last_chapter_title_selector"`
+	BookLastChapterTitleAttr     string `json:"book_last_chapter_title_attr"`
 
 	// 章节目录采集规则
-	ChapterCatalogSelector string `json:"chapter_catalog_selector"`
-	ChapterAbandonNum      int    `json:"chapter_abandon_num"`
+	ChapterCatalogSelector  string `json:"chapter_catalog_selector"`
+	ChapterNextPageSelector string `json:"chapter_next_page_selector"` // 章节目录下一页选择器
+	ChapterAbandonNum       int    `json:"chapter_abandon_num"`        // 丢弃章节数（最新章节）
 
 	// 详情页面采集规则
 	InfoTitleSelector    string `json:"info_title_selector"`

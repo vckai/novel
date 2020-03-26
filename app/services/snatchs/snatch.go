@@ -232,21 +232,20 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	nov := models.NewNovel()
 
 	// 获取封面图片
-	imgAttr := "src"
-	if len(rule.BookCoverAttr) > 0 {
-		imgAttr = rule.BookCoverAttr
+	if len(rule.BookCoverAttr) == 0 {
+		rule.BookCoverAttr = "src"
 	}
 
-	if img, ok := doc.Find(rule.BookCoverSelector).Attr(imgAttr); ok {
+	if img, ok := doc.Find(rule.BookCoverSelector).Attr(rule.BookCoverAttr); ok {
 		nov.Cover = img
 
-		if !strings.Contains(nov.Cover, "http://") && len(nov.Cover) > 0 {
+		if !strings.Contains(nov.Cover, "https://") && !strings.Contains(nov.Cover, "http://") && len(nov.Cover) > 0 {
 			nov.Cover, _ = this.genrateURL(u, nov.Cover)
 		}
 	}
 
 	// 默认封面图片直接重置空
-	if strings.Contains(nov.Cover, rule.BookNoCover) {
+	if len(rule.BookNoCover) > 0 && strings.Contains(nov.Cover, rule.BookNoCover) {
 		nov.Cover = ""
 	}
 
@@ -282,7 +281,11 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 
 	// 获取小说最新章节
 	if len(rule.BookLastChapterTitleSelector) > 0 {
-		nov.ChapterTitle = doc.Find(rule.BookLastChapterTitleSelector).Text()
+		if len(rule.BookLastChapterTitleAttr) > 0 {
+			nov.ChapterTitle = doc.Find(rule.BookLastChapterTitleSelector).AttrOr(rule.BookLastChapterTitleAttr, "")
+		} else {
+			nov.ChapterTitle = doc.Find(rule.BookLastChapterTitleSelector).Text()
+		}
 		nov.ChapterTitle = strings.TrimSpace(nov.ChapterTitle)
 	}
 
@@ -299,13 +302,21 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	}
 
 	// 获取小说简介
-	nov.Desc, _ = doc.Find(rule.BookDescSelector).Html()
+	if len(rule.BookDescAttr) > 0 {
+		nov.Desc = doc.Find(rule.BookDescSelector).AttrOr(rule.BookDescAttr, "")
+	} else {
+		nov.Desc, _ = doc.Find(rule.BookDescSelector).Html()
+	}
 	nov.Desc = this.filter(rule.BookDescFilter, nov.Desc)
 
 	// 获取章节链接地址
 	chapterLink := rawurl
 	if len(rule.BookChapterURLSelector) > 0 {
-		chapterLink, _ = doc.Find(rule.BookChapterURLSelector).Attr("href")
+		if len(rule.BookChapterURLAttr) == 0 {
+			rule.BookChapterURLAttr = "href"
+		}
+
+		chapterLink = doc.Find(rule.BookChapterURLSelector).AttrOr(rule.BookChapterURLAttr, "")
 		if len(chapterLink) == 0 {
 			return nil, ErrNotNovLink
 		}
@@ -371,23 +382,23 @@ func (this *Snatch) GetChapter(provider *models.SnatchRule, rawurl string) (*Sna
 
 	// 获取上一页
 	preURL := ""
-	if rawurl := doc.Find(rule.InfoPrePageSelector).AttrOr("href", ""); len(rawurl) > 0 {
-		rawurl, _ = this.genrateURL(u, rawurl)
-		if !this.IsBookURL(provider, rawurl) {
-			preURL = rawurl
+	if purl := doc.Find(rule.InfoPrePageSelector).AttrOr("href", ""); len(purl) > 0 {
+		purl, _ = this.genrateURL(u, purl)
+		if !this.IsBookURL(provider, purl) && rawurl != purl {
+			preURL = purl
 		}
 	}
 
 	// 获取下一页
 	nextURL := ""
-	if rawurl := doc.Find(rule.InfoNextPageSelector).AttrOr("href", ""); len(rawurl) > 0 {
-		rawurl, _ = this.genrateURL(u, rawurl)
-		if !this.IsBookURL(provider, rawurl) {
-			nextURL = rawurl
+	if nurl := doc.Find(rule.InfoNextPageSelector).AttrOr("href", ""); len(nurl) > 0 {
+		nurl, _ = this.genrateURL(u, nurl)
+		if !this.IsBookURL(provider, nurl) && rawurl != nurl {
+			nextURL = nurl
 		}
 	}
 
-	log.Debug(fmt.Sprintf("[%s]获取小说章节内容[%s]，使用时间：%v", provider.Name, chap.Title, time.Since(t1)))
+	log.Debug(fmt.Sprintf("[%s]获取小说章节内容[%s][%s]，使用时间：%v", provider.Name, chap.Title, rawurl, time.Since(t1)))
 
 	return &SnatchInfo{
 		Source:  provider.Code,
@@ -471,12 +482,33 @@ func (this *Snatch) GetChapters(provider *models.SnatchRule, rawurl string) ([]*
 		}
 
 		links = append(links, &SnatchInfo{
-			Chap: chap,
+			Chap:    chap,
+			UseTime: time.Since(t1),
 		})
 		chapNo++
 	})
 
 	log.Debug(fmt.Sprintf("[%s]获取小说章节列表[%s]，使用时间：%v", provider.Name, rawurl, time.Since(t1)))
+
+	if len(rule.ChapterNextPageSelector) == 0 {
+		return links, nil
+	}
+
+	// @TODO
+	// 存在下一页章节目录
+	// 通过递归的方式采集分页章节列表
+	// 不推荐采集章节列表分页的站点，因为请求的次数太多了，导致采集速度过慢。
+	if nextURL := doc.Find(rule.ChapterNextPageSelector).AttrOr("href", ""); len(nextURL) > 0 {
+		nextURL, _ = this.genrateURL(u, nextURL)
+		if !this.IsBookURL(provider, nextURL) && rawurl != nextURL {
+			// 重置第二页的丢弃章节为0
+			provider.Rules.ChapterAbandonNum = 0
+			ls, err := this.GetChapters(provider, nextURL)
+			if err == nil {
+				links = append(links, ls...)
+			}
+		}
+	}
 
 	return links, nil
 }

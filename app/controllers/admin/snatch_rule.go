@@ -126,6 +126,7 @@ func (this *SnatchRuleController) Goquery() {
 	if this.IsAjax() {
 		rawurl := this.GetString("url")
 		selector := this.GetString("selector")
+		attr := this.GetString("attr", "")
 		charset := this.GetString("charset", "UTF-8")
 		if len(rawurl) == 0 || len(selector) == 0 {
 			this.OutJson(1001, "参数错误，无法访问")
@@ -157,9 +158,14 @@ func (this *SnatchRuleController) Goquery() {
 			this.OutJson(1003, "转换query失败："+err.Error())
 		}
 
-		html, err := doc.Find(selector).Html()
-		if err != nil {
-			this.OutJson(1004, "获取选取内容失败："+err.Error())
+		html := ""
+		if len(attr) > 0 {
+			html = doc.Find(selector).AttrOr(attr, "")
+		} else {
+			html, err = doc.Find(selector).Html()
+			if err != nil {
+				this.OutJson(1004, "获取选取内容失败："+err.Error())
+			}
 		}
 
 		this.OutJson(0, "获取成功", html)
@@ -169,111 +175,255 @@ func (this *SnatchRuleController) Goquery() {
 	this.View("snatch_rule/goquery.tpl")
 }
 
+type TestResult struct {
+	Name    string
+	Rule    string
+	UseTime time.Duration
+	Attr    string
+	Data    string
+	GetData string
+	Ret     bool
+}
+
 // 采集规则测试
 func (this *SnatchRuleController) Test() {
 	id, _ := this.GetUint32("id")
 	if id < 1 {
-		this.OutJson(1001, "参数错误，无法访问")
+		this.Msg("参数错误，无法访问")
 	}
 
 	rule := services.SnatchRuleService.Get(id)
 
 	if rule == nil {
-		this.OutJson(1002, "该采集规则不存在或者已被删除")
+		this.Msg("该采集规则不存在或者已被删除")
 	}
 
 	if len(rule.Test.BookURL) == 0 {
-		this.OutJson(1002, "测试数据中没有小说简介URL")
+		this.Msg("测试数据中没有小说简介URL，无法进行测试对比")
 	}
+
+	results := make([]TestResult, 0)
 
 	c := snatchs.NewSnatch(services.ProxyService.Get)
 
 	// 测试验证小说简介URL
-	if !c.IsBookURL(rule, rule.Test.BookURL) {
-		this.OutJson(1003, "小说URL正则验证失败")
-	}
+	results = append(results, TestResult{
+		Name: "小说简介URL验证",
+		Rule: rule.Rules.IsBookURL,
+		Data: rule.Test.BookURL,
+		Ret:  c.IsBookURL(rule, rule.Test.BookURL),
+	})
 
 	// 获取测试小说
-	s, err := c.GetNovel(rule, rule.Test.BookURL)
+	nov, err := c.GetNovel(rule, rule.Test.BookURL)
 
+	errMsg := ""
+	useTime := time.Duration(0)
 	if err != nil {
-		this.OutJson(1003, "获取简介页面错误："+err.Error())
+		errMsg = err.Error()
+	} else {
+		useTime = nov.UseTime
 	}
 
-	if s.Nov.Name != rule.Test.BookTitle {
-		this.OutJson(1004, "简介页面小说名称比对失败："+s.Nov.Name)
-	}
+	results = append(results, TestResult{
+		Name:    "小说简介获取",
+		UseTime: useTime,
+		Rule:    rule.Rules.IsBookURL,
+		Data:    rule.Test.BookURL,
+		GetData: errMsg,
+		Ret:     err == nil,
+	})
 
-	if s.Nov.Author != rule.Test.BookAuthor {
-		this.OutJson(1005, "简介页面小说作者比对失败："+s.Nov.Author)
-	}
+	if err == nil {
+		// 小说名对比
+		results = append(results, TestResult{
+			Name:    "简介页面小说名称",
+			Rule:    rule.Rules.BookTitleSelector,
+			Attr:    rule.Rules.BookTitleAttr,
+			Data:    rule.Test.BookTitle,
+			GetData: nov.Nov.Name,
+			Ret:     nov.Nov.Name == rule.Test.BookTitle,
+		})
 
-	if s.Nov.CateName != rule.Test.BookCate {
-		this.OutJson(1006, "简介页面小说分类比对失败："+s.Nov.CateName)
-	}
+		// 作者对比
+		results = append(results, TestResult{
+			Name:    "简介页面小说作者",
+			Rule:    rule.Rules.BookAuthorSelector,
+			Attr:    rule.Rules.BookAuthorAttr,
+			Data:    rule.Test.BookAuthor,
+			GetData: nov.Nov.Author,
+			Ret:     nov.Nov.Author == rule.Test.BookAuthor,
+		})
 
-	if !strings.Contains(s.Nov.Desc, rule.Test.BookDesc) {
-		this.OutJson(1007, "简介页面小说简介比对失败："+s.Nov.Desc)
-	}
+		// 分类对比
+		results = append(results, TestResult{
+			Name:    "简介页面小说分类",
+			Rule:    rule.Rules.BookCateSelector,
+			Attr:    rule.Rules.BookCateAttr,
+			Data:    rule.Test.BookCate,
+			GetData: nov.Nov.CateName,
+			Ret:     nov.Nov.CateName == rule.Test.BookCate,
+		})
 
-	if s.Nov.Cover != rule.Test.BookCover {
-		this.OutJson(1008, "简介页面小说缩略图比对失败："+s.Nov.Cover)
-	}
+		// 简介对比
+		results = append(results, TestResult{
+			Name:    "简介页面小说简介",
+			Rule:    rule.Rules.BookDescSelector,
+			Attr:    rule.Rules.BookDescAttr,
+			Data:    rule.Test.BookDesc,
+			GetData: nov.Nov.Desc,
+			Ret:     strings.Contains(nov.Nov.Desc, rule.Test.BookDesc),
+		})
 
-	if s.ChapterUrl != rule.Test.BookChapterURL {
-		this.OutJson(1009, "简介页面小说章节URL比对失败："+s.ChapterUrl)
+		// 缩略图对比
+		results = append(results, TestResult{
+			Name:    "简介页面小说缩略图",
+			Rule:    rule.Rules.BookCoverSelector,
+			Attr:    rule.Rules.BookCoverAttr,
+			Data:    rule.Test.BookCover,
+			GetData: nov.Nov.Cover,
+			Ret:     nov.Nov.Cover == rule.Test.BookCover,
+		})
+
+		// 章节目录URL对比
+		results = append(results, TestResult{
+			Name:    "简介页面章节目录URL",
+			Rule:    rule.Rules.BookChapterURLSelector,
+			Attr:    rule.Rules.BookChapterURLAttr,
+			Data:    rule.Test.BookChapterURL,
+			GetData: nov.ChapterUrl,
+			Ret:     nov.ChapterUrl == rule.Test.BookChapterURL,
+		})
 	}
 
 	// 获取测试章节列表
-	links, err := c.GetChapters(rule, rule.Test.ChapterURL)
+	catalogs, err := c.GetChapters(rule, rule.Test.ChapterURL)
+	errMsg = ""
+	useTime = time.Duration(0)
 	if err != nil {
-		this.OutJson(1010, "章节列表获取失败："+err.Error())
-	}
-	if len(links) == 0 {
-		this.OutJson(1011, "章节列表获取为空")
-	}
-
-	if links[0].Chap.Link != rule.Test.ChapterCatalogURL {
-		this.OutJson(1012, "章节列表第一章节URL错误："+links[0].Chap.Link)
+		errMsg = err.Error()
+	} else if len(catalogs) == 0 {
+		errMsg = "章节列表获取为空"
+	} else {
+		useTime = catalogs[0].UseTime
 	}
 
-	if links[0].Chap.Title != rule.Test.ChapterCatalogTitle {
-		this.OutJson(1013, "章节列表第一章节标题错误"+links[0].Chap.Title)
+	results = append(results, TestResult{
+		Name:    "章节目录页面获取",
+		UseTime: useTime,
+		Data:    rule.Test.ChapterURL,
+		GetData: errMsg,
+		Ret:     err == nil,
+	})
+
+	if err == nil && len(catalogs) > 0 {
+		// 章节目录第一章节URL对比
+		results = append(results, TestResult{
+			Name:    "章节目录第一章节URL",
+			Rule:    rule.Rules.ChapterCatalogSelector,
+			Data:    rule.Test.ChapterCatalogURL,
+			GetData: catalogs[0].Chap.Link,
+			Ret:     catalogs[0].Chap.Link == rule.Test.ChapterCatalogURL,
+		})
+
+		// 章节目录第一章节URL对比
+		results = append(results, TestResult{
+			Name:    "章节目录第一章节URL",
+			Rule:    rule.Rules.ChapterCatalogSelector,
+			Data:    rule.Test.ChapterCatalogTitle,
+			GetData: catalogs[0].Chap.Link,
+			Ret:     catalogs[0].Chap.Title == rule.Test.ChapterCatalogTitle,
+		})
 	}
 
 	// 测试章节内容
 	info, err := c.GetChapter(rule, rule.Test.InfoURL)
+	errMsg = ""
+	useTime = time.Duration(0)
 	if err != nil {
-		this.OutJson(1014, "章节内容页获取失败："+err.Error())
+		errMsg = err.Error()
+	} else {
+		useTime = info.UseTime
 	}
 
-	if info.Chap.Title != rule.Test.InfoTitle {
-		this.OutJson(1015, "章节内容页标题比对失败："+info.Chap.Title)
-	}
+	results = append(results, TestResult{
+		Name:    "章节内容页面获取",
+		UseTime: useTime,
+		Data:    rule.Test.InfoURL,
+		GetData: errMsg,
+		Ret:     err == nil,
+	})
 
-	if !strings.Contains(info.Chap.Desc, rule.Test.InfoDesc) {
-		this.OutJson(1016, "章节内容页章节内容比对失败："+info.Chap.Desc)
-	}
+	if err == nil {
+		// 章节内容页面标题对比
+		results = append(results, TestResult{
+			Name:    "章节内容页面标题",
+			Rule:    rule.Rules.InfoTitleSelector,
+			Data:    rule.Test.InfoTitle,
+			GetData: info.Chap.Title,
+			Ret:     info.Chap.Title == rule.Test.InfoTitle,
+		})
 
-	if info.PreUrl != rule.Test.InfoPrePageURL {
-		this.OutJson(1017, "章节内容页上一页URL对比失败："+info.PreUrl)
-	}
+		// 章节内容页面内容对比
+		results = append(results, TestResult{
+			Name:    "章节内容页面内容",
+			Rule:    rule.Rules.InfoDescSelector,
+			Data:    rule.Test.InfoDesc,
+			GetData: info.Chap.Desc,
+			Ret:     strings.Contains(info.Chap.Desc, rule.Test.InfoDesc),
+		})
 
-	if info.NextUrl != rule.Test.InfoNextPageURL {
-		this.OutJson(1018, "章节内容页下一页URL对比失败："+info.NextUrl)
+		// 章节内容页面上一章URL对比
+		results = append(results, TestResult{
+			Name:    "章节内容页面上一章URL",
+			Rule:    rule.Rules.InfoPrePageSelector,
+			Data:    rule.Test.InfoPrePageURL,
+			GetData: info.PreUrl,
+			Ret:     info.PreUrl == rule.Test.InfoPrePageURL,
+		})
+
+		// 章节内容页面下一章URL对比
+		results = append(results, TestResult{
+			Name:    "章节内容页面下一章URL",
+			Rule:    rule.Rules.InfoNextPageSelector,
+			Data:    rule.Test.InfoNextPageURL,
+			GetData: info.NextUrl,
+			Ret:     info.NextUrl == rule.Test.InfoNextPageURL,
+		})
 	}
 
 	// 搜索小说
 	find, err := c.FindNovel(rule, rule.Test.FindBookKw)
+	errMsg = ""
+	useTime = time.Duration(0)
 	if err != nil {
-		this.OutJson(1019, "搜索小说失败："+err.Error())
+		errMsg = err.Error()
+	} else {
+		useTime = find.UseTime
 	}
 
-	if find.Url != rule.Test.FindBookURL {
-		this.OutJson(1020, "搜索小说URL对比失败："+find.Url)
+	results = append(results, TestResult{
+		Name:    "搜索小说页面获取",
+		UseTime: useTime,
+		Rule:    rule.Rules.FindURL,
+		Data:    rule.Test.FindBookKw,
+		GetData: errMsg,
+		Ret:     err == nil,
+	})
+
+	if err == nil {
+		// 搜索小说页面小说URL对比
+		results = append(results, TestResult{
+			Name:    "章节内容页面下一章URL",
+			Rule:    rule.Rules.FindURL,
+			Data:    rule.Test.FindBookURL,
+			GetData: find.Url,
+			Ret:     find.Url == rule.Test.FindBookURL,
+		})
 	}
 
-	this.OutJson(0, "测试成功")
+	this.Data["Results"] = results
+	this.View("snatch_rule/test.tpl")
 }
 
 // 导入规则文件

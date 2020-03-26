@@ -85,6 +85,7 @@
                         <input placeholder="支持正则表达式" type="text" name="rule.IsCrawlerURL" autocomplete="off" class="layui-input" value="{{.Rule.Rules.IsCrawlerURL}}">
                     </div>
                 </div>
+                <hr />
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">
@@ -164,11 +165,21 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        简介CSS选择器
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="rule.BookDescSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookDescSelector}}">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            简介CSS选择器
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookDescSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookDescSelector}}">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            简介选择属性
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookDescAttr" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookDescAttr}}">
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -206,19 +217,39 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        章节链接CSS选择器
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="rule.BookChapterURLSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookChapterURLSelector}}">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            章节目录页链接CSS选择器
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookChapterURLSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookChapterURLSelector}}">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            章节目录页链接选择属性
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookChapterURLAttr" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookChapterURLAttr}}">
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">
-                        最新章节标题CSS选择器
-                    </label>
-                    <div class="layui-input-block">
-                        <input type="text" name="rule.BookLastChapterTitleSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookLastChapterTitleSelector}}">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            最新章节标题CSS选择器
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookLastChapterTitleSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookLastChapterTitleSelector}}">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">
+                            最新章节选择属性
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="rule.BookLastChapterTitleAttr" autocomplete="off" class="layui-input" value="{{.Rule.Rules.BookLastChapterTitleAttr}}">
+                        </div>
                     </div>
                 </div>
                 <hr />
@@ -228,6 +259,14 @@
                     </label>
                     <div class="layui-input-block">
                         <input lay-verify="required" type="text" name="rule.ChapterCatalogSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.ChapterCatalogSelector}}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        下一章节目录页CSS选择器
+                    </label>
+                    <div class="layui-input-block">
+                        <input type="text" name="rule.ChapterNextPageSelector" autocomplete="off" class="layui-input" value="{{.Rule.Rules.ChapterNextPageSelector}}" placeholder="不建议采集章节列表有分页的站点，效率太低">
                     </div>
                 </div>
                 <div class="layui-form-item">
