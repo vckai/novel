@@ -122,7 +122,7 @@ $(document).ready(function() {
                     <img src="{{$.mOut.ViewUrl}}img/nocover.jpg" {{if ne .Cover ""}}data-echo="{{.Cover}}"{{end}} alt="{{.Name}}" style="height:167px;width: 119px;">
                 </a>
                 <h3 class="f-book-name over-txt">
-                	<a href="" target="_blank">{{.Name}}</a>
+                	<a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank">{{.Name}}</a>
                 </h3>
                 <span class="source over-txt">{{.Author}}</span>
             </li>
