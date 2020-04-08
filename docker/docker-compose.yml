@@ -1,0 +1,44 @@
+version: '3'
+
+
+services:
+### MySQL ################################################
+    mysql:
+        build:
+            context: ./mysql
+            args:
+                - MYSQL_VERSION=${MYSQL_VERSION}
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - TZ=${WORKSPACE_TIMEZONE}
+        volumes:
+            - ${DATA_PATH_HOST}/mysql:/var/lib/mysql
+        ports:
+            - "${MYSQL_PORT}:3306"
+        networks:
+            - backend
+    novel:
+        build:
+            context: ./novel
+        volumes:
+            - ${APP_PATH}:/usr/app
+        ports: 
+            - "80:8089"
+        command: ./novel
+        tty: true
+        networks:
+            - frontend
+            - backend
+
+networks:
+    frontend:
+        driver: ${NETWORKS_DRIVER}
+    backend:
+        driver: ${NETWORKS_DRIVER}
+
+volumes:
+    mysql:
+        driver: ${VOLUMES_DRIVER}
