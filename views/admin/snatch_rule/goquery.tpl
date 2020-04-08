@@ -19,6 +19,14 @@
 			</div>
 			<div class="layui-form-item">
 				<label for="source" class="layui-form-label">
+					CSS选择器属性
+				</label>
+				<div class="layui-input-block">
+					<input type="text" id="attr" name="attr" value="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="source" class="layui-form-label">
 					<span class="x-red">*</span>选择编码
 				</label>
             

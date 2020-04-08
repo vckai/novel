@@ -42,10 +42,11 @@ layui.use(['element', 'form'], function() {
 
   	// 监听导航点击
   	element.on('nav(side)', function(elem) {
-    	var title = elem.find('cite').text();
     	var url   = elem.parent().find('a').attr('_href');
 
-        load_page(url);
+        if (url) {
+            load_page(url);
+        }
 	});
 
 	// 全选

@@ -123,10 +123,9 @@
             }
 		}
 
-		// 测试
+		// 测试规则
 		function test(obj, id) {
-            //发异步删除数据
-            ajax_post({{urlfor "admin.SnatchRuleController.Test"}}, {id: id}, function(){});
+            x_admin_show('测试采集规则', '{{urlfor "admin.SnatchRuleController.Test"}}?id=' + id, '80%', '80%');
 		}
 	</script>
 </body>
