@@ -27,7 +27,7 @@ services:
             - ${APP_PATH}:/usr/app
         ports: 
             - "80:8089"
-        command: ./novel
+        command: supervisord -c supervisord.conf
         tty: true
         networks:
             - frontend
