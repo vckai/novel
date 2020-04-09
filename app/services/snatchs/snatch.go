@@ -169,7 +169,7 @@ func (this *Snatch) FindNovel(provider *models.SnatchRule, kw string) (*SnatchIn
 	}
 
 	// 请求搜索页面
-	doc, resp, err := this.newHtml(u.String(), charset)
+	doc, resp, err := this.newHtml(u.String(), charset, false)
 	if err != nil {
 		return nil, err
 	}
@@ -224,7 +224,7 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 	}
 
 	// 请求采集
-	doc, _, err := this.newHtml(rawurl, provider.Charset)
+	doc, _, err := this.newHtml(rawurl, provider.Charset, true)
 	if err != nil {
 		return nil, err
 	}
@@ -359,7 +359,7 @@ func (this *Snatch) GetChapter(provider *models.SnatchRule, rawurl string) (*Sna
 	}
 
 	// 请求小说详情页面
-	doc, _, err := this.newHtml(rawurl, provider.Charset)
+	doc, _, err := this.newHtml(rawurl, provider.Charset, true)
 	if err != nil {
 		return nil, err
 	}
@@ -432,7 +432,7 @@ func (this *Snatch) GetChapters(provider *models.SnatchRule, rawurl string) ([]*
 	links := make([]*SnatchInfo, 0)
 
 	// 请求章节页面
-	doc, _, err := this.newHtml(rawurl, provider.Charset)
+	doc, _, err := this.newHtml(rawurl, provider.Charset, true)
 	if err != nil {
 		return links, err
 	}
@@ -520,7 +520,7 @@ func (this *Snatch) Proxy(proxyFunc func() string) {
 
 // 网页请求，失败重试
 // 返回goquery
-func (this *Snatch) newHtml(rawurl, charset string) (*goquery.Document, *http.Response, error) {
+func (this *Snatch) newHtml(rawurl, charset string, isRedirect bool) (*goquery.Document, *http.Response, error) {
 	var res []byte
 	var resp *http.Response
 	var body io.Reader
@@ -531,6 +531,10 @@ func (this *Snatch) newHtml(rawurl, charset string) (*goquery.Document, *http.Re
 		Dial:      10 * time.Second,
 		KeepAlive: 60 * time.Second,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			// 存在重定向是否直接跳转
+			if isRedirect {
+				return nil
+			}
 			return http.ErrUseLastResponse
 		},
 	}
