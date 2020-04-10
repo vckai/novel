@@ -48,12 +48,13 @@ var (
 	ErrNotResp      = errors.New("没有返回")
 	ErrNotRule      = errors.New("没有采集规则")
 	ErrNotNov       = errors.New("获取小说失败")
-	ErrNotUrl       = errors.New("没有传入URL地址")
+	ErrNotURL       = errors.New("没有传入URL地址")
 	ErrNotNovName   = errors.New("获取小说书名失败")
-	ErrNotNovLink   = errors.New("获取小说链接失败")
+	ErrNotNovURL    = errors.New("获取小说URL失败")
 	ErrNotNovAuthor = errors.New("获取小说作者失败")
 	ErrNotChapTitle = errors.New("获取小说章节标题失败")
-	ErrNotFindUrl   = errors.New("没有搜索页URL地址")
+	ErrNotFindURL   = errors.New("没有配置搜索页URL地址")
+	ErrInvalidURL   = errors.New("无效的URL地址")
 )
 
 // 采集内容信息
@@ -156,7 +157,7 @@ func (this *Snatch) FindNovel(provider *models.SnatchRule, kw string) (*SnatchIn
 	}
 
 	if len(rule.FindURL) == 0 {
-		return nil, ErrNotFindUrl
+		return nil, ErrNotFindURL
 	}
 
 	kw = strings.TrimSpace(kw)
@@ -185,8 +186,17 @@ func (this *Snatch) FindNovel(provider *models.SnatchRule, kw string) (*SnatchIn
 		novURL, _ = doc.Find(rule.FindBookURLSelector).Attr("href")
 	}
 
-	if len(novURL) == 0 || !this.IsBookURL(provider, novURL) {
-		return nil, ErrNotNovLink
+	if len(novURL) == 0 {
+		return nil, ErrNotNovURL
+	}
+
+	novURL, err = this.genrateURL(u, novURL)
+	if err != nil {
+		return nil, err
+	}
+
+	if !this.IsBookURL(provider, novURL) {
+		return nil, ErrInvalidURL
 	}
 
 	// 获取小说简介
@@ -318,7 +328,7 @@ func (this *Snatch) GetNovel(provider *models.SnatchRule, rawurl string) (*Snatc
 
 		chapterLink = doc.Find(rule.BookChapterURLSelector).AttrOr(rule.BookChapterURLAttr, "")
 		if len(chapterLink) == 0 {
-			return nil, ErrNotNovLink
+			return nil, ErrNotNovURL
 		}
 		// 生成完整链接地址
 		chapterLink, _ = this.genrateURL(u, chapterLink)
