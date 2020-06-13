@@ -490,6 +490,8 @@ func (this *SnatchTaskManager) dayRun() {
 
 		go this.runCrawler()
 		go this.runRank()
+		
+		ticker = updateTicker() //复原定时任务
 	}
 }
 
