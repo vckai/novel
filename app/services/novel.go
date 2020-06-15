@@ -94,13 +94,13 @@ func (this *Novel) Get(id uint32) *models.Novel {
 	nov := models.NewNovel()
 
 	if id < 0 {
-		return nov
+		return nil
 	}
 
 	nov.Id = id
 	err := nov.Read()
 	if err != nil {
-		return nov
+		return nil
 	}
 
 	return nov
