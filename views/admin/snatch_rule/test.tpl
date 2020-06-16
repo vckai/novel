@@ -17,7 +17,7 @@
                     <td>{{.Name}}</td>
                     <td>{{.Rule}}</td>
                     <td>{{.Data}}</td>
-                    <td>{{str2html .GetData}}</td>
+                    <td>{{.GetData}}</td>
                     <td>{{.UseTime}}</td>
                     <td><b style="{{if eq .Ret false}}color: red{{end}}">{{.Ret}}</b></td>
                 </tr>
