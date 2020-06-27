@@ -167,6 +167,8 @@ func (this *SnatchRuleController) Goquery() {
 				this.OutJson(1004, "获取选取内容失败："+err.Error())
 			}
 		}
+		snatch := snatchs.NewSnatch(services.ProxyService.Get)
+		html = snatch.Filter("", html)
 
 		this.OutJson(0, "获取成功", html)
 		return

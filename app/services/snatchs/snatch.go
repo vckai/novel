@@ -55,6 +55,11 @@ var (
 	ErrNotChapTitle = errors.New("获取小说章节标题失败")
 	ErrNotFindURL   = errors.New("没有配置搜索页URL地址")
 	ErrInvalidURL   = errors.New("无效的URL地址")
+
+	defaultFilterRules = []string{
+		"\\<script[\\S\\s]+?\\</script\\>",
+		"\\<style[\\S\\s]+?\\</style\\>",
+	}
 )
 
 // 采集内容信息
@@ -589,6 +594,11 @@ func (this *Snatch) newHtml(rawurl, charset string, isRedirect bool) (*goquery.D
 }
 
 // 采集内容过滤
+func (this *Snatch) Filter(filter, kw string) string {
+	return this.filter(filter, kw)
+}
+
+// 采集内容过滤
 func (this *Snatch) filter(filter, kw string) string {
 	if len(kw) == 0 {
 		return kw
@@ -596,6 +606,7 @@ func (this *Snatch) filter(filter, kw string) string {
 
 	// 正则过滤关键词
 	keyexs := strings.Split(filter, "\n")
+	keyexs = append(keyexs, defaultFilterRules...)
 	for _, v := range keyexs {
 		if len(v) == 0 {
 			continue
@@ -606,6 +617,7 @@ func (this *Snatch) filter(filter, kw string) string {
 			v = aR[0]
 			replaced = aR[1]
 		}
+
 		re, _ := regexp.Compile("(?U)" + v)
 		kw = re.ReplaceAllString(kw, replaced)
 	}
