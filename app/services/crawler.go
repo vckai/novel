@@ -84,9 +84,6 @@ func (this *Crawler) Init(provideName string) (*Crawler, error) {
 	var err error
 
 	this.provider = SnatchRuleService.GetByCode(provideName)
-	if err != nil {
-		return this, err
-	}
 
 	// 解析URL
 	this.initURL, err = url.Parse(this.provider.Url)
