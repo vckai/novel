@@ -86,6 +86,9 @@ func (this *SnatchTask) Run() {
 		log.Debug("[小说更新任务] ID:", this.novId, " 任务无法运行，状态:", this.runStatus)
 		return
 	}
+	
+	// 修改运行状态
+	this.upRunStatus(TASKRUNING)
 
 	// 获取小说采集链接列表
 	links := NovelService.GetLinks(this.novId)
@@ -96,9 +99,6 @@ func (this *SnatchTask) Run() {
 
 	// 修复空章节
 	this.fixEmptyChaps()
-
-	// 修改运行状态
-	this.upRunStatus(TASKRUNING)
 
 	var status uint8
 
