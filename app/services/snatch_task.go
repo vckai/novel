@@ -167,9 +167,8 @@ func (this *SnatchTask) fixEmptyChaps() {
 			log.Warn("[小说修复任务] ID:", nov.Id, " 小说:", nov.Name, " provider:", v.Source, " 章节:", v.ChapterNo, " 获取失败:", err.Error())
 			v.Status = 1
 		} else {
-			v = info.Chap
 			// 无内容章节
-			if v.Desc == "" || strings.Contains(v.Desc, "正在手打中，请稍等片刻") {
+			if info.Chap.Desc == "" || strings.Contains(info.Chap.Desc, "正在手打中，请稍等片刻") {
 				errNum++
 				v.Desc = ""
 				v.Status = 1
