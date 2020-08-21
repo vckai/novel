@@ -538,9 +538,8 @@ func (this *SnatchTaskManager) gc() {
 				if task.IsGc() {
 					log.Debug("GC删除任务:", novId)
 					this.DelTask(novId)
+					i++
 				}
-
-				i++
 			}
 		}
 	}
