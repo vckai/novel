@@ -34,3 +34,6 @@ conf/data.conf
 /novel
 /novel-linux64
 novel.log
+
+
+.idea
