@@ -56,7 +56,7 @@
                     <tr>
                         <td><input type="checkbox" lay-skin="primary" value="{{.Id}}" name="" class="all-x-select"></td>
                         <td>{{.Id}}</td>
-                        <td><a href="{{$.aOut.WebURL}}{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank">{{.Name}}</a></td>
+                        <td><a href="{{$.aOut.WebURL}}{{urlfor "home.BookController.Index" ":id" .Id}}" target="_blank">{{.Name}}</a></td>
                         <td>{{.Author}}</td>
                         <td>{{.CateName}}</td>
                         <td>{{map_get .StatusList .Status}}</td>

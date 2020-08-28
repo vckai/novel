@@ -50,7 +50,7 @@ html {background-color: #f2f2f2}
                     <tr>
                         <td><input type="checkbox" lay-skin="primary" value="{{.Id}}" name="" class="all-x-select"></td>
                         <td>{{.ChapterNo}}</td>
-                        <td><a href="{{$.aOut.WebURL}}{{urlfor "home.BookController.Detail" "id" .Id "novid" .NovId}}" target="_blank">{{.Title}}</a></td>
+                        <td><a href="{{$.aOut.WebURL}}{{urlfor "home.BookController.Detail" ":id" .Id ":novid" .NovId}}" target="_blank">{{.Title}}</a></td>
                         <td>{{.Views}}</td>
                         <td>{{str2html .StatusName}}</td>
                         <td>{{.TryViews}}</td>

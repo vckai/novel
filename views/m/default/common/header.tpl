@@ -13,7 +13,7 @@
 		<i class="search-btn"></i>
 	</div>
 	<div class="search-wrap">
-		<form class="search-query" method="GET" action="{{urlfor "m.BookController.Search"}}" id="searchform" accept-charset="utf-8">
+		<form class="search-query" method="GET" action="{{urlfor "m.HomeController.Search"}}" id="searchform" accept-charset="utf-8">
 			<input type="text" class="search-query-input" id="keyword" name="keyword">
 			<i class="search-clear" id="resetbtn"></i>
 		</form>

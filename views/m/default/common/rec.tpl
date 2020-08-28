@@ -7,7 +7,7 @@
                     <tr id="recommend">
 						{{range .NovRecs}}
 						<td>
-						<a href="{{urlfor "m.BookController.Index" "id" .Id}}">
+						<a href="{{urlfor "m.BookController.Index" ":id" .Id}}">
 							<div class="book-detail">
 								<div class="book-cover"><img src="{{$.mOut.ViewUrl}}img/nocover.jpg" data-echo="{{.Cover}}" alt="{{.Name}}"></div>
 								<h3 class="book-title">{{.Name}}</h3>

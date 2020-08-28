@@ -80,10 +80,10 @@ $(document).ready(function() {
          <ul class="re-book" id="re_book_{{$key}}" {{if ne $key 0}}style="display: none;"{{end}}>
 			 {{range $k, $v := $val}}
               <li>
-                <a href="{{urlfor "home.BookController.Index" "id" $v.Id}}" target="_blank" class="re-pic-box">
+                <a href="{{urlfor "home.BookController.Index" ":id" $v.Id}}" target="_blank" class="re-pic-box">
                     <img src="{{$.mOut.ViewUrl}}img/nocover.jpg" {{if ne $v.Cover ""}}data-echo="{{$v.Cover}}"{{end}} alt="{{$v.Name}}" style="width: 179px;height: 249px;">
                 </a>
-                <h2 class="re-book-name over-txt"><a href="{{urlfor "home.BookController.Index" "id" $v.Id}}" target="_blank">{{$v.Name}}</a></h2>
+                <h2 class="re-book-name over-txt"><a href="{{urlfor "home.BookController.Index" ":id" $v.Id}}" target="_blank">{{$v.Name}}</a></h2>
                 <span class="source over-txt">{{$v.Author}}</span>
                 <a href="{{urlfor "home.HomeController.Cate" ":id" $v.CateId}}" class="r-type">{{$v.CateName}}</a>
               </li>
@@ -118,11 +118,11 @@ $(document).ready(function() {
         <ul class="free-book">
 		{{range .NovNews}}
         	 <li>
-                <a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank" class="f-pic-box">
+                <a href="{{urlfor "home.BookController.Index" ":id" .Id}}" target="_blank" class="f-pic-box">
                     <img src="{{$.mOut.ViewUrl}}img/nocover.jpg" {{if ne .Cover ""}}data-echo="{{.Cover}}"{{end}} alt="{{.Name}}" style="height:167px;width: 119px;">
                 </a>
                 <h3 class="f-book-name over-txt">
-                	<a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank">{{.Name}}</a>
+                	<a href="{{urlfor "home.BookController.Index" ":id" .Id}}" target="_blank">{{.Name}}</a>
                 </h3>
                 <span class="source over-txt">{{.Author}}</span>
             </li>
@@ -164,7 +164,7 @@ $(document).ready(function() {
         <ul class="boy-list">
 		{{range .NovSignNewBooks}}
         	 <li>
-                <a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank">
+                <a href="{{urlfor "home.BookController.Index" ":id" .Id}}" target="_blank">
                     <div class="rotate">
                         <img src="{{$.mOut.ViewUrl}}img/nocover.jpg" {{if ne .Cover ""}}data-echo="{{.Cover}}"{{end}} style="top: 20px; left: 47px; z-index: 2;" class="cur">
                     </div>
@@ -180,7 +180,7 @@ $(document).ready(function() {
         <ul class="girl-list">
 		{{range .NovCollects}}
         	 <li>
-                <a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank">
+                <a href="{{urlfor "home.BookController.Index" ":id" .Id}}" target="_blank">
                     <div class="rotate">
                         <img src="{{$.mOut.ViewUrl}}img/nocover.jpg" {{if ne .Cover ""}}data-echo="{{.Cover}}"{{end}} style="top: 20px; left: 47px; z-index: 2;" class="cur">
                     </div>
@@ -198,11 +198,11 @@ $(document).ready(function() {
         <h1 class="r-tit"><i class="r-ico hot-ico"></i>大家都在看</h1>
 		{{if not_nil .NovRank}}
         <div class="d-book">
-            <a href="{{urlfor "home.BookController.Index" "id" .NovRank.Id}}" target="_blank" class="re-pic-box">
+            <a href="{{urlfor "home.BookController.Index" ":id" .NovRank.Id}}" target="_blank" class="re-pic-box">
                 <img src="{{$.mOut.ViewUrl}}img/nocover.jpg" {{if ne .NovRank.Cover ""}}data-echo="{{.NovRank.Cover}}"{{end}} alt="{{.NovRank.Name}}">
             </a>
             <h2 class="re-book-name over-txt">
-            	<a href="{{urlfor "home.BookController.Index" "id" .NovRank.Id}}" target="_blank">{{.NovRank.Name}}</a>
+            	<a href="{{urlfor "home.BookController.Index" ":id" .NovRank.Id}}" target="_blank">{{.NovRank.Name}}</a>
             </h2>
             <span class="source over-txt">{{.NovRank.Author}}</span>
             <div class="brief-intro">{{str2html .NovRank.Desc}}</div>
@@ -214,11 +214,11 @@ $(document).ready(function() {
         <ul class="hot-book">
 		{{range .NovRanks}}
           	<li>
-                <a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank" class="f-pic-box">
+                <a href="{{urlfor "home.BookController.Index" ":id" .Id}}" target="_blank" class="f-pic-box">
                     <img src="{{$.mOut.ViewUrl}}img/nocover.jpg" {{if ne .Cover ""}}data-echo="{{.Cover}}"{{end}} alt="{{.Name}}" style="width: 119px;height: 167px;">
                 </a>
                 <h3 class="f-book-name over-txt">
-					<a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank">{{.Name}}</a>
+					<a href="{{urlfor "home.BookController.Index" ":id" .Id}}" target="_blank">{{.Name}}</a>
 				</h3>
                 <span class="source over-txt">{{.Author}}</span>
             </li>
@@ -298,7 +298,7 @@ $(document).ready(function() {
     }
     
     function  getRank(rank) {
-        var url = {{urlfor "home.BookController.AjaxRank"}}+'?rank='+rank;
+        var url = {{urlfor "home.AjaxController.AjaxRank"}}+'?rank='+rank;
         $.ajax({
             type: "GET",
             url: url,
@@ -336,11 +336,11 @@ $(document).ready(function() {
 			  books = books + 
 			  '  ><div class="open"> '+
 			  '      <em class="rank rank1">'+(a+1)+'</em> '+
-			  '      <a href="{{urlfor "home.BookController.Index"}}?id='+d[a].id+'" target="_blank" class="rank-pic"> '+
+			  '      <a href="{{urlfor "home.BookController.Index"}}/'+d[a].id+ '" target="_blank" class="rank-pic"> '+
 			   '         <img src="'+cover+'" alt="'+d[a].name+'" style="width: 74px;height: 102px;" /> '+
 			   '     </a> '+
 			   '     <div class="b-info"> '+
-			   '         <h2 class="re-book-name"><a href="{{urlfor "home.BookController.Index"}}?id='+d[a].id+'" target="_blank" >'+d[a].name+'</a></h2> '+
+			   '         <h2 class="re-book-name"><a href="{{urlfor "home.BookController.Index"}}/'+d[a].id+'" target="_blank" >'+d[a].name+'</a></h2> '+
 			   '         <span class="source over-txt">'+d[a].author+'</span> '+
 			   '     </div> '+
 			   ' </div> '+
@@ -353,7 +353,7 @@ $(document).ready(function() {
 			  }
  
 			  books = books +
-			  '<h3 class="book-name over-txt"><a href="{{urlfor "home.BookController.Index"}}?id='+d[a].id+'" target="_blank" >'+d[a].name+'</a></h3> '+
+			  '<h3 class="book-name over-txt"><a href="{{urlfor "home.BookController.Index"}}/'+d[a].id+'" target="_blank" >'+d[a].name+'</a></h3> '+
 			  ' </div>'+
 			  '</li>';
 		}
@@ -368,7 +368,7 @@ $(document).ready(function() {
     }
     
     function  getCateBook(cateId) {
-        var url = '{{urlfor "home.BookController.AjaxRank"}}?rank=cate&cate_id='+cateId;
+        var url = '{{urlfor "home.AjaxController.AjaxRank"}}?rank=cate&cate_id='+cateId;
         $.ajax({
             type: "GET",
             url: url ,
@@ -396,14 +396,14 @@ $(document).ready(function() {
 
 		  books = books + 
 		  '<li> '+
-		  '      <a href="{{urlfor "home.BookController.Index"}}?id='+d[a].id+'" target="_blank" class="pic-container">'+
+		  '      <a href="{{urlfor "home.BookController.Index"}}/'+d[a].id+'" target="_blank" class="pic-container">'+
 		  '          <img src="' + cover + '" alt="' + d[a].name + '" style="width: 120px;height: 163px;" />'+
 		  '      </a>'+
 		  '      <div class="book-info">'+
-		  '          <h2 class="c-book-name over-txt"><a href="{{urlfor "home.BookController.Index"}}?id='+d[a].id+'" target="_blank" >' + d[a].name + '</a></h2>'+
+		  '          <h2 class="c-book-name over-txt"><a href="{{urlfor "home.BookController.Index"}}/'+d[a].id+'" target="_blank" >' + d[a].name + '</a></h2>'+
 		  '          <span class="source over-txt">' +  d[a].author + '</span>'+
 		  '          <div class="brief-intro brief-intro2">' +d[a].desc + '</div>'+
-		  '          <a href="{{urlfor "home.BookController.Index"}}?id='+d[a].id+'" target="_blank" class="read-now">立即阅读</a>'+
+		  '          <a href="{{urlfor "home.BookController.Index"}}/'+d[a].id+'" target="_blank" class="read-now">立即阅读</a>'+
 		  '      </div>'+
 		  '  </li>';
 		}

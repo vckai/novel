@@ -9,7 +9,7 @@
 	</div>
 
 	<div class="search-wrap2">
-		<form class="search-query2" method="GET" action="{{urlfor "m.BookController.Search"}}" id="searchform" accept-charset="utf-8">
+		<form class="search-query2" method="GET" action="{{urlfor "m.HomeController.Search"}}" id="searchform" accept-charset="utf-8">
 			<input type="search" class="search-query-input" id="keyword" name="keyword">
 
 			<button type="reset" class="search-clear" id="resetbtn" value=""></button>
@@ -22,7 +22,7 @@
 {{if .Novels}}
 	<ul class="vertical-list multiline-intro" id="cate_list">
 		{{range .Novels}}
-		<a href="{{urlfor "m.BookController.Index" "id" .Id}}">
+		<a href="{{urlfor "m.BookController.Index" ":id" .Id}}">
 		<li>
 			<div class="book-cover book-cover-size72"><img src="{{$.mOut.ViewUrl}}img/nocover.jpg" data-echo="{{.Cover}}" alt="{{html2str .Name}}"></div>
 			<div class="book-detail">
@@ -126,7 +126,7 @@ $(document).ready(function() {
 				nocover = "{{.mOut.ViewUrl}}img/nocover.jpg";
 			}
 
-			_html += '<a href="{{urlfor "m.BookController.Index"}}?id=' + item.id + '">';
+			_html += '<a href="{{urlfor "m.BookController.Index"}}/' + item.id + '">';
 			_html += '<li>';
 			_html += '	<div class="book-cover book-cover-size72"><img src="' + nocover + '" alt="' + item.name + '"></div>';
 			_html += '  <div class="book-detail">';
@@ -152,7 +152,7 @@ $(document).ready(function() {
 			type: "post",
 			dataType: "json",
 			data:{p: p, cate_id: cid},
-			url: {{urlfor "m.BookController.AjaxNovels"}},
+			url: {{urlfor "m.AjaxController.AjaxNovels"}},
 			success: function(data) {
 				if (data.ret == 0) {
 					if (!data.data.is_next) {

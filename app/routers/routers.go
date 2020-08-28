@@ -32,7 +32,12 @@ func init() {
 	beego.Router("/cate/?:id", &home.HomeController{}, "GET:Cate")
 	beego.Router("/search", &home.HomeController{}, "GET:Search")
 
-	beego.AutoRouter(&home.BookController{})
+	// web 小说页
+	beego.Router("/book/?:id", &home.BookController{}, "GET:Index")
+	beego.Router("/book/:novid/?:id", &home.BookController{}, "GET:Detail")
+
+	beego.AutoRouter(&home.AjaxController{})
+	beego.AutoRouter(&m.AjaxController{})
 
 	// 禁止浏览器页面缓存
 	var FilterNoCache = func(ctx *context.Context) {
@@ -59,12 +64,11 @@ func mRouters() {
 		}),
 
 		beego.NSRouter("/", &m.HomeController{}, "GET:Index"),
+		beego.NSRouter("/book/?:id", &m.BookController{}, "GET:Index"),
+		beego.NSRouter("/book/:novid/?:id", &m.BookController{}, "GET:Detail"),
 
 		// 首页路由
 		beego.NSAutoRouter(&m.HomeController{}),
-
-		// 小说路由
-		beego.NSAutoRouter(&m.BookController{}),
 
 		// 转发小说路由
 		beego.NSAutoRouter(&m.SnatchController{}),

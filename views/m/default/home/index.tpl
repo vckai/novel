@@ -4,8 +4,8 @@
 	<nav class="nav">
 		<ul>
 			<li class="active"><a href="javascript:void(0)">精选</a></li>
-			<li><a href="{{urlfor "m.BookController.List"}}">分类</a></li>
-			<li><a href="{{urlfor "m.BookController.Rank"}}">排行</a></li>
+			<li><a href="{{urlfor "m.HomeController.List"}}">分类</a></li>
+			<li><a href="{{urlfor "m.HomeController.Rank"}}">排行</a></li>
 			<!--<li><a href="javascript:void(0)">书架</a></li>-->
 		</ul>
 	</nav>
@@ -24,19 +24,19 @@
 
     <nav class="nav-circle">
         <ul id="tag">
-            <li><a href="{{urlfor "m.BookController.List" "cate_id" 1}}">
+            <li><a href="{{urlfor "m.HomeController.List" "cate_id" 1}}">
                 <img src="{{.mOut.ViewUrl}}img/icon-1.png" alt="玄幻">玄幻</a>
             </li>
         
-            <li><a href="{{urlfor "m.BookController.New"}}">
+            <li><a href="{{urlfor "m.HomeController.New"}}">
                 <img src="{{.mOut.ViewUrl}}img/icon-2.png" alt="最新更新">热更</a>
             </li>
         
-            <li><a href="{{urlfor "m.BookController.End"}}">
+            <li><a href="{{urlfor "m.HomeController.End"}}">
                 <img src="{{.mOut.ViewUrl}}img/icon-3.png" alt="完本">完本</a>
             </li>
         
-            <li><a href="{{urlfor "m.BookController.List" "cate_id" 2}}">
+            <li><a href="{{urlfor "m.HomeController.List" "cate_id" 2}}">
                 <img src="{{.mOut.ViewUrl}}img/icon-4.png" alt="修真">修真</a>
             </li>
         
@@ -50,7 +50,7 @@
         <blockquote>
             <div id="broadcast">
 			{{range .NovTodayRecs}}
-                <a href="{{urlfor "m.BookController.Index" "id" .Id}}" id="boradcast_0" type="3">
+                <a href="{{urlfor "m.BookController.Index" ":id" .Id}}" id="boradcast_0" type="3">
                     {{.Name}}
                 </a>
 			{{end}}
@@ -66,7 +66,7 @@
 				<tr>
 				{{range .NovRecs}}
 					<td>
-					<a href="{{urlfor "m.BookController.Index" "id" .Id}}">
+					<a href="{{urlfor "m.BookController.Index" ":id" .Id}}">
 						<div class="book-detail">
 							<div class="book-cover"><img src="{{$.mOut.ViewUrl}}img/nocover.jpg" data-echo="{{.Cover}}" alt="{{.Name}}"></div>
 							<h3 class="book-title">{{.Name}}</h3>
@@ -83,7 +83,7 @@
         <h2 class="column-title">小编热推</h2>
 		{{if not_nil .NovHot}}
         <ul class="vertical-list">
-			<a href="{{urlfor "m.BookController.Index" "id" .NovHot.Id}}">
+			<a href="{{urlfor "m.BookController.Index" ":id" .NovHot.Id}}">
             <li>
                 <div class="book-cover book-cover-size78">
                     <img src="{{$.mOut.ViewUrl}}img/nocover.jpg" data-echo="{{.NovHot.Cover}}" alt="{{.NovHot.Name}}">
@@ -103,7 +103,7 @@
  
 		{{range .NovHots}}
         <ul class="vertical-list3">
-			<a href="{{urlfor "m.BookController.Index" "id" .Id}}">
+			<a href="{{urlfor "m.BookController.Index" ":id" .Id}}">
             <li>
                 <h3 class="book-title">
                         {{.Name}}<em class="book-author">{{.Author}}</em>
@@ -123,7 +123,7 @@
                     <tr>
 					{{range .NovVipRecs}}
                         <td>
-						<a href="{{urlfor "m.BookController.Index" "id" .Id}}">
+						<a href="{{urlfor "m.BookController.Index" ":id" .Id}}">
                             <div class="book-detail">
                                 <div class="book-cover">
                                     <img src="{{$.mOut.ViewUrl}}img/nocover.jpg" data-echo="{{.Cover}}" alt="{{.Name}}">

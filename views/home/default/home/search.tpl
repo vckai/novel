@@ -29,12 +29,12 @@
 						{{range .Novs}}
                             <li>
 								<div class="book-img-box">
-									<a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank" class="f-pic-box">
+									<a href="{{urlfor "home.BookController.Index" ":id" .Id}}" target="_blank" class="f-pic-box">
 										<img src="{{$.mOut.ViewUrl}}img/nocover.jpg" {{if ne .Cover ""}}data-echo="{{.Cover}}"{{end}}>
 									</a>
 								</div>
 								<div class="book-mid-info">
-									<h4><a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank">{{str2html .Name}}</a></h4>
+									<h4><a href="{{urlfor "home.BookController.Index" ":id" .Id}}" target="_blank">{{str2html .Name}}</a></h4>
 									<p class="author">
 										<a class="name" href="javascript:;">{{.Author}}</a>
 										<em>|</em>
@@ -63,7 +63,7 @@
 		  <ul class="book-lst" id="recommUl">
 		  {{range .NovRanks}}
 			<li> 
-				<a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank" class="book-lst-tab">
+				<a href="{{urlfor "home.BookController.Index" ":id" .Id}}" target="_blank" class="book-lst-tab">
 					<img src="{{$.mOut.ViewUrl}}img/nocover.jpg" {{if ne .Cover ""}}data-echo="{{.Cover}}"{{end}} height="100" width="75" alt="{{.Name}}">
 					<div class="book-lst-tit">{{.Name}}</div>
 					<div class="book-lst-txt book-lst-clr2">{{.CateName}}</div>

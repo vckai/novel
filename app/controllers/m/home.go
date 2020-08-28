@@ -15,6 +15,7 @@
 package m
 
 import (
+	"github.com/astaxie/beego"
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
 )
@@ -75,4 +76,92 @@ func (this *HomeController) Feedback() {
 
 	this.Data["Title"] = "建议反馈"
 	this.View("home/feedback.tpl")
+}
+
+// 小说列表
+func (this *HomeController) List() {
+	q := this.GetString("q")
+	cateId, _ := this.GetInt("cate_id")
+
+	search := map[string]interface{}{
+		"q":       q,
+		"cate_id": cateId,
+		"count":   false,
+	}
+	novels, _ := services.NovelService.GetList(PAGESIZE, 0, search)
+
+	this.Data["Search"] = search
+	this.Data["Novels"] = novels
+	this.Data["IsNext"] = len(novels) >= PAGESIZE
+	this.Data["Cates"] = services.CateService.GetAll()
+
+	this.View("book/cate.tpl")
+}
+
+// 搜索
+func (this *HomeController) Search() {
+	q := this.GetString("keyword")
+
+	search := map[string]interface{}{
+		"q":     q,
+		"count": false,
+	}
+	novels, _ := services.NovelService.GetList(PAGESIZE, 0, search)
+
+	log := &models.SearchLog{
+		Kw:     q,
+		Source: 1,
+		Ip:     this.Ctx.Input.IP(),
+	}
+
+	if len(novels) > 0 {
+		log.IsResult = 1
+	}
+	services.SearchService.InsertOrIncrement(q, log)
+
+	this.Data["SnatchNovels"] = nil
+	// 非正式环境从采集点中搜索
+	if beego.AppConfig.String("runmode") != "prod" {
+		this.Data["SnatchNovels"] = services.SnatchService.FindNovels(q)
+	}
+
+	this.Data["Search"] = search
+	this.Data["Novels"] = novels
+	this.Data["IsNext"] = len(novels) >= PAGESIZE
+	this.Data["Title"] = q + "搜索结果"
+
+	this.View("book/search.tpl")
+}
+
+// 排行列表
+func (this *HomeController) Rank() {
+	novels := services.NovelService.GetRanks(PAGESIZE, 0)
+
+	this.Data["Novels"] = novels
+	this.Data["IsNext"] = len(novels) >= PAGESIZE
+	this.Data["Title"] = "排行榜"
+
+	this.View("book/list.tpl")
+}
+
+// 最新更新小说列表
+func (this *HomeController) New() {
+	novels := services.NovelService.GetNewUps(100, 0)
+
+	this.Data["Novels"] = novels
+	this.Data["IsNext"] = false
+	this.Data["Title"] = "最新更新"
+
+	this.View("book/list.tpl")
+}
+
+// 完本小说列表
+func (this *HomeController) End() {
+	novels := services.NovelService.GetEnds(100, 0)
+
+	this.Data["Novels"] = novels
+	this.Data["IsNext"] = len(novels) >= PAGESIZE
+	this.Data["Title"] = "完本小说"
+
+	this.View("book/list.tpl")
 }

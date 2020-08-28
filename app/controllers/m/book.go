@@ -15,9 +15,8 @@
 package m
 
 import (
-	"github.com/astaxie/beego"
+	"strconv"
 
-	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
 )
 
@@ -31,13 +30,13 @@ type BookController struct {
 
 // 首页
 func (this *BookController) Index() {
-	id, _ := this.GetUint32("id")
+	id, _ := strconv.ParseUint(this.Ctx.Input.Param(":id"), 10, 32)
 	if id < 1 {
 		this.Msg("参数错误，无法访问")
 	}
 
 	// 获取小说详情
-	novel := services.NovelService.Get(id)
+	novel := services.NovelService.Get(uint32(id))
 	if novel == nil {
 		this.Msg("该小说不存在或者已被删除")
 	}
@@ -60,69 +59,16 @@ func (this *BookController) Index() {
 	this.View("book/index.tpl")
 }
 
-// 小说列表
-func (this *BookController) List() {
-	q := this.GetString("q")
-	cateId, _ := this.GetInt("cate_id")
-
-	search := map[string]interface{}{
-		"q":       q,
-		"cate_id": cateId,
-		"count":   false,
-	}
-	novels, _ := services.NovelService.GetList(PAGESIZE, 0, search)
-
-	this.Data["Search"] = search
-	this.Data["Novels"] = novels
-	this.Data["IsNext"] = len(novels) >= PAGESIZE
-	this.Data["Cates"] = services.CateService.GetAll()
-
-	this.View("book/cate.tpl")
-}
-
-// 获取章节列表
-func (this *BookController) AjaxChaps() {
-	id, _ := this.GetUint32("id")
-	if id < 1 {
-		this.OutJson(1001, "参数错误，无法访问")
-	}
-
-	p, _ := this.GetInt("p")
-	asc := this.GetString("asc")
-
-	if p < 1 {
-		p = 1
-	}
-
-	offset := (p - 1) * 10
-
-	// 获取章节列表
-	chaps, _ := services.ChapterService.GetNovChaps(id, 10, offset, asc, false)
-
-	var res []map[string]interface{}
-
-	for _, chap := range chaps {
-		tmp := make(map[string]interface{})
-
-		tmp["id"] = chap.Id
-		tmp["no"] = chap.ChapterNo
-		tmp["title"] = chap.Title
-
-		res = append(res, tmp)
-	}
-
-	this.OutJson(0, "", res)
-}
-
 // 详情页
 func (this *BookController) Detail() {
-	id, _ := this.GetUint64("id")
-	novId, _ := this.GetUint32("novid")
+	id, _ := strconv.ParseUint(this.Ctx.Input.Param(":id"), 10, 32)
+	novId, _ := strconv.ParseUint(this.Ctx.Input.Param(":novid"), 10, 32)
+
 	if id < 1 || novId < 1 {
 		this.Msg("参数错误，无法访问")
 	}
 
-	chap := services.ChapterService.Get(id, novId)
+	chap := services.ChapterService.Get(id, uint32(novId))
 	if chap == nil {
 		this.Msg("该章节不存在或者已被删除")
 	}
@@ -143,122 +89,4 @@ func (this *BookController) Detail() {
 	this.Data["Title"] = chap.Title + " - " + nov.Name
 
 	this.View("book/detail.tpl")
-}
-
-// 搜索
-func (this *BookController) Search() {
-	q := this.GetString("keyword")
-
-	search := map[string]interface{}{
-		"q":     q,
-		"count": false,
-	}
-	novels, _ := services.NovelService.GetList(PAGESIZE, 0, search)
-
-	log := &models.SearchLog{
-		Kw:     q,
-		Source: 1,
-		Ip:     this.Ctx.Input.IP(),
-	}
-
-	if len(novels) > 0 {
-		log.IsResult = 1
-	}
-	services.SearchService.InsertOrIncrement(q, log)
-
-	this.Data["SnatchNovels"] = nil
-	// 非正式环境从采集点中搜索
-	if beego.AppConfig.String("runmode") != "prod" {
-		this.Data["SnatchNovels"] = services.SnatchService.FindNovels(q)
-	}
-
-	this.Data["Search"] = search
-	this.Data["Novels"] = novels
-	this.Data["IsNext"] = len(novels) >= PAGESIZE
-	this.Data["Title"] = q + "搜索结果"
-
-	this.View("book/search.tpl")
-}
-
-// 排行列表
-func (this *BookController) Rank() {
-	novels := services.NovelService.GetRanks(PAGESIZE, 0)
-
-	this.Data["Novels"] = novels
-	this.Data["IsNext"] = len(novels) >= PAGESIZE
-	this.Data["Title"] = "排行榜"
-
-	this.View("book/list.tpl")
-}
-
-// 最新更新小说列表
-func (this *BookController) New() {
-	novels := services.NovelService.GetNewUps(100, 0)
-
-	this.Data["Novels"] = novels
-	this.Data["IsNext"] = false
-	this.Data["Title"] = "最新更新"
-
-	this.View("book/list.tpl")
-}
-
-// 完本小说列表
-func (this *BookController) End() {
-	novels := services.NovelService.GetEnds(100, 0)
-
-	this.Data["Novels"] = novels
-	this.Data["IsNext"] = len(novels) >= PAGESIZE
-	this.Data["Title"] = "完本小说"
-
-	this.View("book/list.tpl")
-}
-
-// ajax获取小说列表
-func (this *BookController) AjaxNovels() {
-	p, _ := this.GetInt("p")
-	cateId, _ := this.GetInt("cate_id")
-	q := this.GetString("q")
-
-	if p < 1 {
-		p = 1
-	}
-
-	offset := (p - 1) * PAGESIZE
-
-	var novels []*models.Novel
-	switch this.GetString("act") {
-	case "rank":
-		novels = services.NovelService.GetRanks(PAGESIZE, offset)
-	case "end":
-		novels = services.NovelService.GetEnds(PAGESIZE, offset)
-	default:
-		// 获取小说列表
-		search := map[string]interface{}{
-			"q":       q,
-			"cate_id": cateId,
-			"count":   false,
-		}
-		novels, _ = services.NovelService.GetList(PAGESIZE, offset, search)
-	}
-
-	var list []map[string]interface{}
-
-	for _, nov := range novels {
-		tmp := make(map[string]interface{})
-
-		tmp["id"] = nov.Id
-		tmp["name"] = nov.Name
-		tmp["author"] = nov.Author
-		tmp["cate_name"] = nov.CateName
-		tmp["desc"] = beego.HTML2str(nov.Desc)
-		tmp["cover"] = nov.Cover
-
-		list = append(list, tmp)
-	}
-
-	res := map[string]interface{}{
-		"is_next": len(list) >= PAGESIZE,
-		"list":    list,
-	}
-	this.OutJson(0, "", res)
 }

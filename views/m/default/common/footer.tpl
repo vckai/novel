@@ -1,6 +1,6 @@
 
     <footer>
-        <form method="GET" action="{{urlfor "m.BookController.Search"}}" id="foot_search_form">
+        <form method="GET" action="{{urlfor "m.HomeController.Search"}}" id="foot_search_form">
             <div class="foot-search">
                 <input style="font-size:17px" type="search" name="keyword" value="" class="foot-search-input" id="novelKeyword_footer" autocapitalize="off" autocorrect="off" maxlength="2048" autocomplete="off">
                 <button type="submit" class="foot-search-submit" value="" id="footer_submit_btn"></button>

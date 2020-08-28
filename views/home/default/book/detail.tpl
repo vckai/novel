@@ -154,7 +154,7 @@
                         <ul>
                             {{range .Chaps}}
                             <li id="dir_li_{{.Id}}" name="{{.ChapterNo}}">
-                                <a href="{{urlfor "home.BookController.Detail" "id" .Id "novid" $.Nov.Id}}"
+                                <a href="{{urlfor "home.BookController.Detail" ":id" .Id ":novid" $.Nov.Id}}"
                                     data-chap-id="{{.Id}}" {{if eq $.Chap.Id .Id}}class="tool-dir-current" {{end}}>
                                     <span class="tool-dir-index">{{.ChapterNo}}</span>
                                     <span class="tool-dir-status"><i class="icon"></i></span>{{.Title}}</a>
@@ -177,12 +177,12 @@
                 <a class="toolbtn-prev" style="margin-top: 30px;height: 0px;"></a>
 
                 {{if not_nil .Pre}}
-                <a href="{{urlfor "home.BookController.Detail" "id" .Pre.Id "novid" .Nov.Id}}" class="toolbtn-prev"><i
+                <a href="{{urlfor "home.BookController.Detail" ":id" .Pre.Id ":novid" .Nov.Id}}" class="toolbtn-prev"><i
                         class="fa fa-chevron-up"></i><i class="icon icon-tool-prev"></i><span
                         class="help-text">查看上一页</span></a>
                 {{end}}
                 {{if not_nil .Next}}
-                <a href="{{urlfor "home.BookController.Detail" "id" .Next.Id "novid" .Nov.Id}}" class="toolbtn-next"><i
+                <a href="{{urlfor "home.BookController.Detail" ":id" .Next.Id ":novid" .Nov.Id}}" class="toolbtn-next"><i
                         class="fa fa-chevron-down"></i><i class="icon icon-tool-next"></i><span
                         class="help-text">查看下一页</span></a>
                 {{end}}
@@ -202,7 +202,7 @@
                             </div>
                             <div class="bookshelf-book-info">
                                 <em class="bookshelf-book-title">{{.Nov.Name}}</em>
-                                <a href="{{urlfor "home.BookController.Index" "id" .Nov.Id}}"
+                                <a href="{{urlfor "home.BookController.Index" ":id" .Nov.Id}}"
                                     class="bookshelf-book-cover">
                                     <img src="{{.mOut.ViewUrl}}img/nocover.jpg"
                                         {{if ne .Nov.Cover ""}}data-echo="{{.Nov.Cover}}" {{end}}>
@@ -380,7 +380,7 @@
                     //下一页
                     var url = ""
                     {{if not_nil .Next}}
-                        url = '{{urlfor "home.BookController.Detail" "id" .Next.Id "novid" .Nov.Id}}'
+                        url = '{{urlfor "home.BookController.Detail" ":id" .Next.Id ":novid" .Nov.Id}}'
                     {{end}}
                     if (url == ""){
                         alert("已经到底啦～没有下一页:)")

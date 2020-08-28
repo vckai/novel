@@ -25,7 +25,7 @@
     <div class="column-wrap">
 	{{if not_nil .FirstChap}}
         <div class="detail-read-btn">
-			<a href="{{urlfor "m.BookController.Detail" "id" .FirstChap.Id "novid" .Nov.Id}}">开始阅读</a>
+			<a href="{{urlfor "m.BookController.Detail" ":id" .FirstChap.Id ":novid" .Nov.Id}}">开始阅读</a>
 			<a id="down_all" href="javascript:void(0)">离线全本</a>
 		</div>
 	{{end}}
@@ -36,10 +36,10 @@
 
     <div class="column-wrap">
         <h2 class="index-title"><a href="javascript:void(0)" class="index-sort">倒序</a><strong>目录</strong>共{{.Nov.ChapterNum}}章</h2>
-        <div class="index-new"><a href="{{urlfor "m.BookController.Detail" "id" .Nov.ChapterId "novid" .Nov.Id}}"><span class="index-tag">{{datetime .Nov.ChapterUpdatedAt "01-02 15:04"}}</span>{{.Nov.ChapterTitle}}</a></div>
+        <div class="index-new"><a href="{{urlfor "m.BookController.Detail" ":id" .Nov.ChapterId ":novid" .Nov.Id}}"><span class="index-tag">{{datetime .Nov.ChapterUpdatedAt "01-02 15:04"}}</span>{{.Nov.ChapterTitle}}</a></div>
         <ol class="index-list" id="index-list">
 		{{range .Chaps}}
-			<a href="{{urlfor "m.BookController.Detail" "id" .Id "novid" $.Nov.Id}}">	
+			<a href="{{urlfor "m.BookController.Detail" ":id" .Id ":novid" $.Nov.Id}}">
             <li>
             	<b>[{{.ChapterNo}}]</b> {{.Title}} 
             </li>
@@ -144,7 +144,7 @@
 				//if (item.ckey == latest) {
 					//_html += '<li class="index-bookmark">'+ name + '</li>';
 				//} else {
-					_html += '<a href="{{urlfor "m.BookController.Detail"}}?id=' + item.id + '&novid={{.Nov.Id}}"><li>'+ name + '</li></a>';
+					_html += '<a href="{{urlfor "m.BookController.Detail" "novid" .Nov.Id}}/' + item.id + '"><li>'+ name + '</li></a>';
 				//}
 			}
 
@@ -160,7 +160,7 @@
 				type: "post",
 				dataType: "json",
 				data:{p: pageNo, asc: asc},
-				url: {{urlfor "m.BookController.AjaxChaps" "id" .Nov.Id}},
+				url: {{urlfor "m.AjaxController.AjaxChaps" "id" .Nov.Id}},
 				success: function(data) {
 					if (data.ret == 0) {
 						updateIndexList(data.data);

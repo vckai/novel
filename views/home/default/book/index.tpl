@@ -59,7 +59,7 @@
 			{{if eq .FirstChapId 0}}
 	          <a href="javascript:alert('暂无章节信息');" class="btn-read">开始阅读</a>
 			{{else}}
-	          <a href="{{urlfor "home.BookController.Detail" "id" .FirstChapId "novid" .Nov.Id}}" target="_blank" class="btn-read">开始阅读</a>
+	          <a href="{{urlfor "home.BookController.Detail" ":id" .FirstChapId ":novid" .Nov.Id}}" target="_blank" class="btn-read">开始阅读</a>
 			{{end}}
 	          <a href="javascript:addFavorite('{{.Nov.Name}}', location.href);" class="btn-keep" id="fav_btn">收藏本书</a>
 	        </div>
@@ -75,7 +75,7 @@
 	      <ul class="book-lst" id="recommUl">
 		  {{range .NovCateRanks}}
 	      	<li> 
-	      		<a href="{{urlfor "home.BookController.Index" "id" .Id}}" target="_blank" class="book-lst-tab">
+	      		<a href="{{urlfor "home.BookController.Index" ":id" .Id}}" target="_blank" class="book-lst-tab">
 		      		<img src="{{$.mOut.ViewUrl}}img/nocover.jpg" {{if ne .Cover ""}}data-echo="{{.Cover}}"{{end}} height="100" width="75" alt="{{.Name}}">
 		      		<div class="book-lst-tit">{{.Name}}</div>
 		      		<div class="book-lst-txt book-lst-clr2">{{.CateName}}</div>
@@ -92,7 +92,7 @@
 	      <ol class="contents-lst" id="contl1">
 		  {{range .Chaps}}
 	      	<li class="odd">
-	      		<a onclick="dealCurrentPageCookie()" href="{{urlfor "home.BookController.Detail" "id" .Id "novid" $.Nov.Id}}" class="contents-tab" target="_blank" title="{{.Title}}">
+	      		<a onclick="dealCurrentPageCookie()" href="{{urlfor "home.BookController.Detail" ":id" .Id ":novid" $.Nov.Id}}" class="contents-tab" target="_blank" title="{{.Title}}">
 	      			<span>{{.ChapterNo}}</span>{{.Title}}
 	      		</a>
 	      	</li>
