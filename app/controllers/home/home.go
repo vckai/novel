@@ -16,6 +16,7 @@ package home
 
 import (
 	"math"
+	"strconv"
 
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
@@ -107,7 +108,7 @@ func (this *HomeController) Cate() {
 	offset := (p - 1) * size
 
 	// 分类ID
-	cid, _ := this.GetInt("id", 0)
+	cid, _ := strconv.ParseInt(this.Ctx.Input.Param(":id"), 10, 32)
 
 	// 状态
 	status, _ := this.GetInt("status", 0)
@@ -123,7 +124,7 @@ func (this *HomeController) Cate() {
 
 	search := map[string]interface{}{
 		"count":    true,
-		"cate_id":  cid,
+		"cate_id":  int(cid),
 		"status":   status,
 		"text_num": textNum,
 		"uptime":   upTime,

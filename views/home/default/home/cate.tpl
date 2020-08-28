@@ -9,9 +9,9 @@
                 <div class="work-filter type-filter">
                     <h3>分类</h3>
                     <ul class="row-1" type="category">
-                        <li data-id="-1" {{if lt .Search.cate_id 1}}class="act"{{end}}><a href="javascript:gourl('id', 0);">全部</a></li>
+                        <li data-id="-1" {{if lt .Search.cate_id 1}}class="act"{{end}}><a href="{{urlfor "home.HomeController.Cate"}}">全部</a></li>
 						{{range .Cates}}
-                        <li data-id="{{.Id}}" {{if eq $.CateId .Id}}class="act"{{end}}><a href="javascript:gourl('id', {{.Id}});">{{.Name}}</a></li>
+                        <li data-id="{{.Id}}" {{if eq $.CateId .Id}}class="act"{{end}}><a href="{{urlfor "home.HomeController.Cate" ":id" .Id}}">{{.Name}}</a></li>
 						{{end}}
                     </ul>
                 </div>
@@ -86,7 +86,7 @@
 									<p class="author">
 										<a class="name" href="javascript:;">{{.Author}}</a>
 										<em>|</em>
-										<a href="{{urlfor "home.HomeController.Cate" "id" .CateId}}">{{.CateName}}</a>
+										<a href="{{urlfor "home.HomeController.Cate" ":id" .CateId}}">{{.CateName}}</a>
 										<em>|</em>
 										<span>{{.StatusName}}</span>
 									</p>
@@ -111,7 +111,6 @@
 	<script>
 	var params = {
 		"status": {{.Search.status}},
-		"id": {{.Search.cate_id}},
 		"text_num": {{.Search.text_num}},
 		"uptime": {{.Search.uptime}},
 		"ot": {{.Search.ot}},
@@ -131,6 +130,6 @@
 			url.push(i + "=" + params[i]);
 		}
 
-		window.location.href = {{urlfor "home.HomeController.Cate"}} + "?" + url.join("&");
+		window.location.href = {{urlfor "home.HomeController.Cate" ":id" .Search.cate_id}} + "?" + url.join("&");
 	}
 	</script>

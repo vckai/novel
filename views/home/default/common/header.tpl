@@ -47,7 +47,7 @@
 	          <div class="sort-box" id="allsortbox" style="display: none;">
 	              <ul>
 					{{range .Cates}}
-	          			<li><a href="{{urlfor "home.HomeController.Cate" "id" .Id}}" class="top-a">{{.Name}}</a></li>
+	          			<li><a href="{{urlfor "home.HomeController.Cate" ":id" .Id}}" class="top-a">{{.Name}}</a></li>
 					{{end}}
 	              </ul>
 	          </div>

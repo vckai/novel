@@ -85,7 +85,7 @@ $(document).ready(function() {
                 </a>
                 <h2 class="re-book-name over-txt"><a href="{{urlfor "home.BookController.Index" "id" $v.Id}}" target="_blank">{{$v.Name}}</a></h2>
                 <span class="source over-txt">{{$v.Author}}</span>
-                <a href="{{urlfor "home.HomeController.Cate" "id" $v.CateId}}" class="r-type">{{$v.CateName}}</a>
+                <a href="{{urlfor "home.HomeController.Cate" ":id" $v.CateId}}" class="r-type">{{$v.CateName}}</a>
               </li>
 			{{end}}
         </ul>

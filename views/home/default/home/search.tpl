@@ -38,7 +38,7 @@
 									<p class="author">
 										<a class="name" href="javascript:;">{{.Author}}</a>
 										<em>|</em>
-										<a href="{{urlfor "home.HomeController.Cate" "id" .CateId}}">{{.CateName}}</a>
+										<a href="{{urlfor "home.HomeController.Cate" ":id" .CateId}}">{{.CateName}}</a>
 										<em>|</em>
 										<span>{{.StatusName}}</span>
 									</p>

@@ -29,7 +29,9 @@ func init() {
 
 	// 首页路由
 	beego.Router("/", &home.HomeController{}, "GET:Index")
-	beego.AutoRouter(&home.HomeController{})
+	beego.Router("/cate/?:id", &home.HomeController{}, "GET:Cate")
+	beego.Router("/search", &home.HomeController{}, "GET:Search")
+
 	beego.AutoRouter(&home.BookController{})
 
 	// 禁止浏览器页面缓存
