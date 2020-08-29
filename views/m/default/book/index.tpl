@@ -45,7 +45,7 @@
 		{{range .Chaps}}
 			<a href="{{urlfor "m.BookController.Detail" ":id" .Id ":novid" $.Nov.Id}}">
             <li>
-            	<b>[{{.ChapterNo}}]</b> {{.Title}} 
+            	<b>[{{.ChapterNo}}]</b> {{.Title}}
             </li>
 			</a>
 		{{end}}
@@ -148,7 +148,7 @@
 				//if (item.ckey == latest) {
 					//_html += '<li class="index-bookmark">'+ name + '</li>';
 				//} else {
-					_html += '<a href="{{urlfor "m.BookController.Detail" "novid" .Nov.Id}}/' + item.id + '"><li>'+ name + '</li></a>';
+					_html += '<a href="{{urlfor "m.BookController.Index" ":id" .Nov.Id}}/' + item.id + '"><li>'+ name + '</li></a>';
 				//}
 			}
 
