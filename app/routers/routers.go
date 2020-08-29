@@ -17,6 +17,7 @@ package routers
 import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
+	"github.com/vckai/novel/app/controllers/api"
 
 	"github.com/vckai/novel/app/controllers/admin"
 	"github.com/vckai/novel/app/controllers/home"
@@ -36,8 +37,8 @@ func init() {
 	beego.Router("/book/?:id", &home.BookController{}, "GET:Index")
 	beego.Router("/book/:novid/?:id", &home.BookController{}, "GET:Detail")
 
-	beego.AutoRouter(&home.AjaxController{})
-	beego.AutoRouter(&m.AjaxController{})
+	beego.AutoRouter(&api.BookController{})
+	beego.AutoRouter(&api.ChapterController{})
 
 	// 禁止浏览器页面缓存
 	var FilterNoCache = func(ctx *context.Context) {

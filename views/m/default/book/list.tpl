@@ -98,7 +98,7 @@ $(document).ready(function() {
 			type: "post",
 			dataType: "json",
 			data:{p: p, act: "{{.aOut.Action}}"},
-			url: {{urlfor "m.AjaxController.AjaxNovels"}},
+			url: {{urlfor "api.BookController.AjaxNovels"}},
 			success: function(data) {
 				if (data.ret == 0) {
 					if (!data.data.is_next) {

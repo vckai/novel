@@ -1,52 +1,19 @@
-package home
+package api
 
 import (
 	"github.com/astaxie/beego"
+	"github.com/vckai/novel/app/controllers"
 
 	"github.com/vckai/novel/app/models"
 	"github.com/vckai/novel/app/services"
 )
 
-type AjaxController struct {
-	BaseController
+type BookController struct {
+	controllers.BaseController
 }
 
-// ajax加载小说章节
-func (this *AjaxController) AjaxChap() {
-	id, _ := this.GetUint64("id")
-	novId, _ := this.GetUint32("novid")
-	if id < 1 || novId < 1 {
-		this.Msg("参数错误，无法访问")
-	}
-
-	// 获取小说章节信息
-	chap := services.ChapterService.Get(id, novId)
-	if chap == nil {
-		this.Msg("该章节不存在或者已被删除")
-	}
-
-	tmp := map[string]interface{}{
-		"id":    chap.Id,
-		"title": chap.Title,
-		"desc":  chap.Desc,
-	}
-
-	// 获取下一章节ID
-	next := services.ChapterService.GetNext(chap.NovId, chap.ChapterNo)
-	nextId := uint64(0)
-	if next != nil {
-		nextId = next.Id
-	}
-
-	res := map[string]interface{}{
-		"chap":    tmp,
-		"next_id": nextId,
-	}
-	this.OutJson(0, "", res)
-}
-
-// ajax获取小说列表
-func (this *AjaxController) AjaxRank() {
+// 根据排行榜、热更等属性获取小说列表
+func (this *BookController) Rank() {
 	var novels []*models.Novel
 	switch this.GetString("rank") {
 	case "1":
@@ -94,6 +61,57 @@ func (this *AjaxController) AjaxRank() {
 
 	res := map[string]interface{}{
 		"list": list,
+	}
+	this.OutJson(0, "", res)
+}
+
+
+// 根据分类Id获取小说列表
+func (this *BookController) AjaxNovels() {
+	p, _ := this.GetInt("p")
+	cateId, _ := this.GetInt("cate_id")
+	q := this.GetString("q")
+
+	if p < 1 {
+		p = 1
+	}
+
+	offset := (p - 1) * PAGESIZE
+
+	var novels []*models.Novel
+	switch this.GetString("act") {
+	case "rank":
+		novels = services.NovelService.GetRanks(PAGESIZE, offset)
+	case "end":
+		novels = services.NovelService.GetEnds(PAGESIZE, offset)
+	default:
+		// 获取小说列表
+		search := map[string]interface{}{
+			"q":       q,
+			"cate_id": cateId,
+			"count":   false,
+		}
+		novels, _ = services.NovelService.GetList(PAGESIZE, offset, search)
+	}
+
+	var list []map[string]interface{}
+
+	for _, nov := range novels {
+		tmp := make(map[string]interface{})
+
+		tmp["id"] = nov.Id
+		tmp["name"] = nov.Name
+		tmp["author"] = nov.Author
+		tmp["cate_name"] = nov.CateName
+		tmp["desc"] = beego.HTML2str(nov.Desc)
+		tmp["cover"] = nov.Cover
+
+		list = append(list, tmp)
+	}
+
+	res := map[string]interface{}{
+		"is_next": len(list) >= PAGESIZE,
+		"list":    list,
 	}
 	this.OutJson(0, "", res)
 }

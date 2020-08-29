@@ -298,7 +298,7 @@ $(document).ready(function() {
     }
     
     function  getRank(rank) {
-        var url = {{urlfor "home.AjaxController.AjaxRank"}}+'?rank='+rank;
+        var url = {{urlfor "api.BookController.AjaxRank"}}+'?rank='+rank;
         $.ajax({
             type: "GET",
             url: url,
@@ -368,7 +368,7 @@ $(document).ready(function() {
     }
     
     function  getCateBook(cateId) {
-        var url = '{{urlfor "home.AjaxController.AjaxRank"}}?rank=cate&cate_id='+cateId;
+        var url = '{{urlfor "api.BookController.AjaxRank"}}?rank=cate&cate_id='+cateId;
         $.ajax({
             type: "GET",
             url: url ,

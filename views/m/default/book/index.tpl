@@ -160,7 +160,7 @@
 				type: "post",
 				dataType: "json",
 				data:{p: pageNo, asc: asc},
-				url: {{urlfor "m.AjaxController.AjaxChaps" "id" .Nov.Id}},
+				url: {{urlfor "api.ChapterController.AjaxChaps" "id" .Nov.Id}},
 				success: function(data) {
 					if (data.ret == 0) {
 						updateIndexList(data.data);
