@@ -2,7 +2,7 @@ language:
   - go
 
 go:
-  - 1.8
+  - 1.15
   
 before_install:
   - go get -u github.com/yeszao/novel
