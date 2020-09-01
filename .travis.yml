@@ -9,3 +9,12 @@ script:
   - go build
   - ls
   - go test -v
+
+deploy:
+  provider: releases
+  file: novel
+  file_glob: true
+  api_key: $GITHUB_TOKEN
+  skip_cleanup: true
+  on:
+    branch: master
