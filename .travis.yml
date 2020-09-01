@@ -1,0 +1,13 @@
+language:
+  - go
+
+go:
+  - 1.8
+  
+before_install:
+  - go get -u github.com/yeszao/novel
+  
+script:
+  - cd $GOPATH/src/github.com/yeszao/novel
+  - go build
+  - go test -v
