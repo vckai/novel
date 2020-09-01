@@ -5,9 +5,9 @@ go:
   - 1.15
   
 before_install:
-  - go get -u github.com/yeszao/novel
+  - go get -u github.com/vckai/novel
   
 script:
-  - cd $GOPATH/src/github.com/yeszao/novel
+  - cd $GOPATH/src/github.com/vckai/novel
   - go build
   - go test -v
