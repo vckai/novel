@@ -19,7 +19,7 @@ import (
 
 	"github.com/astaxie/beego/validation"
 
-	"github.com/vckai/novel/app/models"
+	"novel/app/models"
 )
 
 // 定义GroupService

@@ -15,8 +15,8 @@
 package admin
 
 import (
-	"github.com/vckai/novel/app/controllers"
-	"github.com/vckai/novel/app/services"
+	"novel/app/controllers"
+	"novel/app/services"
 )
 
 type LoginController struct {

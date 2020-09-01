@@ -17,8 +17,8 @@ package admin
 import (
 	"strings"
 
-	"github.com/vckai/novel/app/models"
-	"github.com/vckai/novel/app/services"
+	"novel/app/models"
+	"novel/app/services"
 )
 
 type SearchController struct {

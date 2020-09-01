@@ -20,8 +20,8 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/beego/i18n"
 
-	"github.com/vckai/novel/app/services"
-	"github.com/vckai/novel/app/utils"
+	"novel/app/services"
+	"novel/app/utils"
 )
 
 // 控制器基类

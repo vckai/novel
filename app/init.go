@@ -7,12 +7,12 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/beego/i18n"
 
-	"github.com/vckai/novel/app/controllers"
-	"github.com/vckai/novel/app/models"
-	_ "github.com/vckai/novel/app/routers"
-	"github.com/vckai/novel/app/services"
-	"github.com/vckai/novel/app/utils"
-	"github.com/vckai/novel/app/utils/log"
+	"novel/app/controllers"
+	"novel/app/models"
+	_ "novel/app/routers"
+	"novel/app/services"
+	"novel/app/utils"
+	"novel/app/utils/log"
 )
 
 const (

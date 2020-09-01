@@ -28,9 +28,9 @@ import (
 	"github.com/axgle/mahonia"
 	"github.com/willf/bloom"
 
-	xhttp "github.com/vckai/novel/app/librarys/net/http"
-	"github.com/vckai/novel/app/models"
-	"github.com/vckai/novel/app/utils/log"
+	xhttp "novel/app/librarys/net/http"
+	"novel/app/models"
+	"novel/app/utils/log"
 )
 
 const (

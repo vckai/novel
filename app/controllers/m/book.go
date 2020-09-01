@@ -17,7 +17,7 @@ package m
 import (
 	"strconv"
 
-	"github.com/vckai/novel/app/services"
+	"novel/app/services"
 )
 
 const (

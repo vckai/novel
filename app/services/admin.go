@@ -21,9 +21,9 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
 
-	"github.com/vckai/novel/app/models"
-	"github.com/vckai/novel/app/utils"
-	"github.com/vckai/novel/app/utils/log"
+	"novel/app/models"
+	"novel/app/utils"
+	"novel/app/utils/log"
 )
 
 // 定义AdminService

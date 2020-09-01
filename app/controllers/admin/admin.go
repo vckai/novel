@@ -15,10 +15,10 @@
 package admin
 
 import (
-	"github.com/vckai/novel/app/controllers"
-	"github.com/vckai/novel/app/models"
-	"github.com/vckai/novel/app/services"
-	"github.com/vckai/novel/app/utils/log"
+	"novel/app/controllers"
+	"novel/app/models"
+	"novel/app/services"
+	"novel/app/utils/log"
 )
 
 type AdminController struct {

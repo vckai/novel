@@ -23,8 +23,8 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/axgle/mahonia"
 
-	xhttp "github.com/vckai/novel/app/librarys/net/http"
-	"github.com/vckai/novel/app/utils/log"
+	xhttp "novel/app/librarys/net/http"
+	"novel/app/utils/log"
 )
 
 type SnatchRank struct{}

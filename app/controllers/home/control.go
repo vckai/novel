@@ -17,8 +17,8 @@ package home
 import (
 	"github.com/mssola/user_agent"
 
-	"github.com/vckai/novel/app/controllers"
-	"github.com/vckai/novel/app/services"
+	"novel/app/controllers"
+	"novel/app/services"
 )
 
 // 前台首页基类

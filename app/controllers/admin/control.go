@@ -20,10 +20,10 @@ import (
 
 	"github.com/astaxie/beego"
 
-	"github.com/vckai/novel/app/controllers"
-	"github.com/vckai/novel/app/models"
-	"github.com/vckai/novel/app/services"
-	"github.com/vckai/novel/app/utils"
+	"novel/app/controllers"
+	"novel/app/models"
+	"novel/app/services"
+	"novel/app/utils"
 )
 
 // 后台管理基类

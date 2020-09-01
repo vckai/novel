@@ -17,7 +17,7 @@ package home
 import (
 	"strconv"
 
-	"github.com/vckai/novel/app/services"
+	"novel/app/services"
 )
 
 type BookController struct {

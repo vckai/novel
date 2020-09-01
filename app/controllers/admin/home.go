@@ -25,7 +25,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/shirou/gopsutil/mem"
 
-	"github.com/vckai/novel/app/services"
+	"novel/app/services"
 )
 
 type HomeController struct {

@@ -17,7 +17,7 @@ package m
 import (
 	"encoding/json"
 
-	"github.com/vckai/novel/app/services"
+	"novel/app/services"
 )
 
 type SnatchController struct {

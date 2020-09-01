@@ -18,9 +18,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/vckai/novel/app/models"
-	"github.com/vckai/novel/app/services"
-	"github.com/vckai/novel/app/utils"
+	"novel/app/models"
+	"novel/app/services"
+	"novel/app/utils"
 )
 
 type SearchLogController struct {

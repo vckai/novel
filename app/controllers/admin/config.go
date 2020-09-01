@@ -15,7 +15,7 @@
 package admin
 
 import (
-	"github.com/vckai/novel/app/services"
+	"novel/app/services"
 )
 
 type ConfigController struct {

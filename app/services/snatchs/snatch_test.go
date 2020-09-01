@@ -18,7 +18,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/vckai/novel/app/models"
+	"novel/app/models"
 )
 
 var providerTest *models.SnatchRule = &models.SnatchRule{
