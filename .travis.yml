@@ -8,6 +8,8 @@ before_install:
   - go get -u github.com/vckai/novel
   
 script:
+  - echo $GOPATH
+  - echo $PWD
   - cd $GOPATH/src/github.com/vckai/novel
   - go build
   - go test -v
