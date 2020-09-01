@@ -5,8 +5,7 @@ go:
   - 1.15
   
 script:
-  - echo $GOPATH
   - echo $PWD
-  - go get -v
   - go build
+  - ls
   - go test -v
