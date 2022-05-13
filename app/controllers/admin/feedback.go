@@ -36,7 +36,7 @@ func (this *FeedbackController) Index() {
 	feeds, count := services.FeedbackService.GetAll(size, offset, search)
 
 	this.Data["Search"] = search
-	this.Data["Limit"] = feeds
+	this.Data["List"] = feeds
 	this.Data["Count"] = count
 	this.Data["Limit"] = size
 	this.View("feedback/index.tpl")
