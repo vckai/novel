@@ -1,6 +1,6 @@
 
-<link href="{{.aOut.ViewUrl}}css/swiper-3.4.2.min.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="{{.aOut.ViewUrl}}js/swiper-3.4.2.jquery.min.js" charset="utf-8"></script>
+<link href="{{.aOut.ViewUrl}}plugin/swiper8/swiper-bundle.min.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{{.aOut.ViewUrl}}plugin/swiper8/swiper-bundle.min.js" charset="utf-8"></script>
 
 <!-- container -->
 <div id="container">
@@ -9,7 +9,7 @@
 	   <div class="detail-section read-notice-sibling">
 	    <!-- ad -->
 	    <div class="ad-down">
-			<div class="swiper-container">
+			<div class="swiper">
 				<div class="swiper-wrapper">
 					{{range .BannerSlices}}
 					<div class="swiper-slide">
@@ -107,14 +107,15 @@
 
 var len = {{.Nov.Desc|len}};
 $(function() {
-	var mySwiper = new Swiper ('.swiper-container', {
+	var mySwiper = new Swiper ('.swiper', {
 		direction: 'horizontal',
 		loop: true,
-		autoplay: 5000,//可选选项，自动滑动
+		autoplay: true,//可选选项，自动滑动
 
 		// 如果需要分页器
-		pagination: '.swiper-pagination',
-		paginationClickable: true
+        pagination: {
+          el: '.swiper-pagination',
+        }
 	})        
 
 	$('#zhankaishouqi').on('click', function() {
