@@ -208,7 +208,7 @@ CREATE TABLE `nov_novel` (
   `is_collect` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否收藏推荐',
   `is_vip_reward` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否vip打赏',
   `is_vip_up` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否vip更新',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '小说状态，0更新，1完结，2太监',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '小说状态，1更新，2完结，3太监',
   `views` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '浏览次数',
   `text_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小说字数',
   `chapter_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '小说章节数',

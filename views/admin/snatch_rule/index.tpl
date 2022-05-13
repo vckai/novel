@@ -50,7 +50,7 @@
                             <a class="layui-btn layui-btn-xs layui-btn-warm" href="javascript:;" onclick="test(this, '{{.Id}}')">
                                 <i class="layui-icon">&#xe623;</i>测试
                             </a>
-                            <a class="layui-btn layui-btn-xs layui-btn-danger" href="javascript:;" onclick="del(this, '{{.Id}}')">
+                            <a class="layui-btn layui-btn-xs layui-btn-danger" href="javascript:;" onclick="del(this, '{{.Id}}', '{{.Name}}')">
                                 <i class="layui-icon">&#xe640;</i>删除
                             </a>
                         </td>
@@ -98,12 +98,12 @@
 		}
 
 		// 删除
-		function del(obj, id) {
+		function del(obj, id, name) {
 			layer.confirm('确认要删除吗？', function(index) {
 				$(obj).parents("tr").remove();
 
-				//发异步删除数据
-				ajax_post({{urlfor "admin.SnatchRuleController.Delete"}}, {id: id}, top.reload_page);
+                		//发异步删除数据
+				ajax_post({{urlfor "admin.SnatchRuleController.Delete"}}, {id: id, name: name}, top.reload_page);
 			});
 		}
 

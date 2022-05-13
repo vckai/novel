@@ -600,7 +600,7 @@ func (this *Snatch) Filter(filter, kw string) string {
 
 // 采集内容过滤
 func (this *Snatch) filter(filter, kw string) string {
-	if len(kw) == 0 {
+	if len(kw) == 0 || len(filter) == 0 {
 		return kw
 	}
 

@@ -86,6 +86,9 @@ func (this *SnatchTask) Run() {
 		log.Debug("[小说更新任务] ID:", this.novId, " 任务无法运行，状态:", this.runStatus)
 		return
 	}
+	
+	// 修改运行状态
+	this.upRunStatus(TASKRUNING)
 
 	// 获取小说采集链接列表
 	links := NovelService.GetLinks(this.novId)
@@ -96,9 +99,6 @@ func (this *SnatchTask) Run() {
 
 	// 修复空章节
 	this.fixEmptyChaps()
-
-	// 修改运行状态
-	this.upRunStatus(TASKRUNING)
 
 	var status uint8
 
@@ -168,7 +168,7 @@ func (this *SnatchTask) fixEmptyChaps() {
 			v.Status = 1
 		} else {
 			// 无内容章节
-			if v.Desc == "" || strings.Contains(v.Desc, "正在手打中，请稍等片刻") {
+			if info.Chap.Desc == "" || strings.Contains(info.Chap.Desc, "正在手打中，请稍等片刻") {
 				errNum++
 				v.Desc = ""
 				v.Status = 1
@@ -538,9 +538,8 @@ func (this *SnatchTaskManager) gc() {
 				if task.IsGc() {
 					log.Debug("GC删除任务:", novId)
 					this.DelTask(novId)
+					i++
 				}
-
-				i++
 			}
 		}
 	}
