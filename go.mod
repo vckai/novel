@@ -26,7 +26,6 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/stretchr/testify v1.3.0 // indirect
 	github.com/tidwall/gjson v1.9.3
-	github.com/tidwall/match v1.0.0 // indirect
 	github.com/willf/bitset v1.1.10 // indirect
 	github.com/willf/bloom v2.0.3+incompatible
 	golang.org/x/crypto v0.0.0-20190403202508-8e1b8d32e692
